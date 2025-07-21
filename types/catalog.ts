@@ -1,0 +1,55 @@
+export interface Product {
+    id: number,
+    name: string,
+    description?: string,
+    slug: string,
+    type: string,
+    default_unit_id?: number,
+    is_active: boolean,
+    has_variants:  boolean,
+    avg_rating?: string
+    price?: number,
+    old_price?: number,
+    is_new: boolean,
+    discount_price?: string,
+    discount_percentage?: string,
+    total_discount?: string,
+    sku?: string,
+    barcode?: string,
+    weight?: string,
+    length?: string,
+    width?: string,
+    height?: string,
+    colors?: Color[],
+    variants?: Variation[],
+    default_unit?: string,
+    images?: Image[],
+    main_image?: Image,
+    quantity?: number,
+    item_key?: string,
+    selected_variant?: object,
+    selected_color?: object
+}
+
+export interface Color {
+    id: number,
+    name: string,
+    code: string
+}
+
+export interface Variation {
+    product_variant_id: number,
+    size: string
+}
+
+export interface Image {
+    id: number,
+    path: string
+}
+
+export interface Catalog {
+    data: Product[],
+    meta: {
+        last_page: number
+    }
+}

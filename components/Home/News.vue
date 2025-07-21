@@ -1,0 +1,31 @@
+<script setup lang="ts">
+
+</script>
+
+<template>
+  <section class="section news home-news">
+    <div class="news__container container">
+      <div class="news__header block__header _left">
+        <div class="block__header-title">Вам может быть это&nbsp;интересно!</div>
+      </div>
+      <NewsGrid />
+
+      <div class="news__more">
+        <NuxtLink to="/news" class="btn _border _gray">читать все новости</NuxtLink>
+      </div>
+
+    </div>
+  </section>
+</template>
+
+<style scoped lang="scss">
+.news__more {
+  display: flex;
+  justify-content: center;
+  margin-top: 5.9rem;
+
+  @media (max-width: $mobile) {
+    margin-top: 3.5rem;
+  }
+}
+</style>
