@@ -26,7 +26,7 @@
 <script setup lang="ts">
 const to = computed( () => {
   return {
-    name: 'news-slug',
+    name: 'articles-slug',
     params: {
       slug: 'test'
     }

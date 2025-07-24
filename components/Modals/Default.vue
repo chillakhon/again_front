@@ -147,6 +147,18 @@ const close = ( event : any ) => {
       }
     }
   }
+
+  &--success {
+    & .modal__content {
+      width: 53.6rem;
+      padding: 5.5rem 0 8.3rem;
+      text-align: center;
+
+      @media (max-width: $mobile) {
+        padding: 3.3rem 4.4rem 4.7rem;
+      }
+    }
+  }
 }
 
 :global(.modal__title){

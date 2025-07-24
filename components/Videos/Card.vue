@@ -20,7 +20,7 @@
   background: #D9D9D9;
 
   @media (max-width: $mobile) {
-    min-height: 42rem;
+    min-height: 40rem;
   }
 }
 </style>

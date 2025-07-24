@@ -13,7 +13,7 @@
     <div class="footer__menu-item">
       <div class="footer__menu-title"></div>
       <ul class="footer__menu-list">
-        <li><NuxtLink to="/news">Новости</NuxtLink></li>
+        <li><NuxtLink to="/articles">Статьи</NuxtLink></li>
         <li><NuxtLink to="/returns">Условия обмена и возврата</NuxtLink></li>
         <li><NuxtLink to="/care">Правила ухода и использования</NuxtLink></li>
         <li><NuxtLink to="/#faq">Отвечаем на ваши вопросы</NuxtLink></li>

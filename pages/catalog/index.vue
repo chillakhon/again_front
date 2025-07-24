@@ -19,6 +19,10 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta( {
+  title: 'Каталог',
+} )
+
 import type {Catalog} from "~/types/catalog";
 
 const { data: products } = await useApi<Catalog>( '/products' );

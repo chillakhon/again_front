@@ -90,8 +90,6 @@ const { data: reviews } = await useApi<{
   }
 } );
 
-const auth = useAuthStore();
-
 const modal = useModal();
 const openModal = () => {
   modal.openModal( ModalsReview, {

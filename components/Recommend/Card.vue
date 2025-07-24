@@ -39,6 +39,11 @@ defineProps<{
   //border-radius: 50%;
   overflow: hidden;
   border-radius: 2rem;
+
+  @media (max-width: $mobile) {
+    min-height: auto;
+    padding-bottom: 100%;
+  }
 }
 
 .recommend-item__media-img {

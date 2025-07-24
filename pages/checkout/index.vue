@@ -66,7 +66,7 @@ const form = computed( () => {
     country_code: 'RU',
     city_name: 'Москва',
     delivery_address: 'Ленина 12',
-    delivery_method_id: 2,
+    //delivery_method_id: 2,
     //delivery_type_code: 'cdek_courier',
     notes: 'Комментарий',
     tariff: {},

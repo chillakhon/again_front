@@ -9,14 +9,14 @@
       <span class="breadcrumbs__sep">/</span>
       <a href="#" class="breadcrumbs__link">Главная</a>
       <span class="breadcrumbs__sep">/</span>
-      <div class="breadcrumbs__current">Новости</div>
+      <div class="breadcrumbs__current">{{ route.meta.title }}</div>
     </div>
   </div>
 
 </template>
 
 <script setup lang="ts">
-
+const route = useRoute();
 </script>
 
 <style scoped lang="scss">

@@ -101,11 +101,7 @@ register();
   gap: 3rem;
 
   @media (max-width: $tablet) {
-    grid-template-columns: 2fr;
-  }
-
-  @media (max-width: $mobile) {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 </style>

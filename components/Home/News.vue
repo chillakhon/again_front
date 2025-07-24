@@ -1,7 +1,3 @@
-<script setup lang="ts">
-
-</script>
-
 <template>
   <section class="section news home-news">
     <div class="news__container container">
@@ -11,12 +7,16 @@
       <NewsGrid />
 
       <div class="news__more">
-        <NuxtLink to="/news" class="btn _border _gray">читать все новости</NuxtLink>
+        <NuxtLink to="/articles" class="btn _border _gray">читать все статьи</NuxtLink>
       </div>
 
     </div>
   </section>
 </template>
+
+<script setup lang="ts">
+
+</script>
 
 <style scoped lang="scss">
 .news__more {

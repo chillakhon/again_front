@@ -9,7 +9,7 @@ register();
         class="videos__swiper swiper"
         :breakpoints="{
           0: {
-            slidesPerView: 1,
+            slidesPerView: 2.2,
             spaceBetween: 10,
             pagination: {
               el: '.videos__dots',

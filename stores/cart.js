@@ -1,6 +1,7 @@
 import {defineStore, skipHydrate} from 'pinia';
 import {hydrate} from "vue";
 import {getFormatPrice} from "~/utils/getFormatPrice.js";
+import { v4 as uuidv4 } from 'uuid';
 
 export const useCartStore = defineStore('cartStore', () => {
     const quantity = ref( 0 );
@@ -66,10 +67,10 @@ export const useCartStore = defineStore('cartStore', () => {
             }
         } else {
             cart.value.push( {...product,
-                item_key: crypto.randomUUID(),
+                item_key: uuidv4(),
                 quantity: quantity,
-                color_id: color.id,
-                product_variant_id: variant.product_variant_id,
+                color_id: color ? color.id : null,
+                product_variant_id: variant ? variant.product_variant_id : null,
                 selected_color: color,
                 selected_variant: variant
             } );

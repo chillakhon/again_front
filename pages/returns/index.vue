@@ -1,4 +1,6 @@
 <template>
+  <Breadcrumbs />
+
   <div class="returns page-padding">
     <div class="returns__container container">
       <div class="returns-block__header block__header _left">

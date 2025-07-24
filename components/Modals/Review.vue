@@ -36,6 +36,8 @@
 </template>
 
 <script setup lang="ts">
+import {ModalsSuccess} from "#components";
+
 const form = ref( {
   // name: '',
   // email: '',
@@ -46,12 +48,11 @@ const form = ref( {
 const auth  = useAuthStore();
 const modal = useModal();
 const getStarSelected = ( value: number ) => {
-  console.log( value );
   form.value.rating = value;
 };
 
 const submit = async () => {
-  const { data } = await useApi( '/reviews', {
+  const { data, status } = await useApi( '/reviews', {
     body: {
       reviewable_id: modal.props.productId,
       reviewable_type: 'Product',
@@ -59,6 +60,13 @@ const submit = async () => {
       rating: form.value.rating
     }
   }, '', 'POST' );
+
+  if ( status.value === 'success' ){
+    modal.openModal( ModalsSuccess, {
+      customClass: 'success',
+      text: 'Ваш отзыв будет добавлен после проверки'
+    } )
+  }
 }
 </script>
 

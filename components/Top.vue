@@ -21,7 +21,7 @@
   font-family: var(--ff-mulish);
 
   @media (max-width: $tablet) {
-    display: none;
+    font-size: 1.4rem;
   }
 }
 </style>
