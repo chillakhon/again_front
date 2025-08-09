@@ -35,7 +35,7 @@
       </div>
       <div class="care__form">
         <div class="care__form-text">Напиши нам в WhatsApp, и мы ответим  на любой ваш вопрос перед покупкой</div>
-        <a href="#" class="btn care__form-btn">Написать в WhatsApp</a>
+        <a href="https://wa.me/79991178888" class="btn care__form-btn" target="_blank">Написать в WhatsApp</a>
       </div>
     </div>
   </div>

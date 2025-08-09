@@ -56,7 +56,7 @@
 
       </div>
 
-      <a href="#" class="payment__btn btn">Купить</a>
+      <NuxtLink to="/catalog" class="payment__btn btn">Купить</NuxtLink>
     </div>
   </section>
 </template>

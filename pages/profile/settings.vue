@@ -5,35 +5,31 @@
         name="first_name"
         placeholder="Имя"
         v-model="userForm.first_name"
-        :value="userForm.first_name"
     />
     <FormInput
         name="last_name"
         placeholder="Фамилия"
         v-model="userForm.last_name"
-        :value="userForm.last_name"
     />
-    <FormInput
-        name="surname"
-        placeholder="Отчество"
-        v-model="userForm.surname"
-        :value="userForm.surname"
+    <FormDatepicker
+      name="date"
+      placeholder="Дата рождения"
+      v-model="userForm.birthday"
     />
     <FormInput
         name="phone"
         placeholder="Телефон"
         v-model="userForm.phone"
-        :value="userForm.phone"
     />
     <FormInput
         name="email"
         placeholder="Почта"
         v-model="userForm.email"
-        :value="userForm.email"
     />
     <div class="form__button">
       <button
-          class="profile-settings__form-btn btn _border"
+          class="profile-settings__form-btn btn _border _loader"
+          :class="{ '_loading': isLoading }"
           @click="save"
       >
         Сохранить изменения
@@ -60,7 +56,7 @@ const { user } = authStore;
 const userForm = ref( {
   first_name: '',
   last_name: '',
-  surname: '',
+  birthday: '',
   phone: '',
   email: '',
 } );
@@ -68,15 +64,20 @@ const userForm = ref( {
 onMounted( () => {
   userForm.value.first_name = user.profile.first_name;
   userForm.value.last_name = user.profile.last_name;
-  userForm.value.surname = user.profile.surname;
+  userForm.value.birthday = user.profile.birthday;
   userForm.value.phone = user.profile.phone;
   userForm.value.email = user.email;
-} )
+} );
+
+const isLoading = ref( false );
 
 const save = async () => {
+  isLoading.value = true;
   const { data } = await useApi('/clients/update-profile', {
     body: userForm.value
-  }, '', 'PUT')
+  }, '', 'PUT');
+
+  isLoading.value = false;
 }
 </script>
 

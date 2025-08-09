@@ -27,12 +27,18 @@
           </div>
           <button
               v-if="auth.isCodeActive"
-              class="login-form__button btn"
-              @click="auth.login( loginForm.email, loginForm.verification_code )"
+              class="login-form__button btn _loader"
+              :class="{ '_loading': isLoading }"
+              @click="login"
           >
             Войти или зарегистрироваться
           </button>
-          <button v-else class="login-form__button btn" @click="auth.sendCode( loginForm.email )">
+          <button
+              v-else
+              class="login-form__button btn _loader"
+              :class="{ '_loading': isLoading }"
+              @click="getCode"
+          >
             Отправить код
           </button>
         </div>
@@ -60,9 +66,18 @@ const loginForm = ref( {
 } );
 
 const auth = useAuthStore();
-// if ( auth.isAuthenticated ){
-//   navigateTo('/profile/settings');
-// }
+const isLoading = ref( false );
+const getCode = async () => {
+  isLoading.value = true;
+  await auth.sendCode( loginForm.value.email );
+  isLoading.value = false;
+}
+
+const login = async () => {
+  isLoading.value = true;
+  await auth.login( loginForm.value.email, loginForm.value.verification_code )
+  isLoading.value = false;
+}
 
 </script>
 
@@ -94,9 +109,11 @@ const auth = useAuthStore();
   }
 }
 
+.login__form {
+  max-width: 40rem;
+}
+
 .login-form__input {
-  display: flex;
-  align-items: center;
   margin-bottom: 1.5rem;
 
   @media (max-width: $mobile) {
@@ -105,8 +122,6 @@ const auth = useAuthStore();
 }
 
 .login-form__row {
-  max-width: 36.7rem;
-  width: 36.7rem;
   margin-bottom: 0;
 }
 
@@ -126,8 +141,8 @@ const auth = useAuthStore();
 }
 
 .login-form__button {
-  max-width: 36.7rem;
   margin: 2rem 0 0;
+  width: 100%;
 
   @media (max-width: $mobile) {
     min-height: 5rem;

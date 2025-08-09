@@ -1,10 +1,12 @@
 import {defineStore, skipHydrate} from 'pinia';
+import {ModalsMessage} from "#components";
 
 export const useAuthStore = defineStore('authStore', () => {
     const user = ref( {} );
     const token = useLocalStorage( 'auth_token', '' );
     const isAuthenticated  = ref( false );
     const isCodeActive = ref( false );
+    const modal = useModal();
 
     const sendCode = async ( email ) => {
         const { data } = await useApi( '/login', {
@@ -15,7 +17,14 @@ export const useAuthStore = defineStore('authStore', () => {
 
         if ( data.value.success ){
             isCodeActive.value = true;
+            modal.openModal( ModalsMessage, {
+                customClass: 'message',
+                title: 'Код подтрвеждения',
+                text: 'На вашу почту был отправлен код для авторизации на сайте'
+            } )
         }
+
+        return data;
     }
 
     const login = async (email, code) => {
@@ -30,6 +39,7 @@ export const useAuthStore = defineStore('authStore', () => {
             user.value = data.value.user;
             token.value = data.value.token;
             isAuthenticated.value = true;
+            isCodeActive.value = false;
 
             if (process.client) {
                 localStorage.setItem('auth_token', data.value.token)

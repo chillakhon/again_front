@@ -29,7 +29,6 @@ const emit = defineEmits(['update:modelValue']);
 const handleInput = ($event: InputEvent) => {
   emit('update:modelValue', ( $event.target as HTMLInputElement ).value)
 }
-
 </script>
 
 <style scoped lang="scss">

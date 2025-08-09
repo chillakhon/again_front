@@ -31,7 +31,7 @@
             </ul>
           </div>
         </div>
-        <a href="#" class="delivery__btn btn">Собрать заказ</a>
+        <NuxtLink to="/catalog" class="delivery__btn btn">Собрать заказ</NuxtLink>
       </div>
       <div class="delivery__card">
         <picture class="delivery__card-pic">
