@@ -9,6 +9,7 @@
           @select-color="getColor"
           @filter-click="filter"
       />
+
       <div class="catalog-page__body">
         <h1 class="catalog-page__title block__title _small">Каталог</h1>
         <CatalogGrid class="catalog-page__grid" v-if="products" :list="products.data" />
@@ -25,23 +26,29 @@ definePageMeta( {
 
 import type {Catalog} from "~/types/catalog";
 
-const { data: products } = await useApi<Catalog>( '/products' );
-
 const priceBefore = ref( 0 );
 const priceAfter = ref( 999999 );
+const color = ref( 1 );
+
+let { data: products } = await useApi<Catalog>('/products');
 
 const getPrice = ( prices: object ) => {
   priceBefore.value = prices.before;
   priceAfter.value = prices.after;
 }
 
-const color = ref( 1 );
 const getColor = ( id: number ) => {
   color.value = id;
 }
 
-const filter = () => {
-  console.log( 'INIT' );
+const filter = async () => {
+  // products = await useApi<Catalog>('/products', {
+  //   query: {
+  //     price_before: priceBefore,
+  //     price_after: priceAfter,
+  //   }
+  // });
+  //products.value = await useApi<Catalog>('/products');
 }
 </script>
 

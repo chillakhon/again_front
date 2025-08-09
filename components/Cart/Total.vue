@@ -4,7 +4,7 @@
       <div class="cart__summary cart-summary">
         <div class="cart-summary__item">
           <span class="cart-summary__item-title">Всего</span>
-          <span class="cart-summary__item-price">{{ cart.total }} ₽</span>
+          <span class="cart-summary__item-price">{{ getFormatPrice().formattedPrice( cart.total ) }} ₽</span>
         </div>
 <!--        <div class="cart-summary__item">-->
 <!--          <span class="cart-summary__item-title">Скидка</span>-->

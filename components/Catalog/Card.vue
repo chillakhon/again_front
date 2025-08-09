@@ -40,7 +40,7 @@
           </NuxtLink>
           <div class="catalog-item__price" v-if="product.price">
             <div class="catalog-item__price-new">{{ getNormalPrice( product.price, product.old_price ) }} ₽</div>
-            <div class="catalog-item__price-old" v-if="product.old_price">{{ product.old_price  }} ₽</div>
+            <div class="catalog-item__price-old" v-if="product.old_price">{{ formattedPrice( product.old_price ) }} ₽</div>
           </div>
         </div>
         <div class="catalog-item__subtitle" v-if="product.description">{{ product.description }}</div>

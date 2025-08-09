@@ -1,7 +1,7 @@
 <template>
   <div class="cart__subtotal">
     <span class="cart__subtotal-title">Итого:</span>
-    <span class="cart__subtotal-price">{{ cart.total }} ₽</span>
+    <span class="cart__subtotal-price">{{ getFormatPrice().formattedPrice( cart.total ) }} ₽</span>
   </div>
 </template>
 

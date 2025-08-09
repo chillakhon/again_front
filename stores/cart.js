@@ -120,9 +120,8 @@ export const useCartStore = defineStore('cartStore', () => {
 
         cart.value.forEach( ( item ) => {
             const quantity = item.quantity ? item.quantity : 1;
-            const price = getFormatPrice().getNormalPrice( item.price, item.old_price );
 
-            total.value += quantity * price;
+            total.value += quantity * item.price;
         } );
     }
 

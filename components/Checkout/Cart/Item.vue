@@ -21,8 +21,8 @@
     </div>
     <div class="checkout-cart__item-quantity">{{ product.quantity }}</div>
     <div class="checkout-cart__item-price price" v-if="product.price">
-      <div class="price__new">{{ getFormatPrice().getNormalPrice( product.price, product.old_price ) }} ₽</div>
-      <div class="price__old" v-if="product.old_price">{{ product.old_price }} ₽</div>
+      <div class="price__new">{{ getNormalPrice( product.price, product.old_price ) }} ₽</div>
+      <div class="price__old" v-if="product.old_price">{{ formattedPrice( product.old_price ) }} ₽</div>
     </div>
   </div>
 </template>
@@ -33,6 +33,8 @@ import type {Product} from "~/types/catalog";
 defineProps<{
   product: Product
 }>();
+
+const { getNormalPrice, formattedPrice } = getFormatPrice();
 </script>
 
 <style scoped lang="scss">

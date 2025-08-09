@@ -38,7 +38,7 @@
             </ClientOnly>
             <div class="cart-item__price price" v-if="product.price">
               <div class="price__new">{{ getFormatPrice().getNormalPrice( product.price, product.old_price ) }} ₽</div>
-              <div class="price__old" v-if="product.old_price">{{ product.old_price }} ₽</div>
+              <div class="price__old" v-if="product.old_price">{{ getFormatPrice().formattedPrice( product.old_price ) }} ₽</div>
             </div>
           </div>
         </div>
@@ -52,8 +52,8 @@
     />
     <div class="cart-item__last">
       <div class="cart-item__price price" v-if="product.price">
-        <div class="price__new">{{ getFormatPrice().getNormalPrice( product.price, product.old_price ) }} ₽</div>
-        <div class="price__old" v-if="product.old_price">{{ product.old_price }} ₽</div>
+        <div class="price__new">{{ getNormalPrice( product.price, product.old_price ) }} ₽</div>
+        <div class="price__old" v-if="product.old_price">{{ formattedPrice( product.old_price ) }} ₽</div>
       </div>
       <button class="cart-item__remove" @click="cartStore.removeFromCart( product.item_key )">
         <svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -95,6 +95,8 @@ const favouritesStore = useFavouritesStore();
 const isFavorite = computed( () => {
   return favouritesStore.isFavorite( props.product.id )
 } );
+
+const { getNormalPrice, formattedPrice } = getFormatPrice();
 </script>
 
 <style scoped lang="scss">

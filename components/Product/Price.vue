@@ -1,7 +1,7 @@
 <template>
   <div class="product__price" v-if="price">
-    <div class="product__price-new">{{ price }} ₽</div>
-    <div class="product__price-old" v-if="oldPrice">{{ oldPrice }} ₽</div>
+    <div class="product__price-new">{{ formattedPrice( price ) }} ₽</div>
+    <div class="product__price-old" v-if="oldPrice">{{ formattedPrice( oldPrice ) }} ₽</div>
   </div>
 </template>
 

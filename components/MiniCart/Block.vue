@@ -9,6 +9,7 @@
             :quantity="item.quantity"
             :title="item.name"
             :price="item.price"
+            :old-price="item.old_price"
             :item-key="item.item_key"
             :selected-color="item.selected_color"
             :selected-variant="item.selected_variant"

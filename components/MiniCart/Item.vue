@@ -16,8 +16,8 @@
         </div>
         <div class="mini-cart__item-content__bottom">
           <div class="price">
-            <div class="price__new">{{ price }} ₽</div>
-<!--            <div class="price__old">10 900 ₽</div>-->
+            <div class="price__new">{{ priceFormat.getNormalPrice( price, oldPrice ) }} ₽</div>
+            <div class="price__old" v-if="oldPrice">{{ priceFormat.formattedPrice( oldPrice ) }} ₽</div>
           </div>
         </div>
       </div>
@@ -49,6 +49,7 @@ const props = defineProps<{
   title: string,
   quantity: number,
   price: string,
+  oldPrice?: string,
   itemKey: string,
   selectedColor?: object,
   selectedVariant?: object,
@@ -60,6 +61,8 @@ const { removeFromCart } = cartStore;
 const getQuantity = ( number: number ) => {
   cartStore.setCartQuantity( props.itemKey, number );
 }
+
+const priceFormat = getFormatPrice();
 </script>
 
 <style scoped lang="scss">
