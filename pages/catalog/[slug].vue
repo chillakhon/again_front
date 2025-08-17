@@ -1,9 +1,6 @@
 <template>
   <Breadcrumbs />
   <div class="product" v-if="product">
-<!--    <pre>-->
-<!--      {{ product }}-->
-<!--    </pre>-->
     <div class="product__container container">
       <div class="product__top">
         <ProductGallery
@@ -34,11 +31,11 @@
 
           <Quantity
               class="product__quantity"
-              v-if="product.price"
+              v-if="product.price && product.stock_quantity > 0"
               @get-quantity="getQuantity"
           />
 
-          <div class="product__actions">
+          <div class="product__actions" v-if=" product.stock_quantity > 0">
             <div class="product__actions-buttons">
               <ProductActionsAddToCart
                   v-if="product.price"
@@ -52,6 +49,10 @@
               </div>
             </div>
             <ProductActionsAddToFav :quantity="quantity" :product="product" />
+          </div>
+
+          <div class="product__stock--not" v-else>
+            Нет в наличии
           </div>
         </div>
       </div>

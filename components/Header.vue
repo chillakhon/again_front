@@ -19,7 +19,7 @@
           <HeaderActions />
         </div>
       </div>
-      <div class="header__bottom">
+      <div class="header__bottom" :class="{ '_active': mobileMenuStore.isActive }">
          <HeaderMenu class="header__menu" />
         <div class="header__mobile">
           <button class="header__call">Связаться с нами</button>
@@ -34,6 +34,7 @@
 import {ModalsCallback} from "#components";
 
 const isFixed = ref( false );
+const mobileMenuStore = useMobileMenuStore();
 
 onMounted( () => {
   window.addEventListener( 'scroll', () => {
@@ -172,6 +173,28 @@ const modal = useModal();
   justify-content: space-between;
   padding-bottom: 3rem !important;
   padding-top: 2.6rem !important;
+
+
+  @media (max-width: $tablet) {
+    :deep(li) {
+      margin-bottom: 2.5rem;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    :deep(a){
+      display: inline-block;
+      font-size: 1.4rem;
+
+      &._active {
+        text-decoration: underline;
+        color: var(--fg-red);
+        font-weight: 700;
+      }
+    }
+  }
 }
 
 .header__mobile {

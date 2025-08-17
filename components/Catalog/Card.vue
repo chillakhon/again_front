@@ -1,7 +1,7 @@
 <template>
   <article class="catalog-item" :data-id="product.id">
     <div class="catalog-item__card">
-      <div class="catalog-item__media">
+      <NuxtLink :to="to" class="catalog-item__media">
         <picture class="catalog-item__media-pic">
           <img
               :src="getImage( product.main_image?.path ? product.main_image?.path : '' )"
@@ -32,7 +32,7 @@
             </svg>
           </button>
         </ClientOnly>
-      </div>
+      </NuxtLink>
       <div class="catalog-item__content">
         <div class="catalog-item__header">
           <NuxtLink :to="to" class="catalog-item__title">

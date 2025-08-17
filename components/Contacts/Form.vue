@@ -2,59 +2,93 @@
   <div class="contacts__form form">
     <div class="contacts__form-title fz-h2">Задайте свой вопрос,<br> и мы свяжемся с Вами</div>
     <div class="form__inputs">
-      <FormInput
-          name="name"
-          placeholder="Введите ваше имя"
-          row-class="_18"
-          :is-light="true"
-          v-model="form.name"
-      />
-      <FormInput
-          name="email"
-          placeholder="Введите вашу email почту"
-          row-class="_18"
-          :is-light="true"
-          :value="form.email"
-          v-model="form.email"
-      />
-      <FormInput
-          name="phone"
-          placeholder="Введите ваш номер телефона"
-          row-class="_18"
-          :is-light="true"
-          :value="form.phone"
-          v-model="form.phone"
-      />
-      <FormInput
-          name="theme"
-          placeholder="Тема вопроса"
-          row-class="_18"
-          :is-light="true"
-          :value="form.theme"
-          v-model="form.theme"
-      />
-      <FormTextarea
-          name="message"
-          placeholder="Задайте свой вопрос"
-          v-model="form.message"
-          class="_18"
-      />
+      <template v-for="( item, key ) in form" :key="key">
+        <component
+            v-if="item.template"
+            :is="item.template"
+            :name="key"
+            :placeholder="item.placeholder"
+            :error="item.error"
+            row-class="_18"
+            v-model="item.value"
+        />
+      </template>
     </div>
     <div class="form__button">
-      <button class="contacts__form-btn btn">отправить</button>
+      <button class="contacts__form-btn btn" @click="send">отправить</button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import {FormInput, FormTextarea, ModalsSuccess} from "#components";
+
 const form = ref( {
-  name: "",
-  email: "",
-  phone: "",
-  theme: "",
-  message: "",
-  policy: "1",
-} )
+  name: {
+    template: FormInput,
+    value: '',
+    placeholder: 'Введите ваше имя',
+    error: ''
+  },
+  email: {
+    template: FormInput,
+    value: '',
+    placeholder: 'Введите вашу email почту',
+    error: ''
+  },
+  phone: {
+    template: FormInput,
+    value: '',
+    placeholder: 'Введите ваш номер телефона',
+    error: ''
+  },
+  theme: {
+    template: FormInput,
+    value: '',
+    placeholder: 'Тема вопроса',
+    error: ''
+  },
+  message: {
+    template: FormTextarea,
+    value: '',
+    placeholder: 'Задайте свой вопрос',
+    error: ''
+  }
+} );
+
+const modal = useModal();
+
+const send = async () => {
+  for ( let key in form.value ) {
+    form.value[key].error = '';
+  }
+
+  const { data, status, error } = await useApi('/contact-requests', {
+    body: {
+      name: form.value.name.value,
+      email: form.value.email.value,
+      phone: form.value.phone.value,
+      message: form.value.message.value,
+    }
+  }, 'contact', 'POST' );
+
+  if ( status.value === 'error' && error?.value?.data?.errors ){
+    for ( const item in error.value.data.errors ){
+      if ( form.value[ item ] ){
+        form.value[ item ].error = error.value.data.errors[ item ][0];
+      }
+    }
+  } else {
+    modal.openModal( ModalsSuccess, {
+      title: 'Спасибо!',
+      text: 'Ваша заявка отправлена'
+    } )
+
+    for ( let key in form.value ) {
+      form.value[key].value = '';
+    }
+  }
+}
 </script>
 
 <style scoped lang="scss">

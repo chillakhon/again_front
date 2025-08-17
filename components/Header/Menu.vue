@@ -19,7 +19,7 @@
         <li class="menu__item"><NuxtLink to="#" class="menu__link">Подбор по впитываемости и по размеру</NuxtLink></li>
       </ul>
     </li>
-    <li class="menu__item"><NuxtLink to="#" class="menu__link">Отвечаем на ваши вопросы</NuxtLink></li>
+    <li class="menu__item"><NuxtLink to="/faq" class="menu__link">Отвечаем на ваши вопросы</NuxtLink></li>
     <li class="menu__item"><NuxtLink to="#" class="menu__link">Полезное</NuxtLink></li>
     <li class="menu__item"><NuxtLink to="/contacts" class="menu__link">Контакты</NuxtLink></li>
   </ul>

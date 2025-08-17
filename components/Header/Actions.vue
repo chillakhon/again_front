@@ -22,17 +22,24 @@
           </span>
       </button>
       <button
-          class="header__link _red"
+          class="header__link _red header__fav"
           @click="asideMenuStore.open( FavouritesBlock, {
             title: 'Избранное',
             counter: favouritesStore.countInFavourites()
         } )"
       >
-        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M15.0707 2.8418C13.4115 2.8418 11.9265 3.64846 11.0007 4.88596C10.0748 3.64846 8.58982 2.8418 6.93065 2.8418C4.11648 2.8418 1.83398 5.13346 1.83398 7.96596C1.83398 9.0568 2.00815 10.0651 2.31065 11.0001C3.75898 15.5835 8.22315 18.3243 10.4323 19.076C10.744 19.186 11.2573 19.186 11.569 19.076C13.7782 18.3243 18.2423 15.5835 19.6907 11.0001C19.9932 10.0651 20.1673 9.0568 20.1673 7.96596C20.1673 5.13346 17.8848 2.8418 15.0707 2.8418Z" fill="#CB0B13"/>
-        </svg>
+        <span class="header__fav-icon">
+          <span class="header__fav-count">{{ favouritesStore.countInFavourites() }}</span>
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M15.0707 2.8418C13.4115 2.8418 11.9265 3.64846 11.0007 4.88596C10.0748 3.64846 8.58982 2.8418 6.93065 2.8418C4.11648 2.8418 1.83398 5.13346 1.83398 7.96596C1.83398 9.0568 2.00815 10.0651 2.31065 11.0001C3.75898 15.5835 8.22315 18.3243 10.4323 19.076C10.744 19.186 11.2573 19.186 11.569 19.076C13.7782 18.3243 18.2423 15.5835 19.6907 11.0001C19.9932 10.0651 20.1673 9.0568 20.1673 7.96596C20.1673 5.13346 17.8848 2.8418 15.0707 2.8418Z" fill="#CB0B13"/>
+          </svg>
+        </span>
       </button>
-      <button class="header__link header__burger burger">
+      <button
+          class="header__link header__burger burger"
+          @click="mobileMenuStore.toggle()"
+          :class="{ '_active': mobileMenuStore.isActive }"
+      >
           <span class="burger__icon">
             <span class="burger__line"></span>
             <span class="burger__line"></span>
@@ -50,10 +57,12 @@ const cartStore = useCartStore();
 const asideMenuStore = useAsideMenuStore();
 const favouritesStore = useFavouritesStore();
 const authStore = useAuthStore();
+const mobileMenuStore = useMobileMenuStore();
 
 const loginUrl = computed( () => {
   return authStore.isAuthenticated ? '/profile/settings' : '/login';
 } )
+
 </script>
 
 <style scoped lang="scss">
@@ -82,7 +91,12 @@ const loginUrl = computed( () => {
   position: relative;
 }
 
-.header__cart-count {
+.header__fav-icon {
+  position: relative;
+}
+
+.header__cart-count,
+.header__fav-count {
   display: block;
   position: absolute;
   top: -.5rem;

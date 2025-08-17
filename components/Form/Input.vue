@@ -9,6 +9,8 @@
         @input="handleInput($event)"
         :autocomplete="autocomplete"
     >
+
+    <div class="form__error" v-if="error">{{ error }}</div>
   </div>
 </template>
 
@@ -19,9 +21,11 @@ withDefaults( defineProps<{
   placeholder?: string,
   rowClass?: string,
   autocomplete?: boolean,
+  error?: string
 }>(), {
   type: 'text',
-  autocomplete: false
+  autocomplete: false,
+  error: ''
 } );
 
 const model = defineModel<string|number>();

@@ -28,7 +28,8 @@ export interface Product {
     quantity?: number,
     item_key?: string,
     selected_variant?: object,
-    selected_color?: object
+    selected_color?: object,
+    stock_quantity: number
 }
 
 export interface Color {
