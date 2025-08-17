@@ -29,17 +29,22 @@ export const useAuthStore = defineStore('authStore', () => {
 
     const login = async (email, code) => {
         try {
-            const { data } = await useApi( '/check-verification', {
+            const { data, error } = await useApi( '/check-verification', {
                 body: {
                     email: email,
                     verification_code: code
                 }
             }, '', 'POST');
 
+            if ( ! data.value?.user || ! data.value?.token ){
+                return error.value;
+            }
+
             user.value = data.value.user;
             token.value = data.value.token;
             isAuthenticated.value = true;
             isCodeActive.value = false;
+
 
             if (process.client) {
                 localStorage.setItem('auth_token', data.value.token)

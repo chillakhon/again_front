@@ -13,7 +13,6 @@
                 placeholder="Введите вашу email почту"
                 row-class="login-form__row"
                 v-model="loginForm.email"
-                :value="loginForm.email"
             />
           </div>
           <div class="login-form__input" v-if="auth.isCodeActive">
@@ -22,7 +21,7 @@
                 placeholder="Введите код"
                 row-class="login-form__row"
                 v-model="loginForm.verification_code"
-                :value="loginForm.verification_code"
+                :error="codeError"
             />
           </div>
           <button
@@ -41,6 +40,8 @@
           >
             Отправить код
           </button>
+
+          <div class="login__error" v-if="formError">{{ formError }}</div>
         </div>
       </div>
       <div class="login__media">
@@ -65,17 +66,40 @@ const loginForm = ref( {
   verification_code: '',
 } );
 
+const formError = ref( '' );
+const codeError = ref( '' );
+
 const auth = useAuthStore();
 const isLoading = ref( false );
 const getCode = async () => {
+  formError.value = '';
+
   isLoading.value = true;
-  await auth.sendCode( loginForm.value.email );
+  const data = await auth.sendCode( loginForm.value.email );
+  if ( data.value.message ){
+    formError.value = data.value.message;
+  }
+
+  if ( auth.isCodeActive ) {
+    formError.value = '';
+  }
   isLoading.value = false;
 }
 
 const login = async () => {
+  formError.value = '';
   isLoading.value = true;
-  await auth.login( loginForm.value.email, loginForm.value.verification_code )
+
+  const { data } = await auth.login( loginForm.value.email, loginForm.value.verification_code );
+
+  if ( data.message ){
+    formError.value = data.message;
+  }
+
+  if ( data.errors ){
+    codeError.value = data.errors.verification_code[0];
+  }
+
   isLoading.value = false;
 }
 
@@ -182,6 +206,16 @@ const login = async () => {
     width: auto;
     height: auto;
   }
+}
+
+.login__error {
+  text-align: center;
+  padding: 1rem;
+  background: var(--fg-red);
+  color: var(--fg-white);
+  border-radius: 6.5rem;
+  margin-top: 2.5rem;
+  font-size: 1.2rem;
 }
 
 </style>
