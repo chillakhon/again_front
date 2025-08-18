@@ -2,15 +2,19 @@
   <div class="checkout__block">
     <div class="checkout__block-title fz-h2">Доставка</div>
     <div class="checkout__delivery">
-      <FormInput
+      <FormSelect
+          v-if="countries"
           name="country"
-          placeholder="Страна*"
-          v-model="countryCode"
+          :list="countries.countries"
+          placeholder="Страна"
+          @get-selected-value="setCountry"
       />
-      <FormInput
+      <FormSelect
+          v-if="cities"
           name="city"
-          placeholder="Населенный пункт*"
-          v-model="cityName"
+          :list="cities.cities"
+          placeholder="Город"
+          @get-selected-value="setCity"
       />
       <FormInput
           name="address"
@@ -76,10 +80,23 @@
 </template>
 
 <script setup lang="ts">
+import type {Cities, Countries} from "~/types/countries";
+
+const { data: countries } = await useApi<Countries>( '/countries' );
+const { data: cities } = await useApi<Cities>( '/countries/cities' );
+
 const countryCode = defineModel( 'countryCode' );
 const cityName = defineModel( 'cityName' );
 const address = defineModel( 'address' );
 const notes = defineModel( 'notes' );
+
+const setCountry = ( object: object ) => {
+  countryCode.value = object.code;
+}
+
+const setCity = ( object: object ) => {
+  cityName.value = object.title;
+}
 </script>
 
 <style scoped lang="scss">

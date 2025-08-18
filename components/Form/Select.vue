@@ -11,7 +11,7 @@
         <button
             class="select__item"
             v-for="( item, key ) in list"
-            @click="selected( item.id, item.name )"
+            @click="selected( item.id, item.name, item.code )"
         >
           {{ item.name }}
         </button>
@@ -44,11 +44,12 @@ const toggle = () => {
 }
 
 const emit = defineEmits(['getSelectedValue']);
-const selected = ( id: number, title: string ) => {
+const selected = ( id: number, title: string, code?: string ) => {
   emit('getSelectedValue', {
     name: props.name,
     id: id,
-    title: title
+    title: title,
+    code: code
   } );
 
   placeholder.value = title;
