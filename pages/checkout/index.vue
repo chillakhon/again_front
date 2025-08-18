@@ -81,7 +81,7 @@ const submit = async () => {
 
   if ( data.value.success === true ){
     cartStore.setEmptyCart();
-    return navigateTo( '/success' )
+    return navigateTo( '/success?id=' + data.value.order.id );
   }
 }
 </script>
