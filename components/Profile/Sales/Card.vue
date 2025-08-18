@@ -1,19 +1,30 @@
 <template>
   <div class="profile-sales__item">
-    <div class="profile-sales__item-media">
+    <div class="profile-sales__item-media" v-if="item.image">
       <picture class="profile-sales__item-pic">
-        <img src="/img/profile.again/sales/item-1.jpg" class="profile-sales__item-img" alt="">
+        <img :src="item.image" class="profile-sales__item-img" alt="">
       </picture>
     </div>
-    <div class="profile-sales__item-title">Заголовок скидки/бонуса</div>
-    <div class="profile-sales__item-text">Описание текста акции Описание текста акции Описание текста акции</div>
-    <div class="profile-sales__item-alert">Скидка 25% на первый заказ</div>
-    <button class="profile-sales__item-btn btn _border _thin">Применить</button>
+    <div class="profile-sales__item-title" v-if="item.title">{{ item.title }}</div>
+    <div class="profile-sales__item-text" v-if="item.description">{{ item.description }}</div>
+<!--    <div class="profile-sales__item-alert">Скидка 25% на первый заказ</div>-->
+    <button class="profile-sales__item-btn btn _border _thin" @click="copy">{{ buttonTitle }}</button>
   </div>
 </template>
 
 <script setup lang="ts">
+import type {Sale} from "~/types/sales";
 
+const props = defineProps<{
+  item: Sale
+}>();
+
+const buttonTitle = ref( 'Скопировать' );
+
+const copy = async () => {
+  await navigator.clipboard.writeText( props.item.code );
+  buttonTitle.value = 'Скопирован';
+}
 </script>
 
 <style scoped lang="scss">
