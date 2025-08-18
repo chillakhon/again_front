@@ -9,7 +9,6 @@
           @select-color="getColor"
           @filter-click="filter"
       />
-
       <div class="catalog-page__body">
         <h1 class="catalog-page__title block__title _small">Каталог</h1>
         <CatalogGrid class="catalog-page__grid" v-if="products" :list="products.data" />
@@ -26,29 +25,32 @@ definePageMeta( {
 
 import type {Catalog} from "~/types/catalog";
 
-const priceBefore = ref( 0 );
-const priceAfter = ref( 999999 );
-const color = ref( 1 );
+const { data } = await useApi<Catalog>('/products');
+const products = ref<Ref>( data );
 
-let { data: products } = await useApi<Catalog>('/products');
+let priceBefore = 0;
+let priceAfter = 999999;
+let color = 0;
 
 const getPrice = ( prices: object ) => {
-  priceBefore.value = prices.before;
-  priceAfter.value = prices.after;
+  priceBefore = prices.before;
+  priceAfter = prices.after;
 }
 
 const getColor = ( id: number ) => {
-  color.value = id;
+  color = id;
 }
 
 const filter = async () => {
-  // products = await useApi<Catalog>('/products', {
-  //   query: {
-  //     price_before: priceBefore,
-  //     price_after: priceAfter,
-  //   }
-  // });
-  //products.value = await useApi<Catalog>('/products');
+  const { data: filterData } = await useApi<Catalog>('/products', {
+    params: {
+      price_before: priceBefore,
+      price_after: priceAfter,
+      color_id: color,
+    }
+  } );
+
+  products.value = filterData.value;
 }
 </script>
 
