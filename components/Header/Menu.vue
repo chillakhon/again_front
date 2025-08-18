@@ -15,12 +15,12 @@
         <li class="menu__item"><NuxtLink to="/delivery" class="menu__link">Доставка и оплата</NuxtLink></li>
         <li class="menu__item"><NuxtLink to="/returns" class="menu__link">Обмен и возврат</NuxtLink></li>
         <li class="menu__item"><NuxtLink to="/care" class="menu__link">Уход и использование</NuxtLink></li>
-        <li class="menu__item"><NuxtLink to="#" class="menu__link">Сертификаты</NuxtLink></li>
+        <li class="menu__item"><NuxtLink to="/sertificates" class="menu__link">Сертификаты</NuxtLink></li>
         <li class="menu__item"><NuxtLink to="#" class="menu__link">Подбор по впитываемости и по размеру</NuxtLink></li>
       </ul>
     </li>
     <li class="menu__item"><NuxtLink to="/faq" class="menu__link">Отвечаем на ваши вопросы</NuxtLink></li>
-    <li class="menu__item"><NuxtLink to="#" class="menu__link">Полезное</NuxtLink></li>
+    <li class="menu__item"><NuxtLink to="/articles" class="menu__link">Полезное</NuxtLink></li>
     <li class="menu__item"><NuxtLink to="/contacts" class="menu__link">Контакты</NuxtLink></li>
   </ul>
 </template>

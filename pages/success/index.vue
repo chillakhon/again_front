@@ -8,7 +8,7 @@
             <div class="success__item">Ваш заказ №{{ data.order_number }} принят</div>
             <div class="success__item">Дата оформления: {{ data.created_at }}</div>
             <div class="success__item">Сумма: __________ ₽</div>
-            <div class="success__item">Статус: <span class="success__status">Принят</span></div>
+            <div class="success__item">Статус: <span class="success__status">{{ getStatus( data.status ).label }}</span></div>
           </div>
           <div class="success__buttons">
             <a href="#" class="btn _border">Перейти к оплате</a>

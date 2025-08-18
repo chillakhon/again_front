@@ -36,15 +36,27 @@ import {ModalsCallback} from "#components";
 const isFixed = ref( false );
 const mobileMenuStore = useMobileMenuStore();
 
-onMounted( () => {
-  window.addEventListener( 'scroll', () => {
-    if ( window.pageYOffset > 200 ) {
-      isFixed.value = true;
-    } else {
-      isFixed.value = false;
-    }
-  } )
-} )
+const handleScroll = () => {
+  isFixed.value = window.scrollY > 200;
+};
+
+onMounted(() => {
+  window.addEventListener('scroll', handleScroll);
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener('scroll', handleScroll);
+});
+
+// onMounted( () => {
+//   window.addEventListener( 'scroll', () => {
+//     if ( window.pageYOffset > 200 ) {
+//       isFixed.value = true;
+//     } else {
+//       isFixed.value = false;
+//     }
+//   } )
+// } )
 
 const modal = useModal();
 </script>
