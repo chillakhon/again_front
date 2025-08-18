@@ -92,5 +92,7 @@ const getSize = ( value: object ) => {
 </script>
 
 <style scoped lang="scss">
-
+.product__stock--not {
+  margin-top: 1.5rem;
+}
 </style>

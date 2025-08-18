@@ -15,6 +15,10 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta( {
+  title: 'Сертификаты',
+} )
+
 const list = ref( [
     '/img/certificates.again/1.jpg'
 ] )

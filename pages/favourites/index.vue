@@ -19,6 +19,9 @@
 
 <script setup lang="ts">
 const favouritesStore = useFavouritesStore();
+definePageMeta( {
+  title: 'Избранное',
+} )
 </script>
 
 <style scoped lang="scss">

@@ -8,11 +8,16 @@
           @select-prices="getPrice"
           @select-color="getColor"
           @filter-click="filter"
+          @reset-click="reset"
       />
       <div class="catalog-page__body">
         <h1 class="catalog-page__title block__title _small">Каталог</h1>
-        <CatalogGrid class="catalog-page__grid" v-if="products" :list="products.data" />
-        <Loadmore class="catalog-page__loadmore" v-if="products && products.meta.last_page > 1" />
+        <template v-if="products.data.length > 0">
+          <CatalogGrid class="catalog-page__grid" :list="products.data" />
+          <Loadmore class="catalog-page__loadmore" v-if="products.meta.last_page > 1" />
+        </template>
+
+        <NotFound v-else />
       </div>
     </div>
   </div>
@@ -44,12 +49,17 @@ const getColor = ( id: number ) => {
 const filter = async () => {
   const { data: filterData } = await useApi<Catalog>('/products', {
     params: {
-      price_before: priceBefore,
-      price_after: priceAfter,
+      price_after: priceBefore,
+      price_before: priceAfter,
       color_id: color,
     }
   } );
 
+  products.value = filterData.value;
+}
+
+const reset = async () => {
+  const { data: filterData } = await useApi<Catalog>('/products' );
   products.value = filterData.value;
 }
 </script>

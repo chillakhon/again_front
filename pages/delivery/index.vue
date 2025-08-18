@@ -44,7 +44,9 @@
 </template>
 
 <script setup lang="ts">
-
+definePageMeta( {
+  title: 'Доставка',
+} )
 </script>
 
 

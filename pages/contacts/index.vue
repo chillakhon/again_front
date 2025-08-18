@@ -33,7 +33,9 @@
 </template>
 
 <script setup lang="ts">
-
+definePageMeta( {
+  title: 'Контакты',
+} )
 </script>
 
 <style scoped lang="scss">

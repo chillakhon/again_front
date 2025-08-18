@@ -59,7 +59,9 @@
 </template>
 
 <script setup lang="ts">
-
+definePageMeta( {
+  title: 'Обмен и возврат',
+} )
 </script>
 
 <style scoped lang="scss">

@@ -47,6 +47,10 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta( {
+  title: 'Спасибо за покупку!',
+} )
+
 const route = useRoute();
 const { data } = await useApi( '/orders/' + route.query.id );
 </script>

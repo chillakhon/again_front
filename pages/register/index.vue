@@ -45,6 +45,10 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta( {
+  title: 'Регистрация',
+} )
+
 const form = ref( {
   first_name: 'Test 1',
   last_name: 'Test 1',

@@ -42,7 +42,9 @@
 </template>
 
 <script setup lang="ts">
-
+definePageMeta( {
+  title: 'Уход',
+} )
 </script>
 
 <style scoped lang="scss">

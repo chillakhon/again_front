@@ -7,7 +7,9 @@
 </template>
 
 <script setup lang="ts">
-
+definePageMeta( {
+  title: 'FAQ',
+} )
 </script>
 
 <style scoped lang="scss">

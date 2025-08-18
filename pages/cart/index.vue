@@ -31,6 +31,9 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta( {
+  title: 'Корзина',
+} )
 const cartStore = useCartStore();
 </script>
 
