@@ -51,6 +51,7 @@
 
   <AsideMenu />
   <ModalsDefault />
+  <Cookies />
 
 </template>
 
