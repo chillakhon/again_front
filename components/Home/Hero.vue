@@ -11,14 +11,16 @@
             clickable: true,
           }"
       >
-        <swiper-slide>
-          <HeroSlide />
-        </swiper-slide>
-        <swiper-slide>
-          <HeroSlide />
-        </swiper-slide>
-        <swiper-slide>
-          <HeroSlide />
+        <swiper-slide v-for="(slide, index) in slides" :key="index">
+          <HeroSlide
+            :title="slide.title"
+            :subtitle="slide.subtitle"
+            :text="slide.text"
+            :image="{
+              original: slide.image_paths.original,
+              sm: slide.image_paths.sm
+            }"
+          />
         </swiper-slide>
       </swiper-container>
 
@@ -32,6 +34,17 @@
 import { register } from 'swiper/element/bundle';
 register();
 
+type Slide = {
+  title: string,
+  subtitle: string,
+  text: string,
+  image_paths: {
+    original: string,
+    sm?: string
+  }
+}
+
+const { data: slides } = await useApi<Slide[]>( '/get_slides' );
 </script>
 
 <style scoped lang="scss">

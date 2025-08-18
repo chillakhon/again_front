@@ -1,21 +1,35 @@
 <template>
   <div class="hero-slide">
-    <div class="hero-slide__subtitle">Здоровье, комфорт, безопасность</div>
-    <h1 class="hero-slide__title">Менструальные медицинские трусы</h1>
-    <p class="hero-slide__text">Разработаны под контролем врачей, сшиты с&nbsp;<strong>заботой о вашем комфорте</strong></p>
+    <div class="hero-slide__subtitle" v-if="subtitle" v-html="subtitle"></div>
+    <h1 class="hero-slide__title" v-if="title" v-html="title"></h1>
+    <p class="hero-slide__text" v-if="text" v-html="text"></p>
     <NuxtLink to="/catalog" class="hero-slide__btn btn">КУПИТЬ</NuxtLink>
-    <div class="hero-slide__media">
+    <div class="hero-slide__media" v-if="image?.original">
       <picture class="hero-slide__media-pic">
-        <source media="(max-width: 600px)" srcset="/img/hero.again/slide-1-mobile.jpg">
-        <source media="(min-width: 601px)" srcset="/img/hero.again/slide-1.jpg">
-        <img src="/img/hero.again/slide-1.jpg" class="hero-slide__media-img" alt="">
+        <source media="(max-width: 600px)" v-if="image?.sm" :srcset="getImageUrl(image.sm)">
+        <source media="(min-width: 601px)" :srcset="getImageUrl(image.original)">
+        <img :src="getImageUrl(image.original)" class="hero-slide__media-img" :alt="title">
       </picture>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+defineProps<{
+  title?: string,
+  subtitle?: string,
+  text?: string,
+  image?: {
+    original: string,
+    sm?: string
+  }
+}>();
 
+const getImageUrl = async (path: string) => {
+  const {data: imagePath} = await useApi('/slides/getImage?path=' + path);
+
+  return imagePath.value;
+}
 </script>
 
 <style scoped lang="scss">

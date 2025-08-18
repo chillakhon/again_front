@@ -9,7 +9,9 @@
 definePageMeta({
   layout: 'profile',
   title: 'История заказов',
-})
+});
+
+const { data: cards } = await useApi( '/orders/user' );
 </script>
 
 <style scoped lang="scss">

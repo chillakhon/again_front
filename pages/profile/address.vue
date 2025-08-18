@@ -1,21 +1,29 @@
 <template>
   <div class="profile-address__form form">
     <div class="profile-address__form-grid">
-      <FormInput
-        name="country"
-        placeholder="Страна"
+      <FormSelect
+          v-if="countries"
+          name="country"
+          :list="countries.countries"
+          placeholder="Страна"
+          v-model="form.country"
       />
       <FormInput
           name="index"
           placeholder="Индекс"
+          v-model="form.index"
       />
-      <FormInput
-          name="city"
+      <FormSelect
+          v-if="cities"
+          name="country"
+          :list="cities.cities"
           placeholder="Город"
+          v-model="form.city"
       />
       <FormInput
           name="house"
           placeholder="Улица, дом"
+          v-model="form.house"
       />
     </div>
     <div class="profile-address__form-actions">
@@ -26,11 +34,23 @@
 </template>
 
 <script setup lang="ts">
+import type {Cities, Countries} from "~/types/countries";
+
 definePageMeta({
   layout: 'profile',
   title: 'Адрес доставки',
   middleware: 'auth'
 })
+
+const { data: countries } = await useApi<Countries>( '/countries' );
+const { data: cities } = await useApi<Cities>( '/countries/cities' );
+
+const form = ref( {
+  country: '',
+  index: '',
+  city: '',
+  house: '',
+} )
 </script>
 
 <style scoped lang="scss">

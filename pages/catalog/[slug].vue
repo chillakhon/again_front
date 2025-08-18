@@ -35,7 +35,7 @@
               @get-quantity="getQuantity"
           />
 
-          <div class="product__actions" v-if=" product.stock_quantity > 0">
+          <div class="product__actions">
             <div class="product__actions-buttons">
               <ProductActionsAddToCart
                   v-if="product.price"
@@ -51,9 +51,9 @@
             <ProductActionsAddToFav :quantity="quantity" :product="product" />
           </div>
 
-          <div class="product__stock--not" v-else>
-            Нет в наличии
-          </div>
+<!--          <div class="product__stock&#45;&#45;not" v-else>-->
+<!--            Нет в наличии-->
+<!--          </div>-->
         </div>
       </div>
 
