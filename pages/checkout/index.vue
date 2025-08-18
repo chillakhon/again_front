@@ -75,9 +75,14 @@ const form = computed( () => {
 } );
 
 const submit = async () => {
-  const { data } = await useApi('/orders', {
+  const { data, error } = await useApi('/orders', {
     body: form.value
-  }, '', 'POST')
+  }, '', 'POST');
+
+  if ( data.value.success === true ){
+    cartStore.setEmptyCart();
+    return navigateTo( '/success' )
+  }
 }
 </script>
 

@@ -5,7 +5,13 @@
       <FormSelect
           v-if="countries"
           name="country"
-          :list="countries.countries"
+          :list="[
+              {
+                id: 0,
+                name: 'Россия',
+                code: 'RU'
+              }
+          ]"
           placeholder="Страна"
           @get-selected-value="setCountry"
       />
