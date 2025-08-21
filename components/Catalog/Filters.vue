@@ -50,7 +50,7 @@ const toggleTabletFilter = () => {
   isActive.value = !isActive.value;
 }
 
-const { data: colors } = await useApi<Colors>( '/colors' );
+const { data: colors } = await useApi<Colors>( '/colors/used-in-catalog' );
 const emit = defineEmits(['selectPrices', 'selectColor', 'filterClick', 'resetClick']);
 
 const emitPrices = ( prices: object ) => {

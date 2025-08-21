@@ -1,8 +1,8 @@
 <template>
   <CartTotal
-      :is-promocode="false"
+      :is-promocode="true"
       :is-border="true"
-      :with-button="withButton"
+      :with-button="false"
   />
 </template>
 

@@ -30,7 +30,11 @@ definePageMeta( {
 
 import type {Catalog} from "~/types/catalog";
 
-const { data } = await useApi<Catalog>('/products');
+const { data } = await useApi<Catalog>('/products', {
+  params: {
+    per_page: 50,
+  }
+});
 const products = ref<Ref>( data );
 
 let priceBefore = 0;

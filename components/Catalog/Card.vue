@@ -15,6 +15,7 @@
           >
         </picture>
 <!--        <div class="catalog-item__sale">скидка 21 %</div>-->
+        <div class="catalog-item__status" v-if="product.stock_quantity === 0">Нет в наличии</div>
         <div class="catalog-item__rating" v-if="product.avg_rating">
           <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M5 0L6.41068 3.05836L9.75528 3.45492L7.28254 5.74164L7.93893 9.04508L5 7.4L2.06107 9.04508L2.71746 5.74164L0.244718 3.45492L3.58932 3.05836L5 0Z" fill="black"/>
@@ -311,6 +312,17 @@ const isFavourite = computed( () => {
         margin-left: 2rem;
       }
     }
+  }
+
+  &__status {
+    position: absolute;
+    bottom: 1rem;
+    left: 1rem;
+    border-radius: 2.4rem;
+    padding: .3rem .8rem .3rem;
+    background: var(--fg-red);
+    color: var(--fg-white);
+    font-size: 1rem;
   }
 }
 

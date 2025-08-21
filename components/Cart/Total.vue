@@ -15,12 +15,13 @@
     <div class="cart__total-bottom">
       <CartSubtotal />
       <NuxtLink v-if="withButton" to="/checkout" class="cart__checkout btn _wide _15 _60">Оформить заказ</NuxtLink>
+      <CartPromocode v-if="isPromocode" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-withDefaults(defineProps<{
+withDefaults( defineProps<{
   isBorder?: boolean,
   isPromocode?: boolean,
   withButton?: boolean
@@ -28,9 +29,7 @@ withDefaults(defineProps<{
   isBorder: false,
   isPromocode: true,
   withButton: true
-});
-
-// <CartPromocode v-if="isPromocode" />
+} );
 
 const cart = useCartStore();
 const getTotal = computed( () => {

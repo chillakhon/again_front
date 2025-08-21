@@ -5,6 +5,10 @@
 
 <script setup lang="ts">
 const modal = useModal();
+
+setTimeout( () => {
+  modal.closeModal();
+}, 3000 )
 </script>
 
 <style scoped lang="scss">
