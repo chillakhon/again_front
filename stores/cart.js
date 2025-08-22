@@ -1,6 +1,4 @@
 import {defineStore, skipHydrate} from 'pinia';
-import {hydrate} from "vue";
-import {getFormatPrice} from "~/utils/getFormatPrice.js";
 import { v4 as uuidv4 } from 'uuid';
 
 export const useCartStore = defineStore('cartStore', () => {
