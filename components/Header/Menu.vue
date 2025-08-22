@@ -65,11 +65,11 @@ const menuItems = [
   },
   {
     link: '/articles',
-    title: 'Контакты'
+    title: 'Полезное'
   },
   {
     link: '/contacts',
-    title: 'Полезное'
+    title: 'Контакты'
   },
 ];
 

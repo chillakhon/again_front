@@ -17,6 +17,12 @@
     <div class="form__button">
       <button class="contacts__form-btn btn" @click="send">отправить</button>
     </div>
+    <FormCheckbox
+        class="form__policy"
+        name="policy"
+        label="Нажимая на кнопку, вы соглашаетесь<br> с <a href='/policy' target='_blank'>политикой конфиденциальности</a>"
+        :is-checked="true"
+    />
   </div>
 </template>
 
