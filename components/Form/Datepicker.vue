@@ -8,6 +8,7 @@
         v-model="model"
         @input="handleInput($event)"
     >
+    <div class="form__error" v-if="error">{{ error }}</div>
   </div>
 </template>
 
@@ -16,6 +17,7 @@ defineProps<{
   name: string,
   placeholder?: string,
   rowClass?: string,
+  error?: string,
 }>();
 
 const model = defineModel<string|number>();

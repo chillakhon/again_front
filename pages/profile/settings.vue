@@ -1,31 +1,13 @@
 <template>
   <div class="profile-settings__form form">
-
-    <FormInput
-        name="first_name"
-        placeholder="Имя"
-        v-model="userForm.first_name"
-    />
-    <FormInput
-        name="last_name"
-        placeholder="Фамилия"
-        v-model="userForm.last_name"
-    />
-    <FormDatepicker
-      name="date"
-      placeholder="Дата рождения"
-      v-model="userForm.birthday"
-    />
-    <FormInput
-        name="phone"
-        placeholder="Телефон"
-        v-model="userForm.phone"
-    />
-    <FormInput
-        name="email"
-        placeholder="Почта"
-        v-model="userForm.email"
-    />
+    <template v-for="( item, key ) in form" :key="key">
+      <component :is="item.template"
+        :name="key"
+        :placeholder="item.placeholder"
+         v-model="item.value"
+         :error="item.error"
+      />
+    </template>
     <div class="form__button">
       <button
           class="profile-settings__form-btn btn _border _loader"
@@ -46,36 +28,89 @@
 </template>
 
 <script setup lang="ts">
+import {FormDatepicker, FormInput, ModalsSuccess} from "#components";
+
 definePageMeta({
   layout: 'profile',
   title: 'Контактные данные',
 } );
 
+const modal = useModal();
 const authStore = useAuthStore();
 const { user } = authStore;
-const userForm = ref( {
-  first_name: '',
-  last_name: '',
-  birthday: '',
-  phone: '',
-  email: '',
+const form = ref( {
+  first_name: {
+    template: FormInput,
+    value: '',
+    placeholder: 'Имя',
+    error: ''
+  },
+  last_name: {
+    template: FormInput,
+    value: '',
+    placeholder: 'Фамилия',
+    error: ''
+  },
+  birthday: {
+    template: FormDatepicker,
+    value: '',
+    placeholder: 'Дата рождения',
+    error: ''
+  },
+  phone: {
+    template: FormInput,
+    type: 'tel',
+    value: '',
+    placeholder: 'Телефон',
+    error: ''
+  },
+  email: {
+    template: FormInput,
+    value: '',
+    type: 'email',
+    placeholder: 'E-mail',
+    error: ''
+  },
 } );
 
 onMounted( () => {
-  userForm.value.first_name = user.profile.first_name;
-  userForm.value.last_name = user.profile.last_name;
-  userForm.value.birthday = user.profile.birthday;
-  userForm.value.phone = user.profile.phone;
-  userForm.value.email = user.email;
+  form.value.first_name.value = user?.profile?.first_name || '';
+  form.value.last_name.value = user?.profile?.last_name || '';
+  form.value.birthday.value = user?.profile?.birthday || '';
+  form.value.phone.value = user?.profile?.phone || '';
+  form.value.email.value = user.email;
 } );
-
+//
 const isLoading = ref( false );
 
 const save = async () => {
+  for ( let key in form.value ) {
+    form.value[key].error = '';
+  }
+
   isLoading.value = true;
-  const { data } = await useApi('/clients/update-profile', {
-    body: userForm.value
+  const { data, status, error } = await useApi('/clients/update-profile', {
+    body: {
+      first_name: form.value.first_name.value,
+      last_name: form.value.last_name.value,
+      phone: form.value.phone.value,
+      email: form.value.email.value,
+      birthday: form.value.birthday.value
+    }
   }, '', 'PUT');
+
+  if ( status.value === 'error' && error?.value?.data?.errors ){
+    for ( const item in error.value.data.errors ){
+      if ( form.value[ item ] ){
+        form.value[ item ].error = error.value.data.errors[ item ][0];
+      }
+    }
+  } else {
+    modal.openModal( ModalsSuccess, {
+      title: 'Спасибо!',
+      text: 'Ваш профиль обновлен'
+    } )
+  }
 
   isLoading.value = false;
 }

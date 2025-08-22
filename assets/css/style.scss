@@ -257,6 +257,12 @@ a, button {
   list-style-position: outside;
 }
 
+.form__error {
+  margin-top: .2rem;
+  color: var(--fg-red);
+  font-size: 1.2rem;
+}
+
 @import "./libs/swiper";
 @import "./libs/nouislider.min";
 @import "./libs/fancybox";
