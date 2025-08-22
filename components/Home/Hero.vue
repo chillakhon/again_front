@@ -5,6 +5,10 @@
           class="hero__slider"
           slides-per-view="1"
           space-between="5"
+          :autoplay="{
+            delay: 5000,
+          }"
+          :loop="true"
           :pagination="{
             //hideOnClick: true
             el: '.hero__dots',
@@ -17,8 +21,8 @@
             :subtitle="slide.subtitle"
             :text="slide.text"
             :image="{
-              original: slide.image_paths.original,
-              sm: slide.image_paths.sm
+              original: slide.image_urls.original,
+              sm: slide.image_urls.sm
             }"
           />
         </swiper-slide>
@@ -38,7 +42,7 @@ type Slide = {
   title: string,
   subtitle: string,
   text: string,
-  image_paths: {
+  image_urls: {
     original: string,
     sm?: string
   }

@@ -6,9 +6,9 @@
     <NuxtLink to="/catalog" class="hero-slide__btn btn">КУПИТЬ</NuxtLink>
     <div class="hero-slide__media" v-if="image?.original">
       <picture class="hero-slide__media-pic">
-        <source media="(max-width: 600px)" v-if="image?.sm" :srcset="getImageUrl(image.sm)">
-        <source media="(min-width: 601px)" :srcset="getImageUrl(image.original)">
-        <img :src="getImageUrl(image.original)" class="hero-slide__media-img" :alt="title">
+        <source media="(max-width: 600px)" v-if="image?.sm" :srcset="image.sm">
+        <source media="(min-width: 601px)" :srcset="image.original">
+        <img :src="image.original" class="hero-slide__media-img" :alt="title">
       </picture>
     </div>
   </div>
@@ -24,12 +24,6 @@ defineProps<{
     sm?: string
   }
 }>();
-
-const getImageUrl = async (path: string) => {
-  const {data: imagePath} = await useApi('/slides/getImage?path=' + path);
-
-  return imagePath.value;
-}
 </script>
 
 <style scoped lang="scss">

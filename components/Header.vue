@@ -277,7 +277,7 @@ const modal = useModal();
 
 @media (max-width: $mobile) {
   .header__bottom {
-    height: calc(100% - 3.7rem);
+    height: calc(100% - 6.9rem);
   }
 }
 </style>

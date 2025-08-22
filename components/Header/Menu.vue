@@ -1,32 +1,96 @@
 <template>
   <ul class="menu">
-    <li class="menu__item"><NuxtLink to="/" class="menu__link">Главная</NuxtLink></li>
-    <li class="menu__item"><NuxtLink to="/catalog" class="menu__link">Каталог</NuxtLink></li>
-    <li class="menu__item menu__item--children">
-      <a href="#" class="menu__link">
-        Информация для клиентов
-        <span class="menu__link-icon">
-              <svg width="10" height="5" viewBox="0 0 10 5" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path opacity="0.4" d="M5 5L9.33013 0.5H0.669873L5 5Z" fill="#545454"/>
-              </svg>
-            </span>
-      </a>
-      <ul class="menu__sub">
-        <li class="menu__item"><NuxtLink to="/delivery" class="menu__link">Доставка и оплата</NuxtLink></li>
-        <li class="menu__item"><NuxtLink to="/returns" class="menu__link">Обмен и возврат</NuxtLink></li>
-        <li class="menu__item"><NuxtLink to="/care" class="menu__link">Уход и использование</NuxtLink></li>
-        <li class="menu__item"><NuxtLink to="/sertificates" class="menu__link">Сертификаты</NuxtLink></li>
-        <li class="menu__item"><NuxtLink to="#" class="menu__link">Подбор по впитываемости и по размеру</NuxtLink></li>
+    <li
+        v-for="( item, key ) in menuItems"
+        :key="key"
+        class="menu__item"
+        :class="{ 'menu__item--children': item.sublist && item.sublist.length }"
+    >
+      <NuxtLink :to="item.link" class="menu__link" @click="clickMenuItem">
+        {{ item.title }}
+        <span class="menu__link-icon" v-if="item.sublist && item.sublist.length">
+          <svg width="10" height="5" viewBox="0 0 10 5" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path opacity="0.4" d="M5 5L9.33013 0.5H0.669873L5 5Z" fill="#545454"/>
+          </svg>
+        </span>
+      </NuxtLink>
+      <ul class="menu__sub" v-if="item.sublist && item.sublist.length > 0">
+        <li v-for="( subItem, subKey ) in item.sublist" :key="subKey" class="menu__item" @click="clickMenuItem">
+          <NuxtLink :to="subItem.link" class="menu__link">{{ subItem.title }}</NuxtLink>
+        </li>
       </ul>
     </li>
-    <li class="menu__item"><NuxtLink to="/faq" class="menu__link">Отвечаем на ваши вопросы</NuxtLink></li>
-    <li class="menu__item"><NuxtLink to="/articles" class="menu__link">Полезное</NuxtLink></li>
-    <li class="menu__item"><NuxtLink to="/contacts" class="menu__link">Контакты</NuxtLink></li>
   </ul>
 </template>
 
 <script setup lang="ts">
+const menuItems = [
+  {
+    link: '/',
+    title: 'Главная'
+  },
+  {
+    link: '/catalog',
+    title: 'Каталог'
+  },
+  {
+    link: '#',
+    title: 'Информация для клиентов',
+    sublist: [
+      {
+        link: '/delivery',
+        title: 'Доставка и оплата',
+      },
+      {
+        link: '/returns',
+        title: 'Обмен и возврат',
+      },
+      {
+        link: '/care',
+        title: 'Уход и использование',
+      },
+      {
+        link: '/sertificates',
+        title: 'Сертификаты',
+      },
+      {
+        link: '#',
+        title: 'Подбор по впитываемости и по размеру',
+      },
+    ]
+  },
+  {
+    link: '/faq',
+    title: 'Отвечаем на ваши вопросы'
+  },
+  {
+    link: '/articles',
+    title: 'Контакты'
+  },
+  {
+    link: '/contacts',
+    title: 'Полезное'
+  },
+];
 
+const mobileMenuStore = useMobileMenuStore();
+
+const clickMenuItem = ( event ) => {
+  const item = event.target;
+  const liItem = item.closest('li');
+
+  if ( liItem.classList.contains('menu__item--children') ){
+    event.preventDefault();
+    const subList = liItem.querySelector('ul');
+    if ( subList ){
+      liItem.classList.toggle('_active');
+    }
+  } else {
+    mobileMenuStore.isActive = false;
+  }
+
+  //mobileMenuStore.isActive = false;
+}
 </script>
 
 <style scoped lang="scss">

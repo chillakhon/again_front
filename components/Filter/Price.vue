@@ -15,7 +15,7 @@ import noUiSlider from 'nouislider';
 
 const sliderRef: Ref = ref( null );
 const sliderBefore: Ref = ref( 0 );
-const sliderAfter: Ref = ref( 999999 );
+const sliderAfter: Ref = ref( 20000 );
 
 let initSlider = null;
 
@@ -25,9 +25,9 @@ onMounted( () => {
   initSlider = noUiSlider.create(sliderRef.value, {
     range: {
       'min': 0,
-      'max': 999999
+      'max': 20000
     },
-    start: [2000, 70000],
+    start: [1000, 6000],
     connect: true,
     step: 100,
   });

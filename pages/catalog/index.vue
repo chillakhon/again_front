@@ -1,6 +1,5 @@
 <template>
   <Breadcrumbs />
-
   <div class="catalog-page page-padding">
     <div class="container catalog-page__container">
       <CatalogFilters
@@ -24,16 +23,15 @@
 </template>
 
 <script setup lang="ts">
-definePageMeta( {
-  title: 'Каталог',
-} )
-
 import type {Catalog} from "~/types/catalog";
 
+definePageMeta( {
+  title: 'Каталог',
+} );
+
+const params = getFilterParams();
 const { data } = await useApi<Catalog>('/products', {
-  params: {
-    per_page: 50,
-  }
+  params: params
 });
 const products = ref<Ref>( data );
 
@@ -63,6 +61,12 @@ const filter = async () => {
 }
 
 const reset = async () => {
+  const router = useRouter();
+  const route = useRoute();
+  const updatedQuery = { ...route.query };
+  delete updatedQuery.search;
+  router.replace({ query: updatedQuery });
+
   const { data: filterData } = await useApi<Catalog>('/products' );
   products.value = filterData.value;
 }
