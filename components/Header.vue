@@ -1,5 +1,5 @@
 <template>
-  <header class="header" :class="{ '_fixed': isFixed }">
+  <header class="header">
     <div class="header__container container">
       <div class="header__top">
         <NuxtLink to="/" class="header__logo">
@@ -36,17 +36,20 @@ import {ModalsCallback} from "#components";
 const isFixed = ref( false );
 const mobileMenuStore = useMobileMenuStore();
 
-const handleScroll = () => {
-  isFixed.value = window.scrollY > 200;
-};
-
-onMounted(() => {
-  window.addEventListener('scroll', handleScroll);
-});
-
-onBeforeUnmount(() => {
-  window.removeEventListener('scroll', handleScroll);
-});
+// const handleScroll = () => {
+//   const header = document.querySelector( '.header' );
+//   if ( header ) {
+//     if (window.scrollY > 100) {
+//       header.classList.add('_fixed');
+//     } else {
+//       header.classList.remove('_fixed');
+//     }
+//   }
+// };
+//
+// onMounted(() => {
+//   window.addEventListener('scroll', handleScroll);
+// } );
 
 // onMounted( () => {
 //   window.addEventListener( 'scroll', () => {
@@ -63,21 +66,26 @@ const modal = useModal();
 
 <style scoped lang="scss">
 .header {
-  position: sticky;
+  //position: sticky;
   top: 0;
   z-index: 99;
-  transition: var(--tr-regular);
+  //transition: var(--tr-regular);
+  background: var(--fg-white);
 
   &._fixed {
     background-color: var(--fg-white);
 
     @media (min-width: $tablet) {
       & .header__bottom {
-        opacity: 0;
-        height: 0;
-        transform: translateY(-20%);
+          opacity: 0;
+          height: 0;
+          transform: translateY(-20%);
       }
     }
+  }
+
+  @media (max-width: $mobile) {
+    position: sticky;
   }
 }
 
