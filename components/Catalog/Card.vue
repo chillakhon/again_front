@@ -323,6 +323,7 @@ const isFavourite = computed( () => {
     background: var(--fg-red);
     color: var(--fg-white);
     font-size: 1rem;
+    width: fit-content;
   }
 }
 

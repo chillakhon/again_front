@@ -4,9 +4,8 @@
       <div class="footer__menu-title">Страницы</div>
       <ul class="footer__menu-list">
         <li><NuxtLink to="/catalog">Каталог</NuxtLink></li>
-        <li><NuxtLink to="/contacts">Контакты</NuxtLink></li>
         <li><NuxtLink to="/delivery">Доставка и оплата</NuxtLink></li>
-        <li><NuxtLink href="#">Сертификаты</NuxtLink></li>
+        <li><NuxtLink href="/sertificates">Сертификаты</NuxtLink></li>
         <li><NuxtLink to="/contacts">Контакты</NuxtLink></li>
       </ul>
     </div>
@@ -16,7 +15,7 @@
         <li><NuxtLink to="/articles">Статьи</NuxtLink></li>
         <li><NuxtLink to="/returns">Условия обмена и возврата</NuxtLink></li>
         <li><NuxtLink to="/care">Правила ухода и использования</NuxtLink></li>
-        <li><NuxtLink to="/#faq">Отвечаем на ваши вопросы</NuxtLink></li>
+        <li><NuxtLink to="/faq">Отвечаем на ваши вопросы</NuxtLink></li>
       </ul>
     </div>
   </div>

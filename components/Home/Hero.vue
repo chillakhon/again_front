@@ -5,9 +5,6 @@
           class="hero__slider"
           slides-per-view="1"
           space-between="5"
-          :autoplay="{
-            delay: 5000,
-          }"
           :loop="true"
           :pagination="{
             //hideOnClick: true
@@ -21,8 +18,8 @@
             :subtitle="slide.subtitle"
             :text="slide.text"
             :image="{
-              original: slide.image_urls.original,
-              sm: slide.image_urls.sm
+              original: slide?.image_urls?.original,
+              sm: slide?.image_urls?.sm
             }"
           />
         </swiper-slide>
@@ -60,7 +57,7 @@ const { data: slides } = await useApi<Slide[]>( '/get_slides' );
   }
 }
 
-.hero__dots {
+swiper-container::part(pagination) {
   margin-top: 3rem;
   position: relative;
   z-index: 15;

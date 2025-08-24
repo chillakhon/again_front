@@ -12,6 +12,7 @@
 
 <script setup lang="ts">
 /**
+ * <HomeHero />
  *   <HomeTechnology />
  *   <HomeCatalog />
  *   <HomeRecommend />

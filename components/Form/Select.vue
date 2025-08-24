@@ -41,6 +41,13 @@ const isActive = ref( false );
 
 const toggle = () => {
   isActive.value = !isActive.value;
+
+  const prevSelects = document.querySelectorAll( ".select" );
+  if ( prevSelects ){
+    prevSelects.forEach( ( item ) => {
+      item.classList.remove( 'select--active' );
+    } )
+  }
 }
 
 const emit = defineEmits(['getSelectedValue']);

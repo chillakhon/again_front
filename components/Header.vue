@@ -22,7 +22,7 @@
       <div class="header__bottom" :class="{ '_active': mobileMenuStore.isActive }">
          <HeaderMenu class="header__menu" />
         <div class="header__mobile">
-          <button class="header__call">Связаться с нами</button>
+          <button class="header__call" @click="modal.openModal( ModalsCallback )">Связаться с нами</button>
           <HeaderSocials />
         </div>
       </div>

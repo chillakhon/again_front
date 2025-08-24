@@ -3,7 +3,7 @@
     <div class="cookie__content">
       <div class="cookie__title">Куки</div>
       <div class="cookie__text">
-        «ООО ЭГЕЙН» использует файлы cookie. Полная информация в правилах по обработке <a href="#">Персональных данных</a>.<br>
+        «ООО ЭГЕЙН» использует файлы cookie. Полная информация в правилах по обработке <NuxtLink href="/policy">Персональных данных</NuxtLink>.<br>
         Вы можете запретить сохранение cookie в настройках своего браузера
       </div>
     </div>
@@ -33,12 +33,29 @@ const useCookie = useCookieStore();
   border: 1px solid var(--fg-input-border);
   padding: 2rem 5rem;
 
+  @media (max-width: $tablet) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  @media (max-width: $mobile) {
+    padding: 2rem 3rem;
+  }
+
   &__btn {
     font-size: 1.2rem;
     width: auto;
     padding: .8rem 3rem;
     min-height: auto;
     margin: 0;
+
+    @media (max-width: $tablet) {
+      margin-top: 1.5rem;
+    }
+
+    @media (max-width: $mobile) {
+      width: 100%;
+    }
   }
 
   &__title {
@@ -49,6 +66,16 @@ const useCookie = useCookieStore();
 
   &__text {
     font-size: 1.4rem;
+
+    @media (max-width: $tablet) {
+      & br {
+        display: none;
+      }
+    }
+
+    @media (max-width: $mobile) {
+      font-size: 1.2rem;
+    }
 
     & a {
       color: var(--fg-red);

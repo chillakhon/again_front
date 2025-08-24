@@ -11,20 +11,7 @@
               ООО ЭГЕЙН<br> ИНН 4707052811<br> ОГРН 1234700025196
             </div>
             <div class="footer__mobile">
-              <div class="footer__contacts">
-                <div class="footer__contacts-item">
-                  <a href="tel:79255523577" class="footer__contacts-link">
-                    <span class="footer__contacts-title">Номер телефона</span>
-                    <span class="footer__contacts-value">+7 925 552 35 77</span>
-                  </a>
-                </div>
-                <div class="footer__contacts-item">
-                  <a href="mailto:info@again8.ru" class="footer__contacts-link">
-                    <span class="footer__contacts-title">Почта</span>
-                    <span class="footer__contacts-value">info@again8.ru</span>
-                  </a>
-                </div>
-              </div>
+              <FooterContacts />
               <FooterSocials />
             </div>
           </div>
@@ -37,13 +24,13 @@
       </div>
       <div class="footer__bottom">
         <div class="footer__bottom-item">
-          <a href="#" class="footer__link _border">Договор оферты</a>
+          <NuxtLink href="#" class="footer__link _border">Договор оферты</NuxtLink>
         </div>
         <div class="footer__bottom-item" style="--text-align: center;">
-          <a href="#" class="footer__link _border _opacity">Все права защищены</a>
+          <div class="footer__save">Все права защищены</div>
         </div>
         <div class="footer__bottom-item" style="--text-align: right;">
-          <a href="#" class="footer__link _border">Политика конфиденциальности</a>
+          <NuxtLink href="/policy" class="footer__link _border">Политика конфиденциальности</NuxtLink>
         </div>
       </div>
     </div>
@@ -175,6 +162,12 @@
     align-items: center;
     margin-top: 1.6rem;
   }
+}
+
+.footer__save {
+  font-size: 1.4rem;
+  color: rgba(255, 255, 255, 0.85);
+  opacity: .3;
 }
 
 </style>
