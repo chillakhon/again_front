@@ -5,7 +5,8 @@ export const getFilterParams = () => {
         'category_id',
         'page',
         'price_after',
-        'price_before'
+        'price_before',
+        'in_stock'
     ];
 
     let params = {};
