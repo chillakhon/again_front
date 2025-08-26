@@ -4,7 +4,10 @@
   <ClientOnly>
     <div class="checkout">
       <div class="checkout__container container">
-        <NotFound v-if="cartStore.cart.length === 0" class="cart__not" :is-title="true" to="/catalog" />
+        <div class="checkout__message" v-if="!userStore.isAuthenticated">
+          <h2 class="checkout__message-title">Для оформления заказа требуется авторизоваться</h2>
+          <NuxtLink to="/login" class="checkout__message__btn btn _left">Авторизоваться</NuxtLink>
+        </div>
         <template v-else-if="cartStore.cart.length">
           <div class="checkout__form">
             <div class="checkout-block__header block__header _small">
@@ -45,6 +48,7 @@
             </div>
           </div>
         </template>
+        <NotFound v-else-if="cartStore.cart.length === 0" class="cart__not" :is-title="true" to="/catalog" />
       </div>
     </div>
   </ClientOnly>
@@ -58,10 +62,9 @@ const form = computed( () => {
   return ref( {
     promo_code: '',
     user: {
-      first_name: userStore.user.profile.first_name,
-      last_name: userStore.user.profile.last_name,
-      surname: userStore.user.profile.surname,
-      phone: userStore.user.profile.phone
+      first_name: userStore.user?.profile?.first_name || '',
+      last_name: userStore.user?.profile?.last_name|| '',
+      phone: userStore.user?.profile?.phone || ''
     },
     country_code: 'RU',
     city_name: 'Москва',
@@ -73,19 +76,21 @@ const form = computed( () => {
     items: cartStore.getCartForCheckout()
   } );
 } );
-
-const submit = async () => {
-  const { data, error } = await useApi('/orders', {
-    body: form.value
-  }, '', 'POST');
-
-  if ( data.value.success === true ){
-    cartStore.setEmptyCart();
-    return navigateTo( '/success?id=' + data.value.order.id );
-  }
-}
+//
+// const submit = async () => {
+//   const { data, error } = await useApi('/orders', {
+//     body: form.value
+//   }, '', 'POST');
+//
+//   if ( data.value.success === true ){
+//     cartStore.setEmptyCart();
+//     return navigateTo( '/success?id=' + data.value.order.id );
+//   }
+// }
 </script>
 
 <style scoped lang="scss">
-
+.checkout__message__btn {
+  margin-top: 2rem;
+}
 </style>

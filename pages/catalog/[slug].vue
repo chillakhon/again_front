@@ -10,7 +10,7 @@
 
         <div class="product__main">
           <ProductHeader
-              :sku="product.sku"
+              :sku="product.code"
               :rating="product.avg_rating"
           />
           <h1 class="product__title">{{ product.name }}</h1>
