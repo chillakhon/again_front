@@ -1,6 +1,6 @@
 <template>
   <div class="form__row" :class="rowClass">
-    <div class="select" :class="{ 'select--active': isActive }">
+    <div class="select" :class="{ 'select--active': isActive }" ref="select">
       <button class="select__result" @click="toggle">
         <span>{{ placeholder }}</span>
         <svg width="10" height="5" viewBox="0 0 10 5" fill="none" xmlns="http://www.w3.org/2000/svg" data-v-90e05f7c="">
@@ -8,14 +8,22 @@
         </svg>
       </button>
       <div class="select__list">
+        <div class="select__search">
+          <input type="text" placeholder="Поиск..." @input="search" v-model="searchInput">
+        </div>
+
         <button
             class="select__item"
             v-for="( item, key ) in list"
+            :key="key"
+            ref="selectItem"
             @click="selected( item.id, item.name, item.code )"
         >
           {{ item.name }}
         </button>
       </div>
+
+      <input type="hidden" v-model="model">
     </div>
 
     <div class="form__error" v-if="error">{{ error }}</div>
@@ -36,8 +44,12 @@ const props = withDefaults( defineProps<{
   placeholder: 'Выбрать'
 } );
 
+const select = ref( false );
+const selectItem = ref( false );
 const placeholder = ref( props.placeholder );
 const isActive = ref( false );
+const searchInput = ref( '' );
+const model = defineModel<string|number>();
 
 const toggle = () => {
   isActive.value = !isActive.value;
@@ -50,7 +62,7 @@ const toggle = () => {
   }
 }
 
-const emit = defineEmits(['getSelectedValue']);
+const emit = defineEmits(['getSelectedValue', 'update:modelValue']);
 const selected = ( id: number, title: string, code?: string ) => {
   emit('getSelectedValue', {
     name: props.name,
@@ -59,9 +71,44 @@ const selected = ( id: number, title: string, code?: string ) => {
     code: code
   } );
 
+  model.value = id;
+
   placeholder.value = title;
   isActive.value = false;
 }
+
+const search = () => {
+  // const searchable = searchInput.value.trim().toLowerCase();
+  // props.list.forEach( ( item, key ) => {
+  //   const value = item.name.trim().toLowerCase();
+  //   if ( value.includes( searchable ) ){
+  //     selectItem.value[ key ].classList.add( 'select__item--hide' );
+  //
+  //     // select.value.querySelectorAll( ".select__item:not( data-key='"+key+"' )" ).forEach( ( selectItem ) => {
+  //     //   selectItem.classList.add( "select__item--hide" );
+  //     // } )
+  //   } else {
+  //     selectItem.value.forEach( ( oldItem ) => {
+  //       oldItem.classList.remove( 'select__item--hide' );
+  //     } );
+  //   }
+  // } );
+
+  // const searchTerm = event.target.value.toLowerCase(); // Получаем ввод и приводим к нижнему регистру
+  // resultsList.innerHTML = "";
+}
+
+// watch( ( model.value ) => {
+//
+// } )
+
+// computed( () => {
+//   console.log( model.value );
+//   if ( model.value ){
+//     const find = props.list.find(user => user.id === model.value);
+//     console.log( find );
+//   }
+// } )
 </script>
 
 <style scoped lang="scss">
@@ -132,6 +179,18 @@ const selected = ( id: number, title: string, code?: string ) => {
     #{$root}__list {
       opacity: 1;
       pointer-events: auto;
+    }
+  }
+
+  &__search {
+    margin-bottom: .5rem;
+
+    & input {
+      height: 5rem;
+      border: .1rem solid var(--fg-input-border);
+      width: 100%;
+      border-radius: 2rem;
+      padding: 0 1.5rem;
     }
   }
 }

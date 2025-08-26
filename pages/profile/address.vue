@@ -1,56 +1,117 @@
 <template>
   <div class="profile-address__form form">
     <div class="profile-address__form-grid">
-      <FormSelect
-          v-if="countries"
-          name="country"
-          :list="countries.countries"
-          placeholder="Страна"
-          v-model="form.country"
-      />
-      <FormInput
-          name="index"
-          placeholder="Индекс"
-          v-model="form.index"
-      />
-      <FormSelect
-          v-if="cities"
-          name="country"
-          :list="cities.cities"
-          placeholder="Город"
-          v-model="form.city"
-      />
-      <FormInput
-          name="house"
-          placeholder="Улица, дом"
-          v-model="form.house"
-      />
+      <template v-for="( item, key ) in form">
+        <component
+          :is="item.template"
+          :name="key"
+          v-model="item.value"
+          :error="item.error"
+          :placeholder="item.placeholder"
+          :list="item.list"
+        />
+      </template>
     </div>
     <div class="profile-address__form-actions">
-      <button class="profile-address__form-btn btn _border">Сохранить изменения</button>
-      <button class="profile-address__form-reset">Сбросить данные</button>
+      <button
+          class="profile-address__form-btn btn _border"
+          :class="{ '_loading': isLoading }"
+          @click="save"
+      >Сохранить изменения</button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import type {Cities, Countries} from "~/types/countries";
+import {FormInput, FormSelect, ModalsSuccess} from "#components";
 
 definePageMeta({
   layout: 'profile',
-  title: 'Адрес доставки',
-  middleware: 'auth'
+  title: 'Адрес доставки'
 })
 
-const { data: countries } = await useApi<Countries>( '/countries' );
-const { data: cities } = await useApi<Cities>( '/countries/cities' );
-
 const form = ref( {
-  country: '',
-  index: '',
-  city: '',
-  house: '',
-} )
+  delivery_country_id: {
+    template: FormSelect,
+    list: [],
+    placeholder: 'Страна',
+    name: 'county',
+    value: '',
+    error: ''
+  },
+  delivery_postal_code: {
+    template: FormInput,
+    name: 'index',
+    placeholder: 'Индекс',
+    value: '',
+    error: ''
+  },
+  delivery_city_id: {
+    template: FormSelect,
+    list: [],
+    placeholder: 'Город',
+    name: 'delivery_city_id',
+    value: '',
+    error: ''
+  },
+  delivery_address: {
+    template: FormInput,
+    name: 'house',
+    placeholder: 'Улица, дом',
+    value: '',
+    error: ''
+  },
+} );
+
+const authStore = useAuthStore();
+const { user } = authStore;
+const modal = useModal();
+const isLoading = ref( false );
+
+onMounted( async () => {
+  const {data: countries} = await useApi<Countries>('/countries');
+  const {data: cities} = await useApi<Cities>('/countries/cities');
+
+  console.log(countries.value);
+  // form.value.delivery_country_id.value = user?.profile?.delivery_country_id || 0;
+  // form.value.delivery_country_id.list = countries.value?.countries;
+  // form.value.delivery_postal_code.value = user?.profile?.delivery_postal_code || '';
+  // form.value.delivery_city_id.value = user?.profile?.delivery_city_id || 0;
+  // form.value.delivery_city_id.list = cities.value?.cities;
+  // form.value.delivery_address.value = user?.profile?.delivery_address || '';
+} );
+
+const save = async () => {
+  for (let key in form.value) {
+    form.value[key].error = '';
+  }
+
+  isLoading.value = true;
+  const {data, status, error} = await useApi('/clients/update-delivery-address', {
+    body: {
+      delivery_country_id: form.value.delivery_country_id.value,
+      delivery_postal_code: form.value.delivery_postal_code.value,
+      delivery_city_id: form.value.delivery_city_id.value,
+      delivery_address: form.value.delivery_address.value
+    }
+  }, '', 'PUT');
+
+  if (status.value === 'error' && error?.value?.data?.errors) {
+    for (const item in error.value.data.errors) {
+      if (form.value[item]) {
+        form.value[item].error = error.value.data.errors[item][0];
+      }
+    }
+  } else {
+    modal.openModal(ModalsSuccess, {
+      title: 'Спасибо!',
+      text: 'Ваш профиль обновлен'
+    })
+  }
+
+  isLoading.value = false;
+}
 </script>
 
 <style scoped lang="scss">
