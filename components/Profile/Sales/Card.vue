@@ -1,11 +1,11 @@
 <template>
   <div class="profile-sales__item">
-    <div class="profile-sales__item-media" v-if="item.image">
+    <div class="profile-sales__item-media" v-if="item.image_url">
       <picture class="profile-sales__item-pic">
-        <img :src="item.image" class="profile-sales__item-img" alt="">
+        <img :src="item.image_url" class="profile-sales__item-img" alt="">
       </picture>
     </div>
-    <div class="profile-sales__item-title" v-if="item.title">{{ item.title }}</div>
+    <div class="profile-sales__item-title" v-if="item.code">{{ item.code }}</div>
     <div class="profile-sales__item-text" v-if="item.description">{{ item.description }}</div>
 <!--    <div class="profile-sales__item-alert">Скидка 25% на первый заказ</div>-->
     <button class="profile-sales__item-btn btn _border _thin" @click="copy">{{ buttonTitle }}</button>

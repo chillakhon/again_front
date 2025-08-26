@@ -4,5 +4,6 @@ export interface Sale {
     description: string,
     image: string,
     discount_amount: string,
-    code: string
+    code: string,
+    image_url?: string
 }
