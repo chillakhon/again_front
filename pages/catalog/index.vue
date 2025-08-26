@@ -29,7 +29,12 @@ definePageMeta( {
   title: 'Каталог',
 } );
 
-const params = getFilterParams();
+const route = useRoute();
+
+
+const params = computed( () => {
+  return getFilterParams();
+} );
 const { data } = await useApi<Catalog>('/products', {
   params: params
 });
