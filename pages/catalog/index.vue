@@ -13,7 +13,11 @@
         <h1 class="catalog-page__title block__title _small">Каталог</h1>
         <template v-if="products.data.length > 0">
           <CatalogGrid class="catalog-page__grid" :list="products.data" />
-          <Loadmore class="catalog-page__loadmore" v-if="products.meta.last_page > 1" />
+          <Loadmore
+              class="catalog-page__loadmore"
+              v-if="products.meta.last_page > 1"
+              @load-more="loadMore"
+          />
         </template>
 
         <NotFound v-else />
@@ -31,7 +35,6 @@ definePageMeta( {
 
 const route = useRoute();
 
-
 const params = computed( () => {
   return getFilterParams();
 } );
@@ -44,6 +47,8 @@ let priceBefore = 0;
 let priceAfter = 999999;
 let color = 0;
 
+let page = 1;
+
 const getPrice = ( prices: object ) => {
   priceBefore = prices.before;
   priceAfter = prices.after;
@@ -53,12 +58,18 @@ const getColor = ( id: number ) => {
   color = id;
 }
 
+const getPage = ( num: number ) => {
+  page = num;
+}
+
 const filter = async () => {
   const { data: filterData } = await useApi<Catalog>('/products', {
     params: {
       price_after: priceBefore,
       price_before: priceAfter,
       color_id: color,
+      in_stock: 1,
+      per_page: 9
     }
   } );
 
@@ -74,6 +85,17 @@ const reset = async () => {
 
   const { data: filterData } = await useApi<Catalog>('/products' );
   products.value = filterData.value;
+}
+
+const loadMore = async ( page: number ) => {
+  // const { data: filterData } = await useApi<Catalog>('/products', {
+  //   params: {
+  //     per_page: 9,
+  //     page: page,
+  //   }
+  // } );
+  //
+  // products.value.data = [ products.value.data, ...filterData?.value.data ];
 }
 </script>
 

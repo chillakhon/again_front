@@ -9,7 +9,9 @@ export const getFilterParams = () => {
         'in_stock'
     ];
 
-    let params = {};
+    let params = {
+        per_page: 9
+    };
 
     for ( const key in route.query  ) {
         if ( ! accessParams.includes( key ) ) {
