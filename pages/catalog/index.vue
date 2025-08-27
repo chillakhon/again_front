@@ -5,11 +5,12 @@
       <CatalogFilters
           class="catalog-page__filter"
           @filter-click="submitFilter"
+          @reset-click="resetFilter"
       />
 
       <div class="catalog-page__body">
         <h1 class="catalog-page__title block__title _small">Каталог</h1>
-        <template v-if="nProducts.data">
+        <template v-if="nProducts.data.length > 0">
           <CatalogGrid
               class="catalog-page__grid"
               :list="nProducts.data"
@@ -21,6 +22,7 @@
               @load-more="loadMore"
           />
         </template>
+        <NotFound v-else />
       </div>
     </div>
   </div>
@@ -29,36 +31,10 @@
 <script setup lang="ts">
 import type {Catalog} from "~/types/catalog";
 
-/**
- *       <CatalogFilters
- *           class="catalog-page__filter"
- *           @select-prices="getPrice"
- *           @select-color="getColor"
- *           @filter-click="filter"
- *           @reset-click="reset"
- *       />
- *       <div class="catalog-page__body">
- *         <h1 class="catalog-page__title block__title _small">Каталог</h1>
- *         <template v-if="products.data.length > 0">
- *           <CatalogGrid class="catalog-page__grid" :list="products.data" />
- *           <Loadmore
- *               class="catalog-page__loadmore"
- *               v-if="products.meta.last_page > 1"
- *               @load-more="loadMore"
- *           />
- *         </template>
- *
- *         <NotFound v-else />
- *       </div>
- */
-
 definePageMeta( {
   title: 'Каталог',
 } );
 
-const meta = ref( {
-  last_page: 4
-} );
 const filters = ref( {
   color: 0,
   price: {
@@ -68,19 +44,6 @@ const filters = ref( {
 } );
 const page = ref( 1 );
 
-// const { data: products, refresh } = await useApi<Catalog>('/products', {
-//   query: {
-//       color_id: filters.value.color || '',
-//       price_before: filters.value.price.before || '',
-//       price_after: filters.value.price.after || '',
-//   }
-// } );
-// watch(data, (newData ) => {
-//   if ( newData?.data ) {
-//     products.value = [...products.value, ...newData.data];
-//     //hasMoreProducts.value = newData.products.length === perPage;
-//   }
-// });
 const { data: products, pending, refresh } = await useAsyncData(
     'products',
     async () => {
@@ -104,7 +67,6 @@ const { data: products, pending, refresh } = await useAsyncData(
 const nProducts = ref( products );
 
 watch( products, ( newProducts, oldProducts ) => {
-  console.log( newProducts );
   if ( newProducts?.data ){
     if ( page.value === 1 ){
       nProducts.value.data = newProducts.data;
@@ -125,6 +87,15 @@ const submitFilter = ( args: object ) => {
 
 const loadMore = () => {
   page.value += 1;
+  refresh();
+}
+
+const resetFilter = () => {
+  page.value = 1;
+  filters.value.color = '';
+  filters.value.price.after = '';
+  filters.value.price.before = '';
+
   refresh();
 }
 </script>
