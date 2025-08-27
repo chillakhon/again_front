@@ -1,16 +1,30 @@
 <template>
   <div class="profile-address__form form">
     <div class="profile-address__form-grid">
-      <template v-for="( item, key ) in form">
-        <component
-          :is="item.template"
-          :name="key"
-          v-model="item.value"
-          :error="item.error"
-          :placeholder="item.placeholder"
-          :list="item.list"
-        />
-      </template>
+      <FormSelect
+        v-if="countries"
+        v-model="form.delivery_country_id.value"
+        :error="form.delivery_country_id.error"
+        :list="countries.countries"
+        placeholder="Выбрать страну"
+      />
+      <FormInput
+          placeholder="Индекс"
+          v-model="form.delivery_postal_code.value"
+          :error="form.delivery_postal_code.error"
+      />
+      <FormSelect
+          v-if="cities"
+          v-model="form.delivery_city_id.value"
+          :error="form.delivery_city_id.error"
+          :list="cities.cities"
+          placeholder="Выбрать город"
+      />
+      <FormInput
+          placeholder="Улица, дом"
+          v-model="form.delivery_address.value"
+          :error="form.delivery_address.error"
+      />
     </div>
     <div class="profile-address__form-actions">
       <button
@@ -29,88 +43,37 @@ import {FormInput, FormSelect, ModalsSuccess} from "#components";
 definePageMeta({
   layout: 'profile',
   title: 'Адрес доставки'
-})
+});
 
-const form = ref( {
-  delivery_country_id: {
-    template: FormSelect,
-    list: [],
-    placeholder: 'Страна',
-    name: 'county',
-    value: '',
-    error: ''
-  },
-  delivery_postal_code: {
-    template: FormInput,
-    name: 'index',
-    placeholder: 'Индекс',
-    value: '',
-    error: ''
-  },
-  delivery_city_id: {
-    template: FormSelect,
-    list: [],
-    placeholder: 'Город',
-    name: 'delivery_city_id',
-    value: '',
-    error: ''
-  },
-  delivery_address: {
-    template: FormInput,
-    name: 'house',
-    placeholder: 'Улица, дом',
-    value: '',
-    error: ''
-  },
-} );
+const { data: countries } = await useApi<Countries>('/countries');
+const { data: cities } = await useApi<Cities>('/countries/cities');
 
 const authStore = useAuthStore();
 const { user } = authStore;
 const modal = useModal();
 const isLoading = ref( false );
 
-onMounted( async () => {
-  const {data: countries} = await useApi<Countries>('/countries');
-  const {data: cities} = await useApi<Cities>('/countries/cities');
-
-  console.log(countries.value);
-  // form.value.delivery_country_id.value = user?.profile?.delivery_country_id || 0;
-  // form.value.delivery_country_id.list = countries.value?.countries;
-  // form.value.delivery_postal_code.value = user?.profile?.delivery_postal_code || '';
-  // form.value.delivery_city_id.value = user?.profile?.delivery_city_id || 0;
-  // form.value.delivery_city_id.list = cities.value?.cities;
-  // form.value.delivery_address.value = user?.profile?.delivery_address || '';
+const form = ref( {
+  delivery_country_id: {
+    value: '',
+    error: '',
+  },
+  delivery_postal_code: {
+    value: '',
+    error: ''
+  },
+  delivery_city_id: {
+    value: '',
+    error: '',
+  },
+  delivery_address: {
+    value: '',
+    error: ''
+  },
 } );
 
-const save = async () => {
-  for (let key in form.value) {
-    form.value[key].error = '';
-  }
+const save = () => {
 
-  isLoading.value = true;
-  const {data, status, error} = await useApi('/clients/update-delivery-address', {
-    body: {
-      delivery_country_id: form.value.delivery_country_id.value,
-      delivery_postal_code: form.value.delivery_postal_code.value,
-      delivery_city_id: form.value.delivery_city_id.value,
-      delivery_address: form.value.delivery_address.value
-    }
-  }, '', 'PUT');
-
-  if (status.value === 'error' && error?.value?.data?.errors) {
-    for (const item in error.value.data.errors) {
-      if (form.value[item]) {
-        form.value[item].error = error.value.data.errors[item][0];
-      }
-    }
-  } else {
-    modal.openModal(ModalsSuccess, {
-      title: 'Спасибо!',
-      text: 'Ваш профиль обновлен'
-    })
-  }
-
-  isLoading.value = false;
 }
 </script>
 

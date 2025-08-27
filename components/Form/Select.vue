@@ -34,7 +34,7 @@
 import type {Country} from "~/types/countries";
 
 const props = withDefaults( defineProps<{
-  name: string,
+  name?: string,
   placeholder?: string,
   rowClass?: string,
   error?: string,

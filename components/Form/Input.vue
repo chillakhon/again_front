@@ -17,7 +17,7 @@
 <script setup lang="ts">
 withDefaults( defineProps<{
   type?: string,
-  name: string,
+  name?: string,
   placeholder?: string,
   rowClass?: string,
   autocomplete?: boolean,
