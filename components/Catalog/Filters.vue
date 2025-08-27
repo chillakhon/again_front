@@ -53,17 +53,27 @@ const toggleTabletFilter = () => {
 const { data: colors } = await useApi<Colors>( '/colors/used-in-catalog' );
 const emit = defineEmits(['selectPrices', 'selectColor', 'filterClick', 'resetClick']);
 
-const emitPrices = ( prices: object ) => {
-  emit('selectPrices', prices );
+const prices = ref( {} );
+const color = ref( 0 );
+
+const emitPrices = ( object: object ) => {
+  prices.value = object;
 }
 
-const emitColor = ( color: number ) => {
-  emit('selectColor', color );
+const emitColor = ( colorId: number ) => {
+  color.value = colorId;
 }
 
 const emitSubmitFilter = () => {
   toggleTabletFilter();
-  emit( 'filterClick' );
+
+  emit( 'filterClick', {
+    color: color.value,
+    price: {
+      before: prices.value.before,
+      after: prices.value.after,
+    }
+  } );
 }
 
 const emitResetFilter = () => {

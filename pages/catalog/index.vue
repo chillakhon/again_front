@@ -4,23 +4,23 @@
     <div class="container catalog-page__container">
       <CatalogFilters
           class="catalog-page__filter"
-          @select-prices="getPrice"
-          @select-color="getColor"
-          @filter-click="filter"
-          @reset-click="reset"
+          @filter-click="submitFilter"
       />
+
       <div class="catalog-page__body">
         <h1 class="catalog-page__title block__title _small">Каталог</h1>
-        <template v-if="products.data.length > 0">
-          <CatalogGrid class="catalog-page__grid" :list="products.data" />
+        <template v-if="nProducts.data">
+          <CatalogGrid
+              class="catalog-page__grid"
+              :list="nProducts.data"
+          />
+
           <Loadmore
               class="catalog-page__loadmore"
-              v-if="products.meta.last_page > 1"
+              v-if="nProducts.meta.last_page > 1 && page !== nProducts.meta.last_page"
               @load-more="loadMore"
           />
         </template>
-
-        <NotFound v-else />
       </div>
     </div>
   </div>
@@ -29,73 +29,103 @@
 <script setup lang="ts">
 import type {Catalog} from "~/types/catalog";
 
+/**
+ *       <CatalogFilters
+ *           class="catalog-page__filter"
+ *           @select-prices="getPrice"
+ *           @select-color="getColor"
+ *           @filter-click="filter"
+ *           @reset-click="reset"
+ *       />
+ *       <div class="catalog-page__body">
+ *         <h1 class="catalog-page__title block__title _small">Каталог</h1>
+ *         <template v-if="products.data.length > 0">
+ *           <CatalogGrid class="catalog-page__grid" :list="products.data" />
+ *           <Loadmore
+ *               class="catalog-page__loadmore"
+ *               v-if="products.meta.last_page > 1"
+ *               @load-more="loadMore"
+ *           />
+ *         </template>
+ *
+ *         <NotFound v-else />
+ *       </div>
+ */
+
 definePageMeta( {
   title: 'Каталог',
 } );
 
-const route = useRoute();
-
-const params = computed( () => {
-  return getFilterParams();
+const meta = ref( {
+  last_page: 4
 } );
-const { data } = await useApi<Catalog>('/products', {
-  params: params
-});
-const products = ref<Ref>( data );
+const filters = ref( {
+  color: 0,
+  price: {
+    before: '',
+    after: '',
+  }
+} );
+const page = ref( 1 );
 
-let priceBefore = 0;
-let priceAfter = 999999;
-let color = 0;
-
-let page = 1;
-
-const getPrice = ( prices: object ) => {
-  priceBefore = prices.before;
-  priceAfter = prices.after;
-}
-
-const getColor = ( id: number ) => {
-  color = id;
-}
-
-const getPage = ( num: number ) => {
-  page = num;
-}
-
-const filter = async () => {
-  const { data: filterData } = await useApi<Catalog>('/products', {
-    params: {
-      price_after: priceBefore,
-      price_before: priceAfter,
-      color_id: color,
-      in_stock: 1,
-      per_page: 9
+// const { data: products, refresh } = await useApi<Catalog>('/products', {
+//   query: {
+//       color_id: filters.value.color || '',
+//       price_before: filters.value.price.before || '',
+//       price_after: filters.value.price.after || '',
+//   }
+// } );
+// watch(data, (newData ) => {
+//   if ( newData?.data ) {
+//     products.value = [...products.value, ...newData.data];
+//     //hasMoreProducts.value = newData.products.length === perPage;
+//   }
+// });
+const { data: products, pending, refresh } = await useAsyncData(
+    'products',
+    async () => {
+      const response = await $fetch('http://193.233.84.235/api/products', {
+        query: {
+            per_page: 24,
+            page: page.value,
+            color_id: filters.value.color || '',
+            price_before: filters.value.price.before || '',
+            price_after: filters.value.price.after || '',
+        }
+      } );
+      return response;
+    },
+    {
+      server: true,
+      immediate: true
     }
-  } );
+);
 
-  products.value = filterData.value;
+const nProducts = ref( products );
+
+watch( products, ( newProducts, oldProducts ) => {
+  console.log( newProducts );
+  if ( newProducts?.data ){
+    if ( page.value === 1 ){
+      nProducts.value.data = newProducts.data;
+    } else {
+      nProducts.value.data = [ ...oldProducts.data, ...newProducts.data ];
+    }
+  }
+} )
+
+const submitFilter = ( args: object ) => {
+  page.value = 1;
+  filters.value.color = args.color;
+  filters.value.price.after = args.price.before;
+  filters.value.price.before = args.price.after;
+
+  refresh();
 }
 
-const reset = async () => {
-  const router = useRouter();
-  const route = useRoute();
-  const updatedQuery = { ...route.query };
-  delete updatedQuery.search;
-  router.replace({ query: updatedQuery });
-
-  const { data: filterData } = await useApi<Catalog>('/products' );
-  products.value = filterData.value;
-}
-
-const loadMore = async ( page: number ) => {
-  // const { data: filterData } = await useApi<Catalog>('/products', {
-  //   params: {
-  //     per_page: 9,
-  //     page: page,
-  //   }
-  // } );
-  //
-  // products.value.data = [ products.value.data, ...filterData?.value.data ];
+const loadMore = () => {
+  page.value += 1;
+  refresh();
 }
 </script>
 
