@@ -13,7 +13,7 @@
       />
     </template>
     <div class="form__button">
-      <button class="modal-callback__btn btn _wide" @click="send">Оставить заявку</button>
+      <button class="modal-callback__btn btn _loader _wide" @click="send">Оставить заявку</button>
     </div>
 
     <FormCheckbox

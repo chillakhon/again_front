@@ -63,7 +63,8 @@
     margin-bottom: 0;
   }
 
-  & .form__input {
+  & .form__input,
+  & .select {
     max-width: 36.7rem;
   }
 }

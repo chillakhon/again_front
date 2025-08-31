@@ -5,14 +5,9 @@
       <FormSelect
           v-if="countries"
           name="country"
-          :list="[
-              {
-                id: 0,
-                name: 'Россия',
-                code: 'RU'
-              }
-          ]"
+          :list="countries.countries"
           placeholder="Страна"
+          :selected-id="userStore.user.profile.delivery_country_id"
           @get-selected-value="setCountry"
       />
       <FormSelect
@@ -20,6 +15,7 @@
           name="city"
           :list="cities.cities"
           placeholder="Город"
+          :selected-id="userStore.user.profile.delivery_city_id"
           @get-selected-value="setCity"
       />
       <FormInput
@@ -27,7 +23,6 @@
           placeholder="Адрес*"
           v-model="address"
       />
-
 
       <FormCheckbox
           name="delivery[]"
@@ -88,8 +83,8 @@
 <script setup lang="ts">
 import type {Cities, Countries} from "~/types/countries";
 
-const { data: countries } = await useApi<Countries>( '/countries' );
-const { data: cities } = await useApi<Cities>( '/countries/cities' );
+const userStore = useAuthStore();
+const countryId = ref( 0 );
 
 const countryCode = defineModel( 'countryCode' );
 const cityName = defineModel( 'cityName' );
@@ -98,11 +93,25 @@ const notes = defineModel( 'notes' );
 
 const setCountry = ( object: object ) => {
   countryCode.value = object.code;
+  countryId.value = object.id;
 }
 
 const setCity = ( object: object ) => {
   cityName.value = object.title;
 }
+
+const { data: countries } = await useApi<Countries>( '/countries' );
+const { data: cities } = await useApi<Cities>( '/countries/cities', {
+  query: {
+    country_id: countryId
+  },
+  watch: [ countryId ]
+} );
+
+// computed( () => {
+//   countryCode.value = userStore.user.profile.delivery_country_id;
+//   cityName.value = userStore.user.profile.delivery_city_id;
+// } )
 </script>
 
 <style scoped lang="scss">

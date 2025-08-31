@@ -7,6 +7,8 @@
         :error="form.delivery_country_id.error"
         :list="countries.countries"
         placeholder="Выбрать страну"
+        :selected-id="user.profile.delivery_country_id"
+        @get-selected-value="setCountry"
       />
       <FormInput
           placeholder="Индекс"
@@ -19,6 +21,7 @@
           :error="form.delivery_city_id.error"
           :list="cities.cities"
           placeholder="Выбрать город"
+          :selected-id="user.profile.delivery_city_id"
       />
       <FormInput
           placeholder="Улица, дом"
@@ -45,8 +48,18 @@ definePageMeta({
   title: 'Адрес доставки'
 });
 
+const countryId = ref( '' );
+const setCountry = ( object: object ) => {
+  countryId.value = object.id;
+}
+
 const { data: countries } = await useApi<Countries>('/countries');
-const { data: cities } = await useApi<Cities>('/countries/cities');
+const { data: cities } = await useApi<Cities>( '/countries/cities', {
+  query: {
+    country_id: countryId
+  },
+  watch: [ countryId ]
+} );
 
 const authStore = useAuthStore();
 const { user } = authStore;
@@ -72,8 +85,39 @@ const form = ref( {
   },
 } );
 
-const save = () => {
+onMounted( () => {
+  form.value.delivery_postal_code.value = user?.profile?.delivery_postal_code || '';
+  form.value.delivery_address.value = user?.profile?.delivery_address || '';
+} )
 
+const save = async () => {
+  for (let key in form.value) {
+    form.value[key].error = '';
+  }
+
+  isLoading.value = true;
+
+  const { data, status, error } = await useApi('/clients/update-delivery-address', {
+    body: {
+      delivery_country_id: form.value.delivery_country_id.value,
+      delivery_postal_code: form.value.delivery_postal_code.value,
+      delivery_city_id: form.value.delivery_city_id.value,
+      delivery_address: form.value.delivery_address.value
+    }
+  }, '', 'PUT' );
+
+  if ( status.value === 'error' && error?.value?.data?.errors ){
+    for ( const item in error.value.data.errors ){
+      if ( form.value[ item ] ){
+        form.value[ item ].error = error.value.data.errors[ item ][0];
+      }
+    }
+  } else {
+    modal.openModal( ModalsSuccess, {
+      title: 'Спасибо!',
+      text: 'Ваш профиль обновлен'
+    } )
+  }
 }
 </script>
 

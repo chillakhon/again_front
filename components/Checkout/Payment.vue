@@ -18,18 +18,29 @@
       />
     </div>
     <div class="checkout__submit">
-      <button class="checkout__btn btn" @click="emit( 'clickToButton' )">Подтвердить заказ</button>
+      <button
+          class="checkout__btn btn _loader"
+          @click="emit( 'clickToButton' )"
+          :class="{ '_loading': isLoading }"
+      >
+        Подтвердить заказ
+      </button>
       <FormCheckbox
         name="policy"
         class="checkout__policy"
         value="1"
-        label="Нажимая на кнопку, вы соглашаетесь<br> с политикой конфиденциальности"
+        label="Нажимая на кнопку, вы соглашаетесь<br> с <a href='/policy' target='_blank'>политикой конфиденциальности</a>"
       />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+withDefaults( defineProps<{
+  isLoading?: boolean
+}>(), {
+  isLoading: false
+} )
 const emit = defineEmits(['clickToButton']);
 </script>
 

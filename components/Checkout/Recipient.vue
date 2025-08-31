@@ -13,11 +13,6 @@
           v-model="lastName"
       />
       <FormInput
-          name="surname"
-          placeholder="Введите отчество*"
-          v-model="surname"
-      />
-      <FormInput
           name="phone"
           placeholder="Введите номер телефона*"
           v-model="phone"
@@ -29,7 +24,6 @@
 <script setup lang="ts">
 const firstName = defineModel( 'firstName' );
 const lastName = defineModel( 'lastName' );
-const surname = defineModel( 'surname' );
 const phone = defineModel( 'phone' );
 </script>
 

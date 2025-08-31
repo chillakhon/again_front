@@ -8,19 +8,21 @@
         </svg>
       </button>
       <div class="select__list">
-        <div class="select__search">
-          <input type="text" placeholder="Поиск..." @input="search" v-model="searchInput">
-        </div>
+<!--        <div class="select__search">-->
+<!--          <input type="text" placeholder="Поиск..." @input="search" v-model="searchInput">-->
+<!--        </div>-->
 
         <button
             class="select__item"
             v-for="( item, key ) in list"
             :key="key"
-            ref="selectItem"
+            ref="selectItems"
             @click="selected( item.id, item.name, item.code )"
         >
           {{ item.name }}
         </button>
+
+        <div class="select__nfound" v-if="notFound">Ничего не найдено</div>
       </div>
 
       <input type="hidden" v-model="model">
@@ -38,18 +40,20 @@ const props = withDefaults( defineProps<{
   placeholder?: string,
   rowClass?: string,
   error?: string,
-  list: Country[]
+  list: Country[],
+  selectedId?: number
 }>(), {
   error: '',
   placeholder: 'Выбрать'
 } );
 
 const select = ref( false );
-const selectItem = ref( false );
+const selectItems = ref( false );
 const placeholder = ref( props.placeholder );
 const isActive = ref( false );
 const searchInput = ref( '' );
 const model = defineModel<string|number>();
+const notFound = ref( false );
 
 const toggle = () => {
   isActive.value = !isActive.value;
@@ -77,42 +81,79 @@ const selected = ( id: number, title: string, code?: string ) => {
   isActive.value = false;
 }
 
-const search = () => {
-  // const searchable = searchInput.value.trim().toLowerCase();
-  // props.list.forEach( ( item, key ) => {
-  //   const value = item.name.trim().toLowerCase();
-  //   if ( value.includes( searchable ) ){
-  //     selectItem.value[ key ].classList.add( 'select__item--hide' );
-  //
-  //     // select.value.querySelectorAll( ".select__item:not( data-key='"+key+"' )" ).forEach( ( selectItem ) => {
-  //     //   selectItem.classList.add( "select__item--hide" );
-  //     // } )
-  //   } else {
-  //     selectItem.value.forEach( ( oldItem ) => {
-  //       oldItem.classList.remove( 'select__item--hide' );
-  //     } );
-  //   }
-  // } );
+onMounted( () => {
+  if ( props.hasOwnProperty( 'selectedId' ) ) {
+    const find = props.list.find( value => value.id === props.selectedId );
+    if ( find ){
+      selected(
+          find.id,
+          find.name,
+          find.code
+      );
+    }
+  }
+} )
 
-  // const searchTerm = event.target.value.toLowerCase(); // Получаем ввод и приводим к нижнему регистру
-  // resultsList.innerHTML = "";
-}
-
-// watch( ( model.value ) => {
+// const search = () => {
+//   const searchable = searchInput.value.trim().toLowerCase();
+//   // let found = null;
+//   // let foundKey = 0;
 //
-// } )
-
-// computed( () => {
-//   console.log( model.value );
-//   if ( model.value ){
-//     const find = props.list.find(user => user.id === model.value);
-//     console.log( find );
-//   }
-// } )
+//   selectItems.value.forEach(function(item) {
+//     if (!item.innerText.includes( searchable ) ) {
+//       item.style.display = 'none';
+//     } else {
+//       item.style.display = 'block';
+//     }
+//   })
+//
+//   // // Iterate through the entire array
+//   // for (let i = 0; i < props.list.length; i++) {
+//   //   if ( props.list[i].name.toLowerCase().includes( searchable ) ) {
+//   //     found = props.list[ i ];
+//   //     foundKey = i;
+//   //     break; // Stop after finding the first match
+//   //   }
+//   // }
+//   //
+//   // console.log( found );
+//   //
+//   // selectItems.value.forEach((item, key) => {
+//   //   if ( key === foundKey ) {
+//   //     item.classList.remove('select__item--hide');
+//   //   } else {
+//   //     item.classList.add('select__item--hide');
+//   //   }
+//   // });
+//
+//   // const found = props.list.find( listItem =>
+//   //     listItem.name.toLowerCase().includes( searchable )
+//   // );
+//   //
+//   // selectItems.value.forEach((item, key) => {
+//   //   if (props.list[key] === found) {
+//   //     item.classList.remove('select__item--hide');
+//   //   } else {
+//   //     item.classList.add('select__item--hide');
+//   //   }
+//   // } );
+//   //
+//   // if ( ! found || found === undefined ){
+//   //   notFound.value = true;
+//   // } else {
+//   //   notFound.value = false;
+//   // }
+//   //
+//   // if ( ! searchable ) {
+//   //   selectItems.value.forEach(item => item.classList.remove('select__item--hide'));
+//   //   notFound.value = false;
+//   // }
+// }
 </script>
 
 <style scoped lang="scss">
 .select {
+  position: relative;
   $root: &;
 
   &__result {
@@ -166,6 +207,10 @@ const search = () => {
       &:hover {
         opacity: .7;
       }
+    }
+
+    &--hide {
+      display: none;
     }
   }
 

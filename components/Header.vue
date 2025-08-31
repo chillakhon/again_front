@@ -19,74 +19,34 @@
           <HeaderActions />
         </div>
       </div>
-      <div class="header__bottom" :class="{ '_active': mobileMenuStore.isActive }">
-         <HeaderMenu class="header__menu" />
-        <div class="header__mobile">
-          <button class="header__call" @click="modal.openModal( ModalsCallback )">Связаться с нами</button>
-          <HeaderSocials />
-        </div>
-      </div>
     </div>
   </header>
+
+  <div class="header__bottom" :class="{ '_active': mobileMenuStore.isActive }">
+    <div class="container">
+      <HeaderMenu class="header__menu" />
+      <div class="header__mobile">
+        <button class="header__call" @click="modal.openModal( ModalsCallback )">Связаться с нами</button>
+        <HeaderSocials />
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
 import {ModalsCallback} from "#components";
-
-const isFixed = ref( false );
 const mobileMenuStore = useMobileMenuStore();
-
-// const handleScroll = () => {
-//   const header = document.querySelector( '.header' );
-//   if ( header ) {
-//     if (window.scrollY > 100) {
-//       header.classList.add('_fixed');
-//     } else {
-//       header.classList.remove('_fixed');
-//     }
-//   }
-// };
-//
-// onMounted(() => {
-//   window.addEventListener('scroll', handleScroll);
-// } );
-
-// onMounted( () => {
-//   window.addEventListener( 'scroll', () => {
-//     if ( window.pageYOffset > 200 ) {
-//       isFixed.value = true;
-//     } else {
-//       isFixed.value = false;
-//     }
-//   } )
-// } )
-
 const modal = useModal();
 </script>
 
 <style scoped lang="scss">
 .header {
-  //position: sticky;
+  position: sticky;
   top: 0;
   z-index: 99;
-  //transition: var(--tr-regular);
   background: var(--fg-white);
 
-  &._fixed {
-    background-color: var(--fg-white);
-
-    @media (min-width: $tablet) {
-      & .header__bottom {
-          opacity: 0;
-          height: 0;
-          transform: translateY(-20%);
-      }
-    }
-  }
-
-  @media (max-width: $mobile) {
-    position: sticky;
-  }
+  $root: &;
 }
 
 .header__bottom {

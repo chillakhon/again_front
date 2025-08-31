@@ -7,8 +7,8 @@
           <div class="success__list">
             <div class="success__item">Ваш заказ №{{ data.order_number }} принят</div>
             <div class="success__item">Дата оформления: {{ data.created_at }}</div>
-            <div class="success__item">Сумма: __________ ₽</div>
-            <div class="success__item">Статус: <span class="success__status">{{ data.status }}</span></div>
+            <div class="success__item">Сумма: {{ getFormatPrice().formattedPrice( data.total_amount ) }} ₽</div>
+            <div class="success__item">Статус: <span class="success__status">{{ getStatus(data.status).label }}</span></div>
           </div>
           <div class="success__buttons">
             <a href="#" class="btn _border">Перейти к оплате</a>
@@ -47,6 +47,8 @@
 </template>
 
 <script setup lang="ts">
+import {getStatus} from "~/utils/getStatus";
+
 definePageMeta( {
   title: 'Спасибо за покупку!',
 } )

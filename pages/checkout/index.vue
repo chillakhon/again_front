@@ -26,10 +26,9 @@
               <CheckoutRecipient
                   v-model:first-name="form.value.user.first_name"
                   v-model:last-name="form.value.user.last_name"
-                  v-model:surname="form.value.user.surname"
                   v-model:phone="form.value.user.phone"
               />
-              <CheckoutPayment @click-to-button="submit" />
+              <CheckoutPayment @click-to-button="submit" :is-loading="isLoading" />
             </div>
           </div>
           <div class="checkout__items">
@@ -57,6 +56,7 @@
 <script setup lang="ts">
 const cartStore = useCartStore();
 const userStore = useAuthStore();
+const isLoading = ref( false );
 
 const form = computed( () => {
   return ref( {
@@ -76,17 +76,21 @@ const form = computed( () => {
     items: cartStore.getCartForCheckout()
   } );
 } );
-//
-// const submit = async () => {
-//   const { data, error } = await useApi('/orders', {
-//     body: form.value
-//   }, '', 'POST');
-//
-//   if ( data.value.success === true ){
-//     cartStore.setEmptyCart();
-//     return navigateTo( '/success?id=' + data.value.order.id );
-//   }
-// }
+
+const submit = async () => {
+  isLoading.value = true;
+
+  const { data, error } = await useApi('/orders', {
+    body: form.value
+  }, '', 'POST');
+
+  isLoading.value = false;
+
+  if ( data.value.success === true ){
+    cartStore.setEmptyCart();
+    return navigateTo( '/success?id=' + data.value.order.id );
+  }
+}
 </script>
 
 <style scoped lang="scss">

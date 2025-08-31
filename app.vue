@@ -1,5 +1,6 @@
 <template>
   <div>
+    <Preloader />
     <NuxtLayout>
       <Top />
       <Header />
