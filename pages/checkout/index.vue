@@ -43,7 +43,10 @@
               />
             </div>
             <div class="checkout__total">
-              <CheckoutTotal :with-button="false" />
+              <CheckoutTotal
+                  :with-button="false"
+                  v-model:promo-code="form.value.promo_code"
+              />
             </div>
           </div>
         </template>

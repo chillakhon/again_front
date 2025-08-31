@@ -178,6 +178,11 @@ onMounted( () => {
       height: auto;
       transition: var(--tr-regular);
     }
+
+    @media (max-width: $mobile) {
+      min-height: 5rem;
+      font-size: 1.4rem;
+    }
   }
 
   &__list {
