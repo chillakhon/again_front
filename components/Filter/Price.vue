@@ -1,10 +1,10 @@
 <template>
   <div class="filter__price-flex">
     <div class="filter__price-value filter__price-before">
-      от&nbsp;<span><span class="filter__price-result">{{ sliderBefore }}</span> ₽</span>
+      от&nbsp;<span><span class="filter__price-result">{{ getFormatPrice().formattedPrice( sliderBefore ) }}</span> ₽</span>
     </div>
     <div class="filter__price-value filter__price-after">
-      до&nbsp;<span><span class="filter__price-result">{{ sliderAfter }}</span> ₽</span>
+      до&nbsp;<span><span class="filter__price-result">{{ getFormatPrice().formattedPrice( sliderAfter ) }}</span> ₽</span>
     </div>
   </div>
   <div class="filter__price-input" ref="sliderRef"></div>

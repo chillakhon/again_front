@@ -43,6 +43,7 @@ const filters = ref( {
   }
 } );
 const page = ref( 1 );
+const isInStock = ref( false );
 
 const { data: products, pending, refresh } = await useAsyncData(
     'products',
@@ -54,6 +55,7 @@ const { data: products, pending, refresh } = await useAsyncData(
             color_id: filters.value.color || '',
             price_before: filters.value.price.before || '',
             price_after: filters.value.price.after || '',
+            in_stock: isInStock.value
         }
       } );
       return response;
@@ -81,6 +83,7 @@ const submitFilter = ( args: object ) => {
   filters.value.color = args.color;
   filters.value.price.after = args.price.before;
   filters.value.price.before = args.price.after;
+  isInStock.value = true;
 
   refresh();
 }
@@ -95,6 +98,7 @@ const resetFilter = () => {
   filters.value.color = '';
   filters.value.price.after = '';
   filters.value.price.before = '';
+  isInStock.value = false;
 
   refresh();
 }
