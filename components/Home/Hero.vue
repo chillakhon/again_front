@@ -57,7 +57,7 @@ const { data: slides } = await useApi<Slide[]>( '/get_slides' );
   }
 }
 
-swiper-container::part(pagination) {
+.hero__dots, swiper-container::part(pagination) {
   margin-top: 3rem;
   position: relative;
   z-index: 15;

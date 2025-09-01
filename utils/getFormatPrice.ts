@@ -1,6 +1,6 @@
 export const getFormatPrice = () => {
-    const formattedPrice = ( price: number ) => {
-        return price.toLocaleString();
+    const formattedPrice = ( price: number|string ) => {
+        return parseFloat( price ).toLocaleString();
     }
 
     const getNormalPrice = ( price: number, oldPrice?: number ) => {

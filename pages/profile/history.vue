@@ -1,6 +1,12 @@
 <template>
   <div class="profile-history__row">
-    <ProfileHistoryCard />
+    <template v-if="cards && cards.orders.length > 0">
+      <ProfileHistoryCard
+          v-for="(order, index) in cards.orders"
+          :key="order.id"
+          :order="order"
+      />
+    </template>
   </div>
   <button class="profile-history__btn btn _gray _border">Показать все заказы</button>
 </template>
@@ -9,6 +15,7 @@
 definePageMeta({
   layout: 'profile',
   title: 'История заказов',
+  middleware: 'auth',
 });
 
 const { data: cards } = await useApi( '/orders/user' );

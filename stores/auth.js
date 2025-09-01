@@ -69,14 +69,21 @@ export const useAuthStore = defineStore('authStore', () => {
     }
 
     const checkAuth = async () => {
-        if (process.client) {
-            const token = localStorage.getItem('auth_token');
-            const { data } = await useApi( '/client-user');
+        if ( token.value ){
+            try {
+                const { data } = await useApi( '/client-user');
 
-            if ( token && data.value.success ){
-                user.value = data.value.user;
-                isAuthenticated.value = true;
+                if ( data.value.success ){
+                    user.value = data.value.user;
+                    isAuthenticated.value = true;
+                }
+            } catch( error ) {
+                return error;
             }
+
+        } else {
+            token.value = '';
+            isAuthenticated.value = false;
         }
     }
 

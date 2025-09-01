@@ -1,21 +1,21 @@
 <template>
   <div class="profile-history__item">
     <div class="profile-history__item-main">
-      <div class="profile-history__item-media">
-        <img src="/img/catalog.again/item-1.jpg" alt="">
+      <div class="profile-history__item-media" v-if="order.items.length > 0">
+        <img :src="getImage( order.items[0].main_image?.path ?? '' )" alt="">
       </div>
       <div class="profile-history__item-content">
         <div class="profile-history__item-col">
-          <div class="profile-history__item-number">Номер заказа: 11233</div>
+          <div class="profile-history__item-number">Номер заказа: {{ order.order_number }}</div>
           <div class="profile-history__item-title">Box Again</div>
           <div class="profile-history__item-delivery">
-            <div class="profile-history__item-count _mobile">8 штук</div>
+            <div class="profile-history__item-count _mobile">{{ order.items.length }} штук</div>
             <span>Доставка</span>
           </div>
         </div>
         <div class="profile-history__item-col">
-          <div class="profile-history__item-date">Дата заказа: 11.12.24</div>
-          <div class="profile-history__item-count">Количество: 8</div>
+          <div class="profile-history__item-date">Дата заказа: {{ getDateFormat().formattedDate( order.created_at ) }}</div>
+          <div class="profile-history__item-count">Количество: {{ order.items.length }}</div>
         </div>
         <div class="profile-history__item-bottom">
           <button class="profile-history__item-repeat">Повторить заказ</button>
@@ -32,11 +32,11 @@
       </div>
     </div>
     <div class="profile-history__item-last">
-      <div class="profile-history__item-date _mobile">Дата заказа: 11.12.24</div>
-      <div class="profile-history__item-status"><p>Статус заказа</p> <span>Доставлено</span></div>
+      <div class="profile-history__item-date _mobile">Дата заказа: {{ getDateFormat().formattedDate( order.created_at ) }}</div>
+      <div class="profile-history__item-status"><p>Статус заказа</p> <span>{{ getStatus( order.status ).label }}</span></div>
       <div class="profile-history__item-price price">
-        <div class="price__new">7 900 ₽</div>
-        <div class="price__old">10 900 ₽</div>
+        <div class="price__new">{{ getFormatPrice().formattedPrice( order.total_amount ) }} ₽</div>
+<!--        <div class="price__old">10 900 ₽</div>-->
       </div>
     </div>
     <div class="profile-history__item-bottom _mobile">
@@ -55,7 +55,11 @@
 </template>
 
 <script setup lang="ts">
+import type {Order} from "~/types/orders";
 
+const props = defineProps<{
+  order: Order
+}>();
 </script>
 
 <style scoped lang="scss">
@@ -114,7 +118,7 @@
 .profile-history__item-col {
   min-width: 18rem;
   max-width: 100%;
-  margin-right: 2.7rem;
+  margin-right: 2rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
