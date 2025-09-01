@@ -324,6 +324,7 @@ const isFavourite = computed( () => {
     color: var(--fg-white);
     font-size: 1rem;
     width: fit-content;
+    min-width: fit-content;
   }
 }
 
