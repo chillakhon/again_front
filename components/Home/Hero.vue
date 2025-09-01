@@ -6,9 +6,12 @@
           slides-per-view="1"
           space-between="5"
           :loop="true"
+          :autoplay="{
+            timeout: 7000,
+          }"
           :pagination="{
             //hideOnClick: true
-            el: '.hero__dots',
+            //el: '.hero__dots',
             clickable: true,
           }"
       >
@@ -24,8 +27,6 @@
           />
         </swiper-slide>
       </swiper-container>
-
-      <div class="hero__dots swiper__dots"></div>
     </div>
   </section>
 

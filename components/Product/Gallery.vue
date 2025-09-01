@@ -14,7 +14,10 @@
         <div class="swiper">
           <div class="swiper-wrapper">
             <div class="swiper-slide" v-for="image in product.images" :key="image.id">
-              <a :href="getImage( image.path )" class="product-gallery__thumbs-item _active">
+              <a :href="getImage( image.path )"
+                 class="product-gallery__thumbs-item _active"
+                 data-fancybox="gallery"
+              >
                 <img
                     :src="getImage( image.path )"
                     class="product-gallery__thumbs-img"
@@ -43,10 +46,20 @@
 
 <script setup lang="ts">
 import type {Product} from "~/types/catalog";
+import { Fancybox as NativeFancybox } from '@fancyapps/ui'
+import '@fancyapps/ui/dist/fancybox/fancybox.css';
 
 defineProps<{
   product: Product
 }>();
+
+onMounted( () => {
+  NativeFancybox.bind('[data-fancybox]', {});
+
+  return () => {
+    NativeFancybox.destroy()
+  }
+} )
 </script>
 
 <style scoped lang="scss">

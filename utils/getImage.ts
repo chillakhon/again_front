@@ -4,5 +4,5 @@ export const getImage = ( path: string ) => {
         return imageDefault;
     }
 
-    return useRuntimeConfig().public.DEV_URI + '/product/image/md_' + path;
+    return useRuntimeConfig().public.DEV_URI + '/product/image/lg_' + path;
 }

@@ -52,8 +52,10 @@
 }
 
 .product-gallery__thumbs-item {
+  --height: 10rem;
+
   display: block;
-  min-height: 10rem;
+  height: var(--height);
   position: relative;
   transition: var(--tr-regular);
   cursor: pointer;
@@ -67,7 +69,7 @@
   }
 
   @media (max-width: $tablet) {
-    height: 28.4rem;
+    --height: 28.4rem;
   }
 }
 
