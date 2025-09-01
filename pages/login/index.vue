@@ -58,8 +58,8 @@
 <script setup lang="ts">
 definePageMeta({
   title: 'Вход',
-  middleware: 'not-auth'
-})
+  //middleware: 'not-auth',
+} )
 
 const loginForm = ref( {
   email: '',
@@ -70,6 +70,13 @@ const formError = ref( '' );
 const codeError = ref( '' );
 
 const auth = useAuthStore();
+// computed( () => {
+//   if ( auth.isAuthenticated ){
+//     return navigateTo( '/profile/settings' );
+//   }
+// } )
+
+
 const isLoading = ref( false );
 const getCode = async () => {
   formError.value = '';
