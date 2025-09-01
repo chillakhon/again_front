@@ -33,7 +33,7 @@ import {FormDatepicker, FormInput, ModalsSuccess} from "#components";
 definePageMeta({
   layout: 'profile',
   title: 'Контактные данные',
-  middleware: ['auth'],
+  middleware: 'auth',
 } );
 
 const modal = useModal();

@@ -16,6 +16,7 @@ import type {Sale} from "~/types/sales";
 definePageMeta({
   layout: 'profile',
   title: 'Ваши скидки и бонусы',
+  middleware: 'auth'
 })
 
 type Data = {

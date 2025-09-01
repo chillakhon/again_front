@@ -70,6 +70,9 @@ const formError = ref( '' );
 const codeError = ref( '' );
 
 const auth = useAuthStore();
+const isAuthenticated = computed( () => {
+  return auth.isAuthenticated;
+} );
 // computed( () => {
 //   if ( auth.isAuthenticated ){
 //     return navigateTo( '/profile/settings' );

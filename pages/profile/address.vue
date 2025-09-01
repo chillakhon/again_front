@@ -45,7 +45,8 @@ import {FormInput, FormSelect, ModalsSuccess} from "#components";
 
 definePageMeta({
   layout: 'profile',
-  title: 'Адрес доставки'
+  title: 'Адрес доставки',
+  middleware: 'auth'
 });
 
 const countryId = ref( '' );

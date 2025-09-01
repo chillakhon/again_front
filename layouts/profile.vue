@@ -19,6 +19,13 @@
 
 <script setup lang="ts">
 const route = useRoute();
+const authStore = useAuthStore();
+
+// onMounted( () => {
+//   if ( ! authStore.isAuthenticated ) {
+//     return navigateTo( '/login' );
+//   }
+// } )
 </script>
 
 <style scoped lang="scss">
