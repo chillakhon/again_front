@@ -6,6 +6,7 @@
           slides-per-view="1"
           space-between="5"
           :loop="true"
+          :modules="[Pagination]"
           :autoplay="{
             timeout: 7000,
           }"
@@ -34,6 +35,7 @@
 
 <script setup lang="ts">
 import { register } from 'swiper/element/bundle';
+import { Pagination } from 'swiper/modules';
 register();
 
 type Slide = {
