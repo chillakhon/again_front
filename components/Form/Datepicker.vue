@@ -1,29 +1,37 @@
 <template>
   <div class="form__row" :class="rowClass">
-    <input
-        type="date"
-        :name="name"
-        class="form__input"
+    <VueDatePicker
         :placeholder="placeholder"
         v-model="model"
-        @input="handleInput($event)"
-    >
+        :enable-time-picker="false"
+        :format="format"
+    ></VueDatePicker>
     <div class="form__error" v-if="error">{{ error }}</div>
   </div>
 </template>
 
 <script setup lang="ts">
-defineProps<{
+import VueDatePicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css'
+
+const props = defineProps<{
   name: string,
   placeholder?: string,
   rowClass?: string,
-  error?: string,
+  error?: string
 }>();
 
 const model = defineModel<string|number>();
 const emit = defineEmits(['update:modelValue']);
-const handleInput = ($event: InputEvent) => {
-  emit('update:modelValue', ( $event.target as HTMLInputElement ).value)
+
+const format = (date) => {
+  return ('0' + date.getDate()).slice(-2) + '.'
+      + ('0' + (date.getMonth()+1)).slice(-2) + '.'
+      + date.getFullYear();
+}
+
+const formatDateOutput = (date) => {
+  return date.getFullYear() + '-' +  ('0' + (date.getMonth()+1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);
 }
 </script>
 
@@ -48,6 +56,49 @@ const handleInput = ($event: InputEvent) => {
   @media (max-width: $mobile) {
     height: 5rem;
     font-size: 1.4rem;
+  }
+}
+
+:deep(.dp__input_wrap) {
+  & input {
+    width: 100%;
+  }
+}
+
+:deep(.dp__input){
+  height: 7rem;
+  border: .1rem solid var(--fg-input-border);
+  padding: 0 4rem 0 6rem;
+  font-size: 1.6rem;
+  border-radius: 6rem;
+  
+  @media (max-width: $mobile) {
+    height: 5rem;
+  }
+}
+
+:deep(.dp__input_icon) {
+  left: 1rem;
+  width: 2rem;
+  height: auto;
+}
+
+:deep(.dp--clear-btn) {
+  right: 2rem;
+}
+
+:deep(.dp--clear-btn svg){
+  width: 1.5rem;
+  height: auto;
+}
+
+:deep(.dp__menu) {
+  font-size: 1.6rem;
+  --dp-preview-font-size: 1.6rem;
+
+  @media (max-width: $mobile) {
+    font-size: 1.4rem;
+    --dp-preview-font-size: 1.4rem;
   }
 }
 </style>

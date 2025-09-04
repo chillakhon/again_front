@@ -114,6 +114,7 @@ const save = async () => {
       }
     }
   } else {
+    authStore.updateAddress( form );
     modal.openModal( ModalsSuccess, {
       title: 'Спасибо!',
       text: 'Ваш профиль обновлен'

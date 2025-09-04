@@ -19,7 +19,7 @@
     <FormCheckbox
         class="form__policy"
         name="policy"
-        label="Нажимая на кнопку, вы соглашаетесь<br> с <a href='/policy' target='_blank'>политикой конфиденциальности</a>"
+        :label="getPolicyLink()"
         :is-checked="true"
     />
   </div>

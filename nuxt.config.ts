@@ -22,6 +22,9 @@ export default defineNuxtConfig({
       DEV_URI: 'http://193.233.84.235/api'
     }
   },
+  build: {
+    transpile: ['@vuepic/vue-datepicker']
+  },
   modules: [
     '@pinia/nuxt',
     'pinia-plugin-persistedstate/nuxt',

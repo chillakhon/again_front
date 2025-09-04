@@ -89,6 +89,8 @@ const save = async () => {
     form.value[key].error = '';
   }
 
+  console.log( getDateFormat().formatDateOutput( form.value.birthday.value ) );
+
   isLoading.value = true;
   const { data, status, error } = await useApi('/clients/update-profile', {
     body: {
@@ -96,9 +98,9 @@ const save = async () => {
       last_name: form.value.last_name.value,
       phone: form.value.phone.value,
       email: form.value.email.value,
-      birthday: form.value.birthday.value
+      birthday: getDateFormat().formatDateOutput( form.value.birthday.value )
     }
-  }, '', 'PUT');
+  }, '', 'PUT' );
 
   if ( status.value === 'error' && error?.value?.data?.errors ){
     for ( const item in error.value.data.errors ){
@@ -107,6 +109,7 @@ const save = async () => {
       }
     }
   } else {
+    authStore.updateProfile( form );
     modal.openModal( ModalsSuccess, {
       title: 'Спасибо!',
       text: 'Ваш профиль обновлен'

@@ -24,7 +24,7 @@
       </div>
       <div class="footer__bottom">
         <div class="footer__bottom-item">
-          <NuxtLink href="#" class="footer__link _border">Договор оферты</NuxtLink>
+          <NuxtLink href="/oferta" class="footer__link _border">Договор оферты</NuxtLink>
         </div>
         <div class="footer__bottom-item" style="--text-align: center;">
           <div class="footer__save">Все права защищены</div>
@@ -103,6 +103,10 @@
 
     &:last-child {
       margin-bottom: 0;
+    }
+
+    &:nth-child(2) {
+      order: 3;
     }
   }
 }
