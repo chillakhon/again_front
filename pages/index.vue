@@ -3,8 +3,6 @@
   <HomeCatalog />
   <HomeRecommend />
   <HomePayment />
-  <HomeReviews />
-  <HomeVideos />
   <HomeFaq />
   <HomeNews />
 </template>
