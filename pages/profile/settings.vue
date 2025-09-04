@@ -21,7 +21,7 @@
           name="policy"
           value="1"
           :is-checked="true"
-          label="Нажимая на кнопку, вы соглашаетесь<br> с <a href='/policy' target='_blank'>политикой конфиденциальности</a>"
+          :label="getPolicyLink()"
       />
     </div>
   </div>

@@ -5,10 +5,11 @@
   width: 100%;
   height: 100%;
   transition: var(--tr-regular);
-  z-index: -1;
+  z-index: 9999;
+  pointer-events: none;
 
   &._active {
-    z-index: 1111;
+    pointer-events: auto;
 
     & .aside-menu__bg {
       opacity: 1;

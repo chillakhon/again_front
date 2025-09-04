@@ -16,11 +16,11 @@
         </button>
       </div>
       <div class="mini-cart__item-content">
-        <div class="mini-cart__item-content__top">
+        <NuxtLink :to="to" class="mini-cart__item-content__top">
           <div class="cart-item__title">{{ product.name }}</div>
-        </div>
+        </NuxtLink>
         <div class="mini-cart__item-content__bottom">
-          <button class="mini-cart__item-fav _mobile">
+          <button class="mini-cart__item-fav _mobile" @click="favouritesStore.toggleFavourites( product )">
             <svg width="14" height="12" viewBox="0 0 14 12" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M10.108 0C8.841 0 7.707 0.593258 7 1.50337C6.293 0.593258 5.159 0 3.892 0C1.743 0 0 1.68539 0 3.76854C0 4.57079 0.133 5.31236 0.364 6C1.47 9.37079 4.879 11.3865 6.566 11.9393C6.804 12.0202 7.196 12.0202 7.434 11.9393C9.121 11.3865 12.53 9.37079 13.636 6C13.867 5.31236 14 4.57079 14 3.76854C14 1.68539 12.257 0 10.108 0Z" fill="#CB0B13"/>
             </svg>
@@ -63,6 +63,15 @@ const quantity = ref( 1 );
 const getQuantity = ( value: number ) => {
   quantity.value = value;
 }
+
+const to = computed( () => {
+  return {
+    name: 'catalog-slug',
+    params: {
+      slug: props.product.id
+    }
+  }
+} )
 </script>
 
 <style scoped lang="scss">

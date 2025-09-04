@@ -35,6 +35,13 @@
           :class="{ '_loading': isLoading }"
           @click="save"
       >Сохранить изменения</button>
+      <FormCheckbox
+          row-class="profile-address__form-policy"
+          name="policy"
+          value="1"
+          :is-checked="true"
+          :label="getPolicyLink()"
+      />
     </div>
   </div>
 </template>
@@ -165,6 +172,15 @@ const save = async () => {
   @media (max-width: $mobile) {
     margin-left: 0;
     margin-top: 1.2rem;
+  }
+}
+
+.profile-address__form-policy {
+  margin-left: 2rem;
+
+  @media (max-width: $mobile) {
+    margin-left: 0;
+    margin-top: 2rem;
   }
 }
 

@@ -22,6 +22,7 @@
           class="checkout__btn btn _loader"
           @click="emit( 'clickToButton' )"
           :class="{ '_loading': isLoading }"
+          :disabled="isDisabled"
       >
         Подтвердить заказ
       </button>
@@ -29,7 +30,9 @@
         name="policy"
         class="checkout__policy"
         value="1"
-        label="Нажимая на кнопку, вы соглашаетесь<br> с <a href='/policy' target='_blank'>политикой конфиденциальности</a>"
+        :is-checked="true"
+        :label="getPolicyLink()"
+        v-model="isChecked"
       />
     </div>
   </div>
@@ -42,6 +45,12 @@ withDefaults( defineProps<{
   isLoading: false
 } )
 const emit = defineEmits(['clickToButton']);
+const isDisabled = ref( true );
+const isChecked = ref( false );
+
+watch( isChecked, ( isChecked: boolean, newValue: boolean ) => {
+  isDisabled.value = newValue;
+} )
 </script>
 
 <style scoped lang="scss">

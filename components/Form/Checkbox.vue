@@ -1,6 +1,12 @@
 <template>
   <div class="checkbox" :class="rowClass">
-    <input class="checkbox__input" type="checkbox" :name="name" :checked="isChecked" @change="handleInput($event)" :value="value">
+    <input
+        class="checkbox__input"
+        type="checkbox"
+        :name="name"
+        :checked="isChecked"
+        v-model="model"
+    >
     <span  class="checkbox__icon"></span>
     <label class="checkbox__label" v-if="label" :class="{ 'checkbox__flex': isLabelObject }">
       <template v-if="isLabelObject">
@@ -39,6 +45,7 @@ onMounted( () => {
   isLabelObject.value = typeof props.label === 'object';
 } )
 
+const model = defineModel<boolean>();
 const emit = defineEmits(['update:modelValue']);
 const handleInput = ($event: InputEvent) => {
   emit('update:modelValue', ( $event.target as HTMLInputElement ).value)

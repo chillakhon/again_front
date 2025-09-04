@@ -19,6 +19,8 @@
   text-align: center;
   box-shadow: 0 -1px 23px 2px rgba(0, 0, 0, 0.09);
   font-family: var(--ff-mulish);
+  position: relative;
+  z-index: 1000;
 
   @media (max-width: $tablet) {
     font-size: 1.4rem;

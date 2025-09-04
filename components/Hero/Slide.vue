@@ -29,7 +29,7 @@ defineProps<{
 <style scoped lang="scss">
 .hero-slide {
   border-radius: 5rem;
-  padding: 1.9rem 3rem;
+  padding: 10rem 3rem;
   min-height: 67.1rem;
   text-align: center;
   position: relative;
@@ -54,7 +54,7 @@ defineProps<{
 }
 
 .hero-slide__title {
-  max-width: 48rem;
+  max-width: 75%;
   margin: 0 auto 1rem;
   font-weight: 300;
 }
@@ -78,6 +78,16 @@ defineProps<{
   }
 }
 
+.hero-slide__btn {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 6rem;
+
+  @media (max-width: $tablet) {
+    width: 80%;
+  }
+}
 
 .hero-slide__media {
   &-pic {

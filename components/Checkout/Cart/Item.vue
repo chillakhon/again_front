@@ -61,7 +61,26 @@ const { getNormalPrice, formattedPrice } = getFormatPrice();
 
 .checkout-cart__item-quantity {
   line-height: 145%;
-  font-size: var(--fz-1-8);
+  min-width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: var(--fg-red);
+  color: var(--fg-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  margin: 0 1.5rem;
+
+  @media (max-width: $mobile) {
+    font-size: 1.1rem;
+    min-width: 1.5rem;
+    height: 1.5rem;
+  }
+}
+
+.checkout-cart__item-price {
+  min-width: fit-content;
 }
 
 </style>

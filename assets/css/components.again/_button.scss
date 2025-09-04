@@ -17,6 +17,12 @@
   justify-content: center;
   transition: var(--tr-regular);
 
+  &:disabled {
+    opacity: .5;
+    cursor: default;
+    pointer-events: none;
+  }
+
   @media (max-width: $mobile) {
     padding: 1rem;
     min-height: 5rem;

@@ -43,7 +43,7 @@ const modal = useModal();
 .header {
   position: sticky;
   top: 0;
-  z-index: 99;
+  z-index: 1000;
   background: var(--fg-white);
 
   $root: &;
@@ -154,7 +154,6 @@ const modal = useModal();
   padding-bottom: 3rem !important;
   padding-top: 2.6rem !important;
 
-
   @media (max-width: $tablet) {
     :deep(li) {
       margin-bottom: 2.5rem;
@@ -199,10 +198,10 @@ const modal = useModal();
     bottom: 0;
     left: 0;
     width: 100%;
-    height: calc(100% - 5.4rem);
+    height: 100%;
     z-index: 999;
     background: var(--fg-white);
-    padding: 2.8rem 2rem;
+    padding: 7rem 2rem 2.8rem;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -243,9 +242,9 @@ const modal = useModal();
   }
 }
 
-@media (max-width: $mobile) {
-  .header__bottom {
-    height: calc(100% - 6.9rem);
-  }
-}
+//@media (max-width: $mobile) {
+//  .header__bottom {
+//    height: calc(100% - 6.9rem);
+//  }
+//}
 </style>

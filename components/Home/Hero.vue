@@ -8,12 +8,12 @@
           :loop="true"
           :modules="[Pagination]"
           :autoplay="{
-            timeout: 7000,
+            delay: 5000
           }"
           :pagination="{
             //hideOnClick: true
             //el: '.hero__dots',
-            clickable: true,
+            clickable: true
           }"
       >
         <swiper-slide v-for="(slide, index) in slides" :key="index">
