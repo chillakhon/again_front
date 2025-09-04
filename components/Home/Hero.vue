@@ -35,7 +35,12 @@
 
 <script setup lang="ts">
 import { register } from 'swiper/element/bundle';
-import { Pagination } from 'swiper/modules';
+import { Pagination, Autoplay } from 'swiper/modules';
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import "swiper/css/scrollbar";
+
 register();
 
 type Slide = {

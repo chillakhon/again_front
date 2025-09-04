@@ -1,6 +1,7 @@
 <template>
   <HomeHero />
   <HomeTechnology />
+  <HomeCatalog />
   <HomeRecommend />
   <HomePayment />
   <HomeReviews />
