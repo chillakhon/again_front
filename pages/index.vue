@@ -1,5 +1,9 @@
 <template>
-  Test
+  <HomeTechnology />
+  <HomeRecommend />
+  <HomePayment />
+  <HomeFaq />
+  <HomeNews />
 </template>
 
 <script setup lang="ts">
