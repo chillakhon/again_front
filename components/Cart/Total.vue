@@ -4,12 +4,12 @@
       <div class="cart__summary cart-summary">
         <div class="cart-summary__item">
           <span class="cart-summary__item-title">Всего</span>
-          <span class="cart-summary__item-price">{{ getFormatPrice().formattedPrice( cart.total ) }} ₽</span>
+          <span class="cart-summary__item-price">{{ getFormatPrice().formattedPrice( cart.subtotal ) }} ₽</span>
         </div>
-<!--        <div class="cart-summary__item">-->
-<!--          <span class="cart-summary__item-title">Скидка</span>-->
-<!--          <span class="cart-summary__item-price">3 000 ₽</span>-->
-<!--        </div>-->
+        <div class="cart-summary__item" v-if="cart.sale">
+          <span class="cart-summary__item-title">Скидка</span>
+          <span class="cart-summary__item-price">{{ getFormatPrice().formattedPrice( cart.sale ) }} ₽</span>
+        </div>
       </div>
     </div>
     <div class="cart__total-bottom">

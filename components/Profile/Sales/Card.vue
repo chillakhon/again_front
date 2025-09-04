@@ -7,13 +7,18 @@
     </div>
     <div class="profile-sales__item-title" v-if="item.code">{{ item.code }}</div>
     <div class="profile-sales__item-text" v-if="item.description">{{ item.description }}</div>
+    <div class="profile-sales__item-info">
+      <p><strong>Дата окончания: </strong> {{ getDateFormat().formattedDate( item.expires_at ) }}</p>
+      <p><strong>Тип: </strong> {{ discountType[ item.discount_type ] }}</p>
+      <p><strong>Сумма: </strong> {{ getFormatPrice().formattedPrice( item.discount_amount ) }} {{ discountCurrency[ item.discount_type ] }}</p>
+    </div>
 <!--    <div class="profile-sales__item-alert">Скидка 25% на первый заказ</div>-->
     <button class="profile-sales__item-btn btn _border _thin" @click="copy">{{ buttonTitle }}</button>
   </div>
 </template>
 
 <script setup lang="ts">
-import type {Sale} from "~/types/sales";
+import {discountCurrency, discountType, type Sale} from "~/types/sales";
 
 const props = defineProps<{
   item: Sale
@@ -99,4 +104,8 @@ const copy = async () => {
   }
 }
 
+.profile-sales__item-info {
+  --fz-regular: 1.4rem;
+  margin-top: 1rem;
+}
 </style>

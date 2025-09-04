@@ -4,6 +4,18 @@ export interface Sale {
     description: string,
     image: string,
     discount_amount: string,
+    discount_type: string,
     code: string,
-    image_url?: string
+    image_url?: string,
+    expires_at: string
+}
+
+export const discountType = {
+    percentage: 'Процентная',
+    fixed: 'Фиксированная',
+}
+
+export const discountCurrency = {
+    percentage: '%',
+    fixed: '₽',
 }

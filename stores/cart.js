@@ -7,6 +7,7 @@ export const useCartStore = defineStore('cartStore', () => {
     const total = ref( 0 );
     const sale = ref( 0 );
     const cart = useLocalStorage('cart', []);
+    const promoCode = ref( '' ) ;
 
     const init = () =>{
         countInCart();
@@ -121,6 +122,24 @@ export const useCartStore = defineStore('cartStore', () => {
 
             total.value += quantity * item.price;
         } );
+
+        subtotal.value = total.value;
+    }
+
+    const countCartPromocode = ( code, type, amount ) => {
+        if ( type === 'percentage' ){
+            subtotal.value = total.value;
+            sale.value = (total.value * (parseFloat( amount ) / 100));
+            total.value = total.value - sale.value;
+        }
+
+        if ( type === 'fixed' ) {
+            subtotal.value = total.value;
+            sale.value = parseFloat( amount );
+            total.value = total.value - parseFloat( amount );
+        }
+
+        promoCode.value = code;
     }
 
     // const countCartSubtotal = () => {
@@ -177,9 +196,11 @@ export const useCartStore = defineStore('cartStore', () => {
         init,
         getCartForCheckout,
         setEmptyCart,
+        countCartPromocode,
         quantity,
         subtotal,
         total,
-        sale
+        sale,
+        promoCode
     }
 } )

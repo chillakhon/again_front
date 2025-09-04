@@ -63,7 +63,7 @@ const isLoading = ref( false );
 
 const form = computed( () => {
   return ref( {
-    promo_code: '',
+    promo_code: cartStore.promoCode,
     user: {
       first_name: userStore.user?.profile?.first_name || '',
       last_name: userStore.user?.profile?.last_name|| '',
