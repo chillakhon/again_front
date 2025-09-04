@@ -15,13 +15,17 @@
       </template>
     </div>
     <div class="form__button">
-      <button class="contacts__form-btn btn" @click="send">отправить</button>
+      <button
+          class="contacts__form-btn btn"
+          @click="send"
+          :disabled="isButtonDisabled"
+      >отправить</button>
     </div>
     <FormCheckbox
         class="form__policy"
         name="policy"
         :label="getPolicyLink()"
-        :is-checked="true"
+        v-model="isChecked"
     />
   </div>
 </template>
@@ -61,6 +65,13 @@ const form = ref( {
     error: ''
   }
 } );
+
+const isChecked = ref( true );
+const isButtonDisabled = ref( false );
+
+watch( ( isChecked ), ( oldValue, newValue ) => {
+  isButtonDisabled.value = newValue;
+} )
 
 const modal = useModal();
 

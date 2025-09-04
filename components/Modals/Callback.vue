@@ -13,14 +13,18 @@
       />
     </template>
     <div class="form__button">
-      <button class="modal-callback__btn btn _loader _wide" @click="send">Оставить заявку</button>
+      <button
+          class="modal-callback__btn btn _loader _wide"
+          @click="send"
+          :disabled="isButtonDisabled"
+      >Оставить заявку</button>
     </div>
 
     <FormCheckbox
         class="form__policy"
         name="policy"
         :label="getPolicyLink()"
-        :is-checked="true"
+        v-model="isChecked"
     />
   </div>
 </template>
@@ -38,6 +42,13 @@ const form = ref( {
     error: ''
   }
 } );
+
+const isChecked = ref( true );
+const isButtonDisabled = ref( false );
+
+watch( ( isChecked ), ( oldValue, newValue ) => {
+  isButtonDisabled.value = newValue;
+} )
 
 const modal = useModal();
 
