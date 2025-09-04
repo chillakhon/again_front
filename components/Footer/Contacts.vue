@@ -27,12 +27,16 @@
 
   @media (max-width: $mobile) {
     order: 2;
-    justify-content: center;
-    align-items: center;
-    display: flex;
-    flex-direction: row;
-    text-align: center;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8rem;
     margin-top: 1.6rem;
+    width: 100%;
+    //justify-content: center;
+    //align-items: center;
+    //display: flex;
+    //flex-direction: row;
+    //text-align: center;
   }
 }
 
@@ -47,7 +51,8 @@
   @media (max-width: $mobile) {
     margin-bottom: 0;
     margin-right: 2.6rem;
-    text-align: center;
+    //text-align: center;
+    text-align: left;
 
     &:last-child {
       margin-right: 0;

@@ -13,8 +13,8 @@
       <div class="footer__menu-title"></div>
       <ul class="footer__menu-list">
         <li><NuxtLink to="/articles">Статьи</NuxtLink></li>
-        <li><NuxtLink to="/returns">Условия обмена и возврата</NuxtLink></li>
-        <li><NuxtLink to="/care">Правила ухода и использования</NuxtLink></li>
+        <li><NuxtLink to="/returns">Условия обмена и&nbsp;возврата</NuxtLink></li>
+        <li><NuxtLink to="/care">Правила ухода и&nbsp;использования</NuxtLink></li>
         <li><NuxtLink to="/faq">Отвечаем на ваши вопросы</NuxtLink></li>
       </ul>
     </div>
@@ -41,8 +41,8 @@
     margin-top: 2.8rem;
     width: 100%;
     display: grid;
-    grid-template-columns: 6fr 6fr;
-    gap: 2rem;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8rem;
   }
 }
 

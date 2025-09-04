@@ -325,6 +325,11 @@ const isFavourite = computed( () => {
     font-size: 1rem;
     width: fit-content;
     min-width: fit-content;
+
+    @media (max-width: $mobile) {
+      min-width: 9rem;
+      text-align: center;
+    }
   }
 }
 

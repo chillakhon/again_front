@@ -1,9 +1,9 @@
 .product-gallery__flex {
-  display: flex;
+  //display: flex;
   margin-top: 1rem;
 
   @media (max-width: $tablet) {
-    flex-direction: column;
+    //flex-direction: column;
   }
 }
 
