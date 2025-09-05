@@ -6,13 +6,11 @@
           slides-per-view="1"
           space-between="5"
           :loop="true"
-          :modules="[Pagination]"
+          :modules="[Pagination, Autoplay]"
           :autoplay="{
             delay: 5000
           }"
           :pagination="{
-            //hideOnClick: true
-            //el: '.hero__dots',
             clickable: true
           }"
       >

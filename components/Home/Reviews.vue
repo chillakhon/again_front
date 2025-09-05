@@ -26,40 +26,43 @@
           </button>
         </div>
       </div>
-      <swiper-container
-          v-if="reviews?.success && reviews.data.length"
-          class="swiper product-reviews__swiper"
-          :auto-height="true"
-          :navigation="{
-          nextEl: '.product-reviews__next',
-          prevEl: '.product-reviews__prev',
-        }"
-          :breakpoints="{
-          0: {
-            slidesPerView: 1.3,
-            spaceBetween: 10,
-          },
-          575: {
-            slidesPerView: 2.5,
-            spaceBetween: 10,
-          },
-          992: {
-            slidesPerView: 4,
-            spaceBetween: 16,
-          }
-        }"
-      >
-        <swiper-slide v-for="review in reviews.data" :key="review.id">
-          <ReviewsCard
-              :rating="review.rating"
-              :content="review.content"
-              :user-name="review?.client?.name"
-              :date="review.published_at"
-          />
-        </swiper-slide>
-      </swiper-container>
-      <div v-else>Отзывов не добавлено</div>
-
+      <ClientOnly>
+        <swiper-container
+            v-if="reviews?.success && reviews.data.length"
+            class="swiper product-reviews__swiper"
+            :auto-height="true"
+            :slidesPerView="1.3"
+            :spaceBetween="10"
+            :navigation="{
+              nextEl: '.product-reviews__next',
+              prevEl: '.product-reviews__prev',
+            }"
+            :breakpoints="{
+            0: {
+              slidesPerView: 1.3,
+              spaceBetween: 10,
+            },
+            575: {
+              slidesPerView: 2.5,
+              spaceBetween: 10,
+            },
+            992: {
+              slidesPerView: 4,
+              spaceBetween: 16,
+            }
+          }"
+        >
+          <swiper-slide v-for="review in reviews.data" :key="review.id">
+            <ReviewsCard
+                :rating="review.rating"
+                :content="review.content"
+                :user-name="review?.client?.name"
+                :date="review.published_at"
+            />
+          </swiper-slide>
+        </swiper-container>
+        <div v-else>Отзывов не добавлено</div>
+      </ClientOnly>
       <!--    <button class="product-reviews__more">Показать еще отзывы</button>-->
       <button class="product-reviews__button _mobile" @click="openModal">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
