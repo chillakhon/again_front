@@ -7,14 +7,15 @@ register();
   <section class="videos">
     <swiper-container
         class="videos__swiper swiper"
+        :slidesPerView="2.2"
+        :spaceBetween="10"
+        :pagination="{
+          clickable: true
+        }"
         :breakpoints="{
           0: {
             slidesPerView: 2.2,
             spaceBetween: 10,
-            pagination: {
-              el: '.videos__dots',
-              clickable: true
-            },
           },
           600: {
             slidesPerView: 3.5,
