@@ -77,6 +77,10 @@ register();
   }
 }
 
+swiper-container::part(pagination) {
+  margin-top: 2rem;
+}
+
 .videos__dots {
   margin-top: 2rem;
   display: none;
