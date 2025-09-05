@@ -1,31 +1,33 @@
 <template>
   <section class="hero">
     <div class="hero__container container">
-      <swiper-container
-          class="hero__slider"
-          slides-per-view="1"
-          space-between="5"
-          :loop="true"
-          :modules="[Pagination, Autoplay]"
-          :autoplay="{
-            delay: 5000
-          }"
-          :pagination="{
-            clickable: true
-          }"
-      >
-        <swiper-slide v-for="(slide, index) in slides" :key="index">
-          <HeroSlide
-            :title="slide.title"
-            :subtitle="slide.subtitle"
-            :text="slide.text"
-            :image="{
-              original: slide?.image_urls?.original,
-              sm: slide?.image_urls?.sm
+      <ClientOnly>
+        <swiper-container
+            class="hero__slider"
+            slides-per-view="1"
+            space-between="5"
+            :loop="true"
+            :modules="[Pagination, Autoplay]"
+            :autoplay="{
+              delay: 5000
             }"
-          />
-        </swiper-slide>
-      </swiper-container>
+            :pagination="{
+              clickable: true
+            }"
+        >
+          <swiper-slide v-for="(slide, index) in slides" :key="index">
+            <HeroSlide
+              :title="slide.title"
+              :subtitle="slide.subtitle"
+              :text="slide.text"
+              :image="{
+                original: slide?.image_urls?.original,
+                sm: slide?.image_urls?.sm
+              }"
+            />
+          </swiper-slide>
+        </swiper-container>
+      </ClientOnly>
     </div>
   </section>
 
@@ -35,9 +37,7 @@
 import { register } from 'swiper/element/bundle';
 import { Pagination, Autoplay } from 'swiper/modules';
 import "swiper/css";
-import "swiper/css/navigation";
 import "swiper/css/pagination";
-import "swiper/css/scrollbar";
 
 register();
 

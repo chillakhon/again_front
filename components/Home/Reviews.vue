@@ -80,6 +80,9 @@
 import {ModalsReview} from "#components";
 import type {Review} from "~/types/review";
 import { register } from 'swiper/element/bundle';
+import "swiper/css";
+import "swiper/css/pagination";
+
 register();
 
 const { data: reviews } = await useApi<{
