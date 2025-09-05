@@ -104,6 +104,7 @@ const clearSearch = () => {
 
       @media (max-width: $mobile) {
         font-size: 1rem;
+        height: 3.7rem;
       }
     }
 
@@ -122,6 +123,10 @@ const clearSearch = () => {
     width: 1.3rem;
     top: 50%;
     transform: translateY(-50%);
+
+    @media (max-width: $mobile) {
+      right: 3.4rem;
+    }
   }
 }
 
