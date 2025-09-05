@@ -12,6 +12,7 @@
       <button
           class="profile-settings__form-btn btn _border _loader"
           :class="{ '_loading': isLoading }"
+          :disabled="isButtonDisabled"
           @click="save"
       >
         Сохранить изменения
@@ -19,8 +20,7 @@
       <FormCheckbox
           row-class="profile-settings__form-policy"
           name="policy"
-          value="1"
-          :is-checked="true"
+          v-model="isChecked"
           :label="getPolicyLink()"
       />
     </div>
@@ -83,6 +83,13 @@ onMounted( () => {
 } );
 //
 const isLoading = ref( false );
+
+const isChecked = ref( true );
+const isButtonDisabled = ref( false );
+
+watch( ( isChecked ), ( oldValue, newValue ) => {
+  isButtonDisabled.value = newValue;
+} )
 
 const save = async () => {
   for ( let key in form.value ) {

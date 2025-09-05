@@ -33,13 +33,14 @@
       <button
           class="profile-address__form-btn btn _border"
           :class="{ '_loading': isLoading }"
+          :disabled="isButtonDisabled"
           @click="save"
       >Сохранить изменения</button>
       <FormCheckbox
           row-class="profile-address__form-policy"
           name="policy"
           value="1"
-          :is-checked="true"
+          v-model="isChecked"
           :label="getPolicyLink()"
       />
     </div>
@@ -96,6 +97,13 @@ const form = ref( {
 onMounted( () => {
   form.value.delivery_postal_code.value = user?.profile?.delivery_postal_code || '';
   form.value.delivery_address.value = user?.profile?.delivery_address || '';
+} )
+
+const isChecked = ref( true );
+const isButtonDisabled = ref( false );
+
+watch( ( isChecked ), ( oldValue, newValue ) => {
+  isButtonDisabled.value = newValue;
 } )
 
 const save = async () => {

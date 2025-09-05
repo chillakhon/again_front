@@ -5,6 +5,9 @@
         v-model="model"
         :enable-time-picker="false"
         :format="format"
+        :format-locale="ru"
+        select-text="Выбрать"
+        cancel-text="Отменить"
     ></VueDatePicker>
     <div class="form__error" v-if="error">{{ error }}</div>
   </div>
@@ -13,6 +16,7 @@
 <script setup lang="ts">
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
+import { ru } from 'date-fns/locale';
 
 const props = defineProps<{
   name: string,

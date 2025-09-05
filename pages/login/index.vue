@@ -57,8 +57,7 @@
 
 <script setup lang="ts">
 definePageMeta({
-  title: 'Вход',
-  //middleware: 'not-auth',
+  title: 'Вход'
 } )
 
 const loginForm = ref( {
