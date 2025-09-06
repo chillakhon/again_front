@@ -1,5 +1,6 @@
 <template>
   <div class="profile-settings__form form">
+    {{ isFormError }}
     <template v-for="( item, key ) in form" :key="key">
       <component :is="item.template"
         :name="key"
@@ -29,6 +30,7 @@
 
 <script setup lang="ts">
 import {FormDatepicker, FormInput, ModalsSuccess} from "#components";
+import {useFormValidator} from "~/composables/useFormValidator";
 
 definePageMeta({
   layout: 'profile',
@@ -44,33 +46,48 @@ const form = ref( {
     template: FormInput,
     value: '',
     placeholder: 'Имя',
-    error: ''
+    error: '',
+    validation: {
+      required: true
+    }
   },
   last_name: {
     template: FormInput,
     value: '',
     placeholder: 'Фамилия',
-    error: ''
+    error: '',
+    validation: {
+      required: true
+    }
   },
   birthday: {
     template: FormDatepicker,
     value: '',
     placeholder: 'Дата рождения',
-    error: ''
+    error: '',
+    validation: {
+      required: true
+    }
   },
   phone: {
     template: FormInput,
     type: 'tel',
     value: '',
     placeholder: 'Телефон',
-    error: ''
+    error: '',
+    validation: {
+      required: true
+    }
   },
   email: {
     template: FormInput,
     value: '',
     type: 'email',
     placeholder: 'E-mail',
-    error: ''
+    error: '',
+    validation: {
+      required: true
+    }
   },
 } );
 
@@ -92,11 +109,13 @@ watch( ( isChecked ), ( oldValue, newValue ) => {
 } )
 
 const save = async () => {
-  for ( let key in form.value ) {
-    form.value[key].error = '';
-  }
+  const { isFormError, validateForm, resetErrors } = useFormValidator( form );
+  resetErrors();
+  validateForm();
 
-  console.log( getDateFormat().formatDateOutput( form.value.birthday.value ) );
+  if ( isFormError.value ) {
+    return;
+  }
 
   isLoading.value = true;
   const { data, status, error } = await useApi('/clients/update-profile', {

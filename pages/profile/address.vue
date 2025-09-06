@@ -50,6 +50,7 @@
 <script setup lang="ts">
 import type {Cities, Countries} from "~/types/countries";
 import {FormInput, FormSelect, ModalsSuccess} from "#components";
+import {useFormValidator} from "~/composables/useFormValidator";
 
 definePageMeta({
   layout: 'profile',
@@ -79,18 +80,30 @@ const form = ref( {
   delivery_country_id: {
     value: '',
     error: '',
+    validation: {
+      required: true,
+    }
   },
   delivery_postal_code: {
     value: '',
-    error: ''
+    error: '',
+    validation: {
+      required: true,
+    }
   },
   delivery_city_id: {
     value: '',
     error: '',
+    validation: {
+      required: true,
+    }
   },
   delivery_address: {
     value: '',
-    error: ''
+    error: '',
+    validation: {
+      required: true,
+    }
   },
 } );
 
@@ -107,8 +120,13 @@ watch( ( isChecked ), ( oldValue, newValue ) => {
 } )
 
 const save = async () => {
-  for (let key in form.value) {
-    form.value[key].error = '';
+  const { isFormError, validateForm, resetErrors } = useFormValidator( form );
+
+  resetErrors();
+  validateForm();
+
+  if ( isFormError.value ){
+    return;
   }
 
   isLoading.value = true;
