@@ -16,7 +16,7 @@
 <script setup lang="ts">
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
-import { ru } from 'date-fns/locale';
+import ru from 'date-fns/locale/ru/index.js';
 
 const props = defineProps<{
   name: string,
