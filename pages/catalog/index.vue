@@ -36,8 +36,9 @@ definePageMeta( {
   title: 'Каталог',
 } );
 
+const route = useRoute();
 const filters = getFilterParams();
-const page = ref( 0 );
+const page = ref( 1 );
 
 const { data: products, refresh } = await useAsyncData(
     'products',
@@ -71,7 +72,15 @@ watch( products, ( newProducts, oldProducts ) => {
       nProducts.value.data = [ ...oldProducts.data, ...newProducts.data ];
     }
   }
-} )
+} );
+
+watch( route, ( newQuery, oldQuery ) => {
+  console.log( newQuery.query.search );
+  if ( newQuery.query.hasOwnProperty( 'search' ) && newQuery.query.search ) {
+    filters.value.search = newQuery.query.search;
+    refresh();
+  }
+} );
 
 const submitFilter = ( args: object ) => {
   page.value = 1;

@@ -41,7 +41,7 @@ const toggleSearch = () => {
 
 const submitSearch = () => {
   if ( inputSearch.value ) {
-    router.push( { path: '/catalog', query: {
+    router.replace( { path: '/catalog', query: {
       search: inputSearch.value,
       in_stock: true,
     } } );
