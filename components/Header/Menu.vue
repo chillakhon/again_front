@@ -86,7 +86,7 @@ const clickMenuItem = ( event ) => {
       liItem.classList.toggle('_active');
     }
   } else {
-    mobileMenuStore.isActive = false;
+    mobileMenuStore.close();
   }
 
   //mobileMenuStore.isActive = false;
