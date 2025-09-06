@@ -12,7 +12,7 @@
           </div>
           <div class="success__buttons">
             <a href="#" class="btn _border">Перейти к оплате</a>
-            <a href="#" class="btn _border _gray">Повторить заказ</a>
+<!--            <a href="#" class="btn _border _gray">Повторить заказ</a>-->
           </div>
           <div class="success__messengers">
             <div class="success__messengers-title">Получать уведомления<br> в мессенджерах</div>

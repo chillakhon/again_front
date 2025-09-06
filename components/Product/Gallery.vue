@@ -1,5 +1,5 @@
 <template>
-  <div class="product-gallery">
+  <div class="product-gallery" v-if="product.main_image || product.images?.length > 0">
     <swiper-container thumbs-swiper=".my-thumbs">
       <swiper-slide v-for="(image, index) in product.images" :key="image.id">
         <a :href="getImage( image.path )" data-fancybox="gallery">

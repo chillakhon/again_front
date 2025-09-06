@@ -1,6 +1,13 @@
 <template>
   <Breadcrumbs />
   <div class="product" v-if="product">
+    <div
+        class="product__added"
+        :class="{ 'product__added--active': isAddedMessageActive }"
+    >
+      Товар добавлен в корзину
+    </div>
+
     <div class="product__container container">
       <div class="product__top">
         <ProductGallery
@@ -43,6 +50,7 @@
                   :product="product"
                   :variation="selectedSize"
                   :color="selectedColor"
+                  @add-to-cart="addToCart"
               />
               <div class="product__actions-back">
                 <NuxtLink to="/catalog">Вернуться в каталог</NuxtLink>
@@ -74,6 +82,8 @@ const { data: product } = await useApi<Product>( '/products', {
   }
 } );
 
+const isAddedMessageActive = ref( false );
+
 const quantity = ref( 1 );
 const getQuantity = ( value: number ) => {
   quantity.value = value;
@@ -89,10 +99,49 @@ const getColor = ( value: object ) => {
 const getSize = ( value: object ) => {
   selectedSize.value = value;
 }
+
+const addToCart = () => {
+  isAddedMessageActive.value = true;
+
+  setTimeout( () => {
+    isAddedMessageActive.value = false;
+  }, 1500 );
+}
 </script>
 
 <style scoped lang="scss">
 .product__stock--not {
   margin-top: 1.5rem;
+}
+
+.product {
+  position: relative;
+
+  &__added {
+    position: absolute;
+    right: 0;
+    top: 0;
+    background: #4CAF50;
+    padding: .8rem 1rem;
+    font-size: 1.2rem;
+    color: var(--fg-white);
+    opacity: 0;
+    pointer-events: none;
+    transition: var(--tr-regular);
+
+    @media (max-width: $mobile) {
+      position: fixed;
+      top: auto;
+      right: auto;
+      left: 0;
+      bottom: .5rem;
+      width: 100%;
+      font-size: 1rem;
+    }
+
+    &--active {
+      opacity: 1;
+    }
+  }
 }
 </style>

@@ -1,11 +1,11 @@
 <template>
-  <button class="product__actions-cart btn" @click="addToCart( product, quantity, variation, color )">В корзину</button>
+  <button class="product__actions-cart btn" @click="emitAddToCart">В корзину</button>
 </template>
 
 <script setup lang="ts">
 import type {Product} from "~/types/catalog";
 
-withDefaults( defineProps<{
+const props = withDefaults( defineProps<{
   quantity: number,
   product: Product,
   variation?: object | null,
@@ -18,6 +18,12 @@ withDefaults( defineProps<{
 
 const cartStore = useCartStore();
 const { addToCart } = cartStore;
+const emit = defineEmits(['addToCart']);
+
+const emitAddToCart = () => {
+  addToCart( props.product, props.quantity, props.variation, props.color );
+  emit( "addToCart" );
+}
 </script>
 
 

@@ -152,7 +152,7 @@ const handleInput = ($event: InputEvent) => {
 
 .checkbox__link {
   display: inline-block;
-  color: rgba(0,0,0,.29);
+  color: rgba(0,0,0,.29) !important;
   font-size: 1.4rem;
   text-decoration: underline !important;
   margin-top: .2rem;

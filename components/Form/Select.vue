@@ -8,13 +8,13 @@
         </svg>
       </button>
       <div class="select__list">
-<!--        <div class="select__search">-->
-<!--          <input type="text" placeholder="Поиск..." @input="search" v-model="searchInput">-->
-<!--        </div>-->
+        <div class="select__search">
+          <input type="text" placeholder="Поиск..." @input="search" v-model="searchInput">
+        </div>
 
         <button
             class="select__item"
-            v-for="( item, key ) in list"
+            v-for="( item, key ) in items"
             :key="key"
             ref="selectItems"
             @click="selected( item.id, item.name, item.code )"
@@ -47,6 +47,7 @@ const props = withDefaults( defineProps<{
   placeholder: 'Выбрать'
 } );
 
+const items = ref( props.list );
 const select = ref( false );
 const selectItems = ref( false );
 const placeholder = ref( props.placeholder );
@@ -92,63 +93,13 @@ onMounted( () => {
       );
     }
   }
-} )
+} );
 
-// const search = () => {
-//   const searchable = searchInput.value.trim().toLowerCase();
-//   // let found = null;
-//   // let foundKey = 0;
-//
-//   selectItems.value.forEach(function(item) {
-//     if (!item.innerText.includes( searchable ) ) {
-//       item.style.display = 'none';
-//     } else {
-//       item.style.display = 'block';
-//     }
-//   })
-//
-//   // // Iterate through the entire array
-//   // for (let i = 0; i < props.list.length; i++) {
-//   //   if ( props.list[i].name.toLowerCase().includes( searchable ) ) {
-//   //     found = props.list[ i ];
-//   //     foundKey = i;
-//   //     break; // Stop after finding the first match
-//   //   }
-//   // }
-//   //
-//   // console.log( found );
-//   //
-//   // selectItems.value.forEach((item, key) => {
-//   //   if ( key === foundKey ) {
-//   //     item.classList.remove('select__item--hide');
-//   //   } else {
-//   //     item.classList.add('select__item--hide');
-//   //   }
-//   // });
-//
-//   // const found = props.list.find( listItem =>
-//   //     listItem.name.toLowerCase().includes( searchable )
-//   // );
-//   //
-//   // selectItems.value.forEach((item, key) => {
-//   //   if (props.list[key] === found) {
-//   //     item.classList.remove('select__item--hide');
-//   //   } else {
-//   //     item.classList.add('select__item--hide');
-//   //   }
-//   // } );
-//   //
-//   // if ( ! found || found === undefined ){
-//   //   notFound.value = true;
-//   // } else {
-//   //   notFound.value = false;
-//   // }
-//   //
-//   // if ( ! searchable ) {
-//   //   selectItems.value.forEach(item => item.classList.remove('select__item--hide'));
-//   //   notFound.value = false;
-//   // }
-// }
+const search = () => {
+  items.value = props.list.filter( item =>
+      item.name.toLowerCase().includes(searchInput.value.toLowerCase())
+  );
+}
 </script>
 
 <style scoped lang="scss">

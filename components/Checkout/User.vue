@@ -2,7 +2,7 @@
   <div class="checkout__auth">
     <div class="checkout__auth-block" v-if="userStore.isAuthenticated">
       <div class="checkout__auth-text">
-        <p>Вы авторизовались как <a href="#"><span>{{ userStore.user.profile.last_name }} {{ userStore.user.profile.last_name }}</span></a></p>
+        <p>Вы авторизовались как <a href="#"><span>{{ userStore.user.profile.last_name }} {{ userStore.user.profile.first_name }}</span></a></p>
         <p><a href="#">{{ userStore.user.profile.phone }}</a></p>
         <p><a href="#">{{ userStore.user.email }}</a></p>
       </div>
