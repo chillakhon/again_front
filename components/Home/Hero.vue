@@ -9,10 +9,19 @@
             :loop="true"
             :modules="[Pagination, Autoplay]"
             :autoplay="{
-              delay: 5000
+              delay: 7000
             }"
+            effect="fade"
             :pagination="{
               clickable: true
+            }"
+            :breakpoints="{
+              0: {
+                delay: 7000
+              },
+               992: {
+                delay: 6000
+               }
             }"
         >
           <swiper-slide v-for="(slide, index) in slides" :key="index">

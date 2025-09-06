@@ -16,6 +16,7 @@
   align-items: center;
   justify-content: center;
   transition: var(--tr-regular);
+  touch-action: manipulation;
 
   &:disabled {
     opacity: .5;
