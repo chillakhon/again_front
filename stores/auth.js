@@ -6,6 +6,7 @@ export const useAuthStore = defineStore('authStore', () => {
     const token = useLocalStorage( 'auth_token', '' );
     const isAuthenticated  = ref( false );
     const isCodeActive = ref( false );
+    const isChecked = ref( false );
     const modal = useModal();
 
     const sendCode = async ( email ) => {
@@ -69,21 +70,22 @@ export const useAuthStore = defineStore('authStore', () => {
     }
 
     const checkAuth = async () => {
-        if ( token.value ){
-            try {
-                const { data } = await useApi( '/client-user');
-
-                if ( data.value.success ){
-                    user.value = data.value.user;
-                    isAuthenticated.value = true;
-                }
-            } catch( error ) {
-                return error;
-            }
-
-        } else {
-            token.value = '';
+        if ( ! token.value) {
             isAuthenticated.value = false;
+            isChecked.value = true;
+            return;
+        }
+
+        try {
+            const { data } = await useApi( '/client-user');
+            if ( data.value.success ){
+                user.value = data.value.user;
+                isAuthenticated.value = true;
+            }
+        } catch ( error ) {
+            return error;
+        } finally {
+            isChecked.value = true;
         }
     }
 
@@ -107,6 +109,7 @@ export const useAuthStore = defineStore('authStore', () => {
         token: skipHydrate( token ),
         isAuthenticated,
         isCodeActive,
+        isChecked,
         sendCode,
         login,
         logout,

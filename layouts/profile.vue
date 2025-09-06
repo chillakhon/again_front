@@ -2,17 +2,20 @@
   <Top />
   <Header />
 
-  <Breadcrumbs />
+  <ClientOnly>
+    <Breadcrumbs />
 
-  <div class="profile">
-    <div class="profile__container container">
-      <ProfileMenu />
-      <div class="profile__content">
-        <div class="profile__title block__title fz-h2">{{ route.meta.title }}</div>
-        <NuxtPage />
+    <div class="profile">
+      <div class="profile__container container">
+        <ProfileMenu />
+        <div class="profile__content">
+          <div class="profile__title block__title fz-h2">{{ route.meta.title }}</div>
+          <NuxtPage />
+        </div>
       </div>
     </div>
-  </div>
+
+  </ClientOnly>
 
   <Footer />
 </template>

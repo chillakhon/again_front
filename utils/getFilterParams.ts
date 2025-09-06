@@ -1,25 +1,22 @@
 export const getFilterParams = () => {
     const route = useRoute();
-    const accessParams = [
-        'search',
-        'category_id',
-        'page',
-        'price_after',
-        'price_before',
-        'in_stock'
-    ];
-
-    let params = {
-        per_page: 9
-    };
+    const filters = ref( {
+        color: 0,
+        price: {
+            before: '',
+            after: '',
+        },
+        search: '',
+        in_stock: 0
+    } );
 
     for ( const key in route.query  ) {
-        if ( ! accessParams.includes( key ) ) {
+        if ( ! filters.value.hasOwnProperty( key ) ) {
             continue;
         }
 
-        params[ key ] = route.query[key];
+        filters.value[key] = route.query[key];
     }
 
-    return params;
+    return filters;
 }

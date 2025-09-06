@@ -43,7 +43,7 @@ const submitSearch = () => {
   if ( inputSearch.value ) {
     router.push( { path: '/catalog', query: {
       search: inputSearch.value,
-      in_stock: 1,
+      in_stock: true,
     } } );
   }
 }

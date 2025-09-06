@@ -1,4 +1,5 @@
 <template>
+  <ClientOnly>
   <div class="login">
     <div class="login__container container">
       <div class="login__left">
@@ -53,11 +54,13 @@
       </div>
     </div>
   </div>
+  </ClientOnly>
 </template>
 
 <script setup lang="ts">
 definePageMeta({
-  title: 'Вход'
+  title: 'Вход',
+  middleware: 'not-auth',
 } )
 
 const loginForm = ref( {

@@ -60,5 +60,7 @@ onMounted( () => {
 </script>
 
 <style scoped lang="scss">
-
+swiper-container::part(container) {
+  touch-action: pan-y;
+}
 </style>

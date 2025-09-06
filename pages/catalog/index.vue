@@ -30,32 +30,27 @@
 
 <script setup lang="ts">
 import type {Catalog} from "~/types/catalog";
+import {getFilterParams} from "~/utils/getFilterParams";
 
 definePageMeta( {
   title: 'Каталог',
 } );
 
-const filters = ref( {
-  color: 0,
-  price: {
-    before: '',
-    after: '',
-  }
-} );
-const page = ref( 1 );
-const isInStock = ref( false );
+const filters = getFilterParams();
+const page = ref( 0 );
 
-const { data: products, pending, refresh } = await useAsyncData(
+const { data: products, refresh } = await useAsyncData(
     'products',
     async () => {
       const response = await $fetch('http://193.233.84.235/api/products', {
         query: {
-            per_page: 24,
+            per_page: 9,
             page: page.value,
             color_id: filters.value.color || '',
             price_before: filters.value.price.before || '',
             price_after: filters.value.price.after || '',
-            in_stock: isInStock.value
+            in_stock: filters.value.in_stock || false,
+            search: filters.value.search || '',
         }
       } );
       return response;
@@ -83,7 +78,7 @@ const submitFilter = ( args: object ) => {
   filters.value.color = args.color;
   filters.value.price.after = args.price.before;
   filters.value.price.before = args.price.after;
-  isInStock.value = true;
+  filters.value.in_stock = 1;
 
   refresh();
 }
@@ -98,7 +93,7 @@ const resetFilter = () => {
   filters.value.color = '';
   filters.value.price.after = '';
   filters.value.price.before = '';
-  isInStock.value = false;
+  filters.value.in_stock = 0
 
   refresh();
 }
