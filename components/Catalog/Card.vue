@@ -135,15 +135,16 @@ const isFavourite = computed( () => {
     }
 
     @media (any-hover: hover) {
-      &:hover {
-        #{$media}-main {
-          opacity: 0;
+        &:has(#{$media}-on-hover):hover {
+          #{$media}-main {
+            opacity: 0;
+          }
+
+          #{$media}-on-hover {
+            opacity: 1;
+          }
         }
 
-        #{$media}-main-on-hover {
-          opacity: 1;
-        }
-      }
     }
   }
 

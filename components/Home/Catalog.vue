@@ -17,6 +17,7 @@ const { data: products } = await useApi<{
 }>( '/products', {
   query: {
     per_page: 6,
+    in_stock: 1
   }
 } )
 </script>

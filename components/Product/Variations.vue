@@ -1,6 +1,6 @@
 <template>
   <div class="product__variables product-variables">
-    <div class="product-variables__block" data-type="size" v-if="variations">
+    <div class="product-variables__block" data-type="size" v-if="variations && variations.length > 0">
       <div class="product-variables__header">
         <div class="product-variables__title">Размер:</div>
         <button
