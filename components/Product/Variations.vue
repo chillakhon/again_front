@@ -11,8 +11,8 @@
         >Таблица размеров</button>
       </div>
       <div class="product-variables__values">
-        <div class="product-variables__size" v-for="(size, key) in variations" :key="size.product_variant_id">
-          <input type="radio" name="size" :value="size.product_variant_id" :checked="variations[key] === size" @change="emit( 'getSize', size )">
+        <div class="product-variables__size" v-for="(size, key) in variations" :key="size.id">
+          <input type="radio" name="size" :value="size.id" :checked="key === 0" @change="emit( 'getSize', size )">
           <label>{{ size.size }}</label>
         </div>
       </div>
@@ -38,11 +38,11 @@
 </template>
 
 <script setup lang="ts">
-import type {Variation, Color} from "~/types/catalog";
+import type {Variation, Color, AvailableVariation} from "~/types/catalog";
 import {ModalsSizes} from "#components";
 
 const props = defineProps<{
-  variations?: Variation[],
+  variations?: AvailableVariation[],
   colors?: Color[]
 }>();
 

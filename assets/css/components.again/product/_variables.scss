@@ -41,9 +41,14 @@
   }
 }
 
+.product-variables__values:has( .product-variables__size ) {
+  margin-top: -.9rem;
+}
+
 .product-variables__size {
   position: relative;
   margin-right: .9rem;
+  margin-top: .9rem;
 
   &:last-child {
     margin-right: 0;

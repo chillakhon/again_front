@@ -47,7 +47,7 @@ export const useCartStore = defineStore('cartStore', () => {
         if ( variant && color ){
             item = cart.value.find((item) => {
                 return item.id === product.id
-                && item.product_variant_id === variant.product_variant_id
+                && item.product_variant_id === variant.id
                 && item.color_id === color.id;
             } );
         } else {
@@ -69,7 +69,7 @@ export const useCartStore = defineStore('cartStore', () => {
                 item_key: uuidv4(),
                 quantity: quantity,
                 color_id: color ? color.id : null,
-                product_variant_id: variant ? variant.product_variant_id : null,
+                product_variant_id: variant ? variant.id : null,
                 selected_color: color,
                 selected_variant: variant
             } );

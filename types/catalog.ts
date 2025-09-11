@@ -23,6 +23,7 @@ export interface Product {
     height?: string,
     colors?: Color[],
     variants?: Variation[],
+    available_variants: AvailableVariation[],
     default_unit?: string,
     images?: Image[],
     main_image?: Image,
@@ -37,6 +38,14 @@ export interface Color {
     id: number,
     name: string,
     code: string
+}
+
+export interface AvailableVariation {
+    id: number,
+    color_id: number,
+    size: string,
+    quantity: number,
+    price: number
 }
 
 export interface Variation {

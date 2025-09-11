@@ -29,8 +29,8 @@
           />
 
           <ProductVariations
-              v-if="product.variants?.length || product.colors?.length"
-              :variations="product.variants"
+              v-if="product.available_variants?.length || product.colors?.length"
+              :variations="product.available_variants"
               :colors="product.colors"
               @get-color="getColor"
               @get-size="getSize"
