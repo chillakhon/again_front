@@ -2,7 +2,10 @@
 export default defineNuxtConfig({
   app: {
     head: {
-      link: [{ rel: 'icon', href: "/favicon.ico" }]
+      link: [{ rel: 'icon', href: "/favicon.ico" }],
+      meta: [
+        { name: 'viewport', content: 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' }
+      ]
     },
   },
   compatibilityDate: '2025-05-15',

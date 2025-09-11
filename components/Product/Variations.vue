@@ -22,7 +22,13 @@
         <div class="product-variables__title">Цвет:</div>
       </div>
       <div class="product-variables__values">
-        <div class="product-variables__color" v-for="(color, key) in colors" :key="color.id" :style="{ '--color': color.code }">
+        <div
+            class="product-variables__color"
+           v-for="(color, key) in colors"
+           :key="color.id"
+           :style="{ '--color': color.code }"
+            :class="{ '_white': color.code === '#FFFFFF' }"
+        >
           <input type="radio" name="color" :value="color.id" :checked="colors[key] === color" @change="emit( 'getColor', color )">
           <label for=""></label>
         </div>

@@ -76,7 +76,7 @@ const isActive = ref( false );
   position: relative;
 
   @media (max-width: $mobile) {
-    padding: 1.6rem 2rem 1.4rem 1.5rem;
+    padding: 1.6rem 6rem 1.4rem 1.5rem;
   }
 }
 

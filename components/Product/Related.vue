@@ -20,6 +20,7 @@
           </div>
         </div>
       </div>
+      <ClientOnly>
       <swiper-container
           ref="slider"
           class="related__swiper"
@@ -46,6 +47,7 @@
           <CatalogCard :product="product" />
         </swiper-slide>
       </swiper-container>
+      </ClientOnly>
       <div class="related__button">
         <NuxtLink to="/catalog" class="btn _border _gray">В каталог</NuxtLink>
       </div>

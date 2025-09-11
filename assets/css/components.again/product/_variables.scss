@@ -116,6 +116,12 @@
     }
   }
 
+  &._white {
+    & label {
+      border-color: var(--fg-gray) !important;
+    }
+  }
+
   & label {
     display: block;
     width: 3.7rem;
