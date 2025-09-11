@@ -12,18 +12,25 @@
 <script setup lang="ts">
 const props = withDefaults( defineProps<{
   value?: number,
-  withTitle?: boolean
+  withTitle?: boolean,
+  isNullAccess: boolean,
 }>(), {
   value: 1,
-  withTitle: true
+  withTitle: true,
+  isNullAccess: true
 } );
 
-const emit = defineEmits(['getQuantity']);
+const emit = defineEmits(['getQuantity', 'setQuantityNull']);
 const value = ref( props.value );
 
 const minus = () => {
-  if (value.value < 2){
+  if ( value.value < 2) {
     value.value = 1;
+
+    if ( ! props.isNullAccess ){
+      emit('setQuantityNull');
+    }
+
     return false;
   }
 

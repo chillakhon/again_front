@@ -113,5 +113,13 @@ const clickToMenu = () => {
   text-align: center;
   border-radius: 50%;
   color: var(--fg-white);
+
+  @media (max-width: $mobile) {
+    width: .9rem;
+    height: .9rem;
+    font-size: .55rem;
+    top: -.45rem;
+    right: -.45rem;
+  }
 }
 </style>

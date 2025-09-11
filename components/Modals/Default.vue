@@ -171,6 +171,13 @@ const close = ( event : any ) => {
       }
     }
   }
+
+  &--submitremove {
+    & .modal__content {
+      max-width: 40rem;
+      padding-bottom: 4rem;
+    }
+  }
 }
 
 :global(.modal__title){
@@ -179,5 +186,10 @@ const close = ( event : any ) => {
   font-weight: 300;
   text-align: center;
   font-family: var(--ff-cormorant);
+}
+
+:global(.modal__title--small){
+  font-size: var(--fz-h3);
+  line-height: var(--fz-h3);
 }
 </style>

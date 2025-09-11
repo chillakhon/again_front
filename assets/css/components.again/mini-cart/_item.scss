@@ -50,9 +50,21 @@
   justify-content: space-between;
   align-items: flex-end;
   min-width: fit-content;
+  position: relative;
 }
 
 .mini-cart__item-content__bottom {
   display: flex;
   align-items: center;
+}
+
+.mini-cart__item-not {
+  border-radius: 2.4rem;
+  padding: 0.3rem 0.8rem 0.3rem;
+  background: var(--fg-red);
+  color: var(--fg-white);
+  font-size: 1rem;
+  width: fit-content;
+  min-width: fit-content;
+  margin-top: auto;
 }

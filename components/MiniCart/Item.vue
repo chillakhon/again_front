@@ -3,7 +3,11 @@
     <div class="mini-cart__item-main">
       <div class="mini-cart__item-media">
         <picture class="mini-cart__item-media__pic img--cover">
-          <img src="/img/catalog.again/item-1.jpg" class="mini-cart__item-media__img" alt="">
+          <img
+              :src="getImage( image )"
+              class="mini-cart__item-media__img"
+              :alt="title"
+          >
         </picture>
       </div>
       <div class="mini-cart__item-content">
@@ -36,7 +40,9 @@
       </button>
       <CartQuantity
         :value="cartStore.getItemQuantity( itemKey )"
+        :is-null-access="false"
         @get-quantity="getQuantity"
+        @set-quantity-null="setQuantityNullAction"
       />
     </div>
   </div>
@@ -44,7 +50,10 @@
 </template>
 
 <script setup lang="ts">
+import SubmitRemove from "~/components/Modals/SubmitRemove.vue";
+
 const props = defineProps<{
+  image: string,
   id: number,
   title: string,
   quantity: number,
@@ -57,9 +66,17 @@ const props = defineProps<{
 
 const cartStore = useCartStore();
 const { removeFromCart } = cartStore;
+const modal = useModal();
 
 const getQuantity = ( number: number ) => {
   cartStore.setCartQuantity( props.itemKey, number );
+}
+
+const setQuantityNullAction = () => {
+  modal.openModal( SubmitRemove, {
+    customClass: 'submitremove',
+    cartItemKey: props.itemKey
+  } )
 }
 
 const priceFormat = getFormatPrice();

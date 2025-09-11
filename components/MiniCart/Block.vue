@@ -6,6 +6,7 @@
             v-for="item in cartStore.cart"
             :key="item.id"
             :id="item.id"
+            :image="item.main_image?.path"
             :quantity="item.quantity"
             :title="item.name"
             :price="item.price"

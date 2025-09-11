@@ -75,9 +75,12 @@ const formatDateOutput = (date) => {
   padding: 0 4rem 0 6rem;
   font-size: 1.6rem;
   border-radius: 6rem;
+  font-weight: 400;
+  color: inherit;
   
   @media (max-width: $mobile) {
     height: 5rem;
+    font-size: 1.4rem;
   }
 }
 

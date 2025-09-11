@@ -68,6 +68,11 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-bottom: 3.5rem;
+
+  @media (max-width: $mobile) {
+    margin-bottom: 2rem;
+  }
 }
 
 .aside-menu__head-left {

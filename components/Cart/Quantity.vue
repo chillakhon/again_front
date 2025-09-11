@@ -1,12 +1,14 @@
 <template>
   <Quantity
     :value="value"
+    :is-null-access="isNullAccess"
   />
 </template>
 
 <script setup lang="ts">
 defineProps<{
-  value: number
+  value: number,
+  isNullAccess: boolean
 }>();
 </script>
 

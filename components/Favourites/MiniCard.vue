@@ -33,18 +33,23 @@
       </div>
     </div>
     <div class="mini-cart__item-last">
-      <Quantity
-          :value="1"
-          :with-title="false"
-          @get-quantity="getQuantity"
-      />
-      <button
-          v-if="product.price"
-          class="mini-cart__item-btn"
-          @click="cartStore.addToCart( product, quantity )"
-      >
-        в корзину
-      </button>
+      <template v-if="product.stock_quantity > 0">
+        <Quantity
+            :value="1"
+            :with-title="false"
+            @get-quantity="getQuantity"
+        />
+        <button
+            v-if="product.price"
+            class="mini-cart__item-btn"
+            @click="cartStore.addToCart( product, quantity )"
+        >
+          в корзину
+        </button>
+      </template>
+      <template v-else>
+        <div class="mini-cart__item-not">Нет в наличии</div>
+      </template>
     </div>
   </div>
 </template>
