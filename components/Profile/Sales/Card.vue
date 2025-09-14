@@ -33,7 +33,7 @@ const buttonActive = ref( false );
 const buttonTitle = ref( 'Скопировать' );
 
 const copy = async () => {
-  await navigator.clipboard.writeText( props.item.code );
+  //await navigator.clipboard.writeText( props.item.code );
   buttonTitle.value = 'Скопирован';
   buttonActive.value = true;
 }
