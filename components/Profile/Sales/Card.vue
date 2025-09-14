@@ -16,13 +16,14 @@
     <button
         class="profile-sales__item-btn btn _border _thin"
         :class="{ '_active': buttonActive }"
-        @click="copy">
+        @click="copyClick">
       {{ buttonTitle }}
     </button>
   </div>
 </template>
 
 <script setup lang="ts">
+import copy from 'copy-to-clipboard';
 import {discountCurrency, discountType, type Sale} from "~/types/sales";
 
 const props = defineProps<{
@@ -32,8 +33,9 @@ const props = defineProps<{
 const buttonActive = ref( false );
 const buttonTitle = ref( 'Скопировать' );
 
-const copy = () => {
-  navigator.clipboard.writeText( props.item.code );
+const copyClick = () => {
+  //navigator.clipboard.writeText( props.item.code );
+  copy( props.item.code );
   buttonTitle.value = 'Скопирован';
   buttonActive.value = true;
 }
