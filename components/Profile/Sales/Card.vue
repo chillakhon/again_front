@@ -32,8 +32,8 @@ const props = defineProps<{
 const buttonActive = ref( false );
 const buttonTitle = ref( 'Скопировать' );
 
-const copy = async () => {
-  //await navigator.clipboard.writeText( props.item.code );
+const copy = () => {
+  navigator.clipboard.writeText( props.item.code );
   buttonTitle.value = 'Скопирован';
   buttonActive.value = true;
 }
