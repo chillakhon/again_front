@@ -163,9 +163,9 @@ const isFavourite = computed( () => {
     align-items: center;
     justify-content: center;
     border: none;
-    position: absolute;
-    top: 1rem;
-    right: .9rem;
+    position: absolute !important;
+    top: 1rem !important;
+    right: .9rem !important;
     width: 3.5rem;
     height: 3.5rem;
     border-radius: 50%;

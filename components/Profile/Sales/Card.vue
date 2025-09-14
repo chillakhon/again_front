@@ -38,6 +38,11 @@ const copyClick = () => {
   copy( props.item.code );
   buttonTitle.value = 'Скопирован';
   buttonActive.value = true;
+
+  setTimeout( () => {
+    buttonTitle.value = 'Скопировать';
+    buttonActive.value = false;
+  }, 1500 )
 }
 </script>
 

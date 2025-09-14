@@ -21,32 +21,32 @@
         </div>
       </div>
       <ClientOnly>
-      <swiper-container
-          ref="slider"
-          class="related__swiper"
-          :navigation="{
-            nextEl: '.related__next',
-            prevEl: '.related__prev',
-          }"
-          :breakpoints="{
-            0: {
-              slidesPerView: 1.15,
-              spaceBetween: 10,
-            },
-            575: {
-              slidesPerView: 2.5,
-              spaceBetween: 10,
-            },
-            992: {
-              slidesPerView: 4,
-              spaceBetween: 28,
-            }
-          }"
-      >
-        <swiper-slide v-for="product in products.data" :key="product.id">
-          <CatalogCard :product="product" />
-        </swiper-slide>
-      </swiper-container>
+        <swiper-container
+            ref="slider"
+            class="related__swiper"
+            :navigation="{
+              nextEl: '.related__next',
+              prevEl: '.related__prev',
+            }"
+            :breakpoints="{
+              0: {
+                slidesPerView: 1.15,
+                spaceBetween: 10,
+              },
+              575: {
+                slidesPerView: 2.5,
+                spaceBetween: 10,
+              },
+              992: {
+                slidesPerView: 4,
+                spaceBetween: 28,
+              }
+            }"
+        >
+          <swiper-slide v-for="product in products.data" :key="product.id">
+            <CatalogCard :product="product" />
+          </swiper-slide>
+        </swiper-container>
       </ClientOnly>
       <div class="related__button">
         <NuxtLink to="/catalog" class="btn _border _gray">В каталог</NuxtLink>
