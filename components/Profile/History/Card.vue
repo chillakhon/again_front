@@ -262,7 +262,11 @@ const props = defineProps<{
   min-width: fit-content;
 
   @media (max-width: $mobile) {
-    min-width: auto;
+    min-width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 1rem;
   }
 }
 
@@ -307,7 +311,7 @@ const props = defineProps<{
   margin-top: 2.3rem;
 
   @media (max-width: $mobile) {
-    margin-top: 1rem;
+    margin-top: 0;
   }
 }
 

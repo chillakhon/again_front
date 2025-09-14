@@ -66,5 +66,10 @@ const slider = ref( null );
 </script>
 
 <style scoped lang="scss">
-
+.related:deep(.catalog-item) {
+  height: 100%;
+}
+.related swiper-slide {
+  height: auto !important;
+}
 </style>

@@ -13,7 +13,12 @@
       <p><strong>Сумма: </strong> {{ getFormatPrice().formattedPrice( item.discount_amount ) }} {{ discountCurrency[ item.discount_type ] }}</p>
     </div>
 <!--    <div class="profile-sales__item-alert">Скидка 25% на первый заказ</div>-->
-    <button class="profile-sales__item-btn btn _border _thin" @click="copy">{{ buttonTitle }}</button>
+    <button
+        class="profile-sales__item-btn btn _border _thin"
+        :class="{ '_active': buttonActive }"
+        @click="copy">
+      {{ buttonTitle }}
+    </button>
   </div>
 </template>
 
@@ -24,11 +29,13 @@ const props = defineProps<{
   item: Sale
 }>();
 
+const buttonActive = ref( false );
 const buttonTitle = ref( 'Скопировать' );
 
 const copy = async () => {
   await navigator.clipboard.writeText( props.item.code );
   buttonTitle.value = 'Скопирован';
+  buttonActive.value = true;
 }
 </script>
 
@@ -101,6 +108,12 @@ const copy = async () => {
   @media (max-width: $mobile) {
     margin-top: 2rem;
     text-transform: uppercase !important;
+  }
+
+  &._active {
+    background: var(--fg-green) !important;
+    color: var(--fg-white) !important;
+    border-color: var(--fg-green);
   }
 }
 

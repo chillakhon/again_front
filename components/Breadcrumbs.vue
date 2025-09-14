@@ -38,6 +38,10 @@ const route = useRoute();
   font-size: 1.4rem;
   font-family: var(--ff-sf-pro);
   color: #7B8990;
+
+  @media (max-width: $mobile) {
+    flex-wrap: wrap;
+  }
 }
 
 .breadcrumbs__sep {

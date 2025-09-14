@@ -34,11 +34,7 @@
 }
 
 [data-type="size"] .product-variables__values {
-  justify-content: space-between;
-
-  @media (max-width: $tablet) {
-    justify-content: flex-start;
-  }
+  justify-content: flex-start;
 }
 
 .product-variables__values:has( .product-variables__size ) {
@@ -73,6 +69,10 @@
     &:checked + label {
       background: var(--fg-red);
       color: var(--fg-white);
+    }
+
+    &:disabled + label {
+      opacity: .45;
     }
   }
 

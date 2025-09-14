@@ -54,7 +54,7 @@ const menuItems = [
         title: 'Сертификаты',
       },
       {
-        link: '#',
+        link: '/selection',
         title: 'Подбор по впитываемости и по размеру',
       },
     ]
