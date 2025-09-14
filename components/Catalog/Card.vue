@@ -171,6 +171,7 @@ const isFavourite = computed( () => {
     height: 3.5rem;
     border-radius: 50%;
     background: var(--fg-white);
+    z-index: 5;
 
     & svg {
       max-width: 1.5rem;
