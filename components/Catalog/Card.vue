@@ -22,7 +22,7 @@
           </svg>
           <span>{{ product.avg_rating }}</span>
         </div>
-
+        <ClientOnly>
           <button
               class="catalog-item__fav add-to-fav"
               :class="{ '_active': isFavourite }"
@@ -32,7 +32,7 @@
               <path d="M11.62 18.8101C11.28 18.9301 10.72 18.9301 10.38 18.8101C7.48 17.8201 1 13.6901 1 6.6901C1 3.6001 3.49 1.1001 6.56 1.1001C8.38 1.1001 9.99 1.9801 11 3.3401C12.01 1.9801 13.63 1.1001 15.44 1.1001C18.51 1.1001 21 3.6001 21 6.6901C21 13.6901 14.52 17.8201 11.62 18.8101Z" stroke="#4F4F4F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           </button>
-
+        </ClientOnly>
       </NuxtLink>
       <div class="catalog-item__content">
         <div class="catalog-item__header">
@@ -111,6 +111,7 @@ const isFavourite = computed( () => {
   &__media {
     $media: &;
     position: relative;
+    display: block;
 
     &-pic {
       min-height: 32.8rem;
@@ -163,9 +164,9 @@ const isFavourite = computed( () => {
     align-items: center;
     justify-content: center;
     border: none;
-    position: absolute !important;
-    top: 1rem !important;
-    right: .9rem !important;
+    position: absolute;
+    top: 1rem;
+    right: .9rem;
     width: 3.5rem;
     height: 3.5rem;
     border-radius: 50%;
