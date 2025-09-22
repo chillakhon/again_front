@@ -1,11 +1,3 @@
-<script setup lang="ts">
-import { register } from 'swiper/element/bundle';
-import "swiper/css";
-import "swiper/css/pagination";
-
-register();
-</script>
-
 <template>
   <section class="videos">
     <ClientOnly>
@@ -16,6 +8,10 @@ register();
           :pagination="{
             clickable: true
           }"
+          :modules="[Pagination, Autoplay]"
+          :autoplay="{
+              delay: 7000
+            }"
           :breakpoints="{
             0: {
               slidesPerView: 2.2,
@@ -67,6 +63,15 @@ register();
     </ClientOnly>
   </section>
 </template>
+
+<script setup lang="ts">
+import { register } from 'swiper/element/bundle';
+import "swiper/css";
+import "swiper/css/pagination";
+import {Autoplay, Pagination} from "swiper/modules";
+
+register();
+</script>
 
 <style scoped lang="scss">
 .videos {

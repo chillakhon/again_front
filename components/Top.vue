@@ -10,8 +10,8 @@
 
 <style scoped lang="scss">
 .top {
-  background: #545454;
-  padding: .2rem 0 .3rem;
+  background: var(--fg-red);
+  padding: .8rem 0 1rem;
   font-weight: 200;
   font-size: 1.8rem;
   line-height: 2.7rem;

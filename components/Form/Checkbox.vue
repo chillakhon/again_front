@@ -88,7 +88,7 @@ const handleInput = ($event: InputEvent) => {
     position: relative;
     z-index: 15;
     color: var(--fg-red);
-    text-decoration: underline;
+    border-bottom: .1rem solid var(--fg-red);
   }
 
   @media (max-width: $mobile) {

@@ -28,6 +28,15 @@ const submitRemove = () => {
 
     & .btn {
       width: 45%;
+
+      @media (max-width: $mobile) {
+        width: 100%;
+        margin-bottom: 1.5rem;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
     }
 
     @media (max-width: $mobile) {

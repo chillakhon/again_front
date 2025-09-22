@@ -14,7 +14,10 @@
               class="catalog-item__media-img catalog-item__media-on-hover"
           >
         </picture>
-<!--        <div class="catalog-item__sale">скидка 21 %</div>-->
+        <div class="catalog-item__sale">
+          <span>Выгода</span>
+          2 490 Р
+        </div>
         <div class="catalog-item__status" v-if="product.stock_quantity === 0">Нет в наличии</div>
         <div class="catalog-item__rating" v-if="product.avg_rating">
           <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -44,7 +47,17 @@
             <div class="catalog-item__price-old" v-if="product.old_price">{{ formattedPrice( product.old_price ) }} ₽</div>
           </div>
         </div>
-        <div class="catalog-item__subtitle" v-if="product.description">{{ product.description }}</div>
+        <div class="catalog-item__drop">
+          <svg width="35" height="53" viewBox="0 0 35 53" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M17.5 2.44238C17.9642 3.22192 18.5965 4.2922 19.3438 5.5791C20.9647 8.37082 23.1253 12.1781 25.2842 16.2441C27.4447 20.3133 29.5956 24.6268 31.2041 28.4336C32.0084 30.3371 32.6709 32.0998 33.1309 33.6328C33.5953 35.181 33.8339 36.4317 33.834 37.333C33.834 45.0358 26.6503 51.5 17.5 51.5C8.3499 51.4998 1.16699 45.0357 1.16699 37.333C1.16705 36.4317 1.40466 35.181 1.86914 33.6328C2.3291 32.0997 2.99251 30.3372 3.79688 28.4336C5.40542 24.6268 7.55625 20.3133 9.7168 16.2441C11.8757 12.1782 14.0363 8.37079 15.6572 5.5791C16.4043 4.29242 17.0359 3.22186 17.5 2.44238Z" stroke="#CB0B13" stroke-width="2" fill="#CB0B13"/>
+          </svg>
+          <svg width="35" height="53" viewBox="0 0 35 53" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M17.5 2.44238C17.9642 3.22192 18.5965 4.2922 19.3438 5.5791C20.9647 8.37082 23.1253 12.1781 25.2842 16.2441C27.4447 20.3133 29.5956 24.6268 31.2041 28.4336C32.0084 30.3371 32.6709 32.0998 33.1309 33.6328C33.5953 35.181 33.8339 36.4317 33.834 37.333C33.834 45.0358 26.6503 51.5 17.5 51.5C8.3499 51.4998 1.16699 45.0357 1.16699 37.333C1.16705 36.4317 1.40466 35.181 1.86914 33.6328C2.3291 32.0997 2.99251 30.3372 3.79688 28.4336C5.40542 24.6268 7.55625 20.3133 9.7168 16.2441C11.8757 12.1782 14.0363 8.37079 15.6572 5.5791C16.4043 4.29242 17.0359 3.22186 17.5 2.44238Z" stroke="#CB0B13" stroke-width="2" fill="#CB0B13"/>
+          </svg>
+          <svg width="35" height="53" viewBox="0 0 35 53" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M17.5 2.44238C17.9642 3.22192 18.5965 4.2922 19.3438 5.5791C20.9647 8.37082 23.1253 12.1781 25.2842 16.2441C27.4447 20.3133 29.5956 24.6268 31.2041 28.4336C32.0084 30.3371 32.6709 32.0998 33.1309 33.6328C33.5953 35.181 33.8339 36.4317 33.834 37.333C33.834 45.0358 26.6503 51.5 17.5 51.5C8.3499 51.4998 1.16699 45.0357 1.16699 37.333C1.16705 36.4317 1.40466 35.181 1.86914 33.6328C2.3291 32.0997 2.99251 30.3372 3.79688 28.4336C5.40542 24.6268 7.55625 20.3133 9.7168 16.2441C11.8757 12.1782 14.0363 8.37079 15.6572 5.5791C16.4043 4.29242 17.0359 3.22186 17.5 2.44238Z" stroke="#CB0B13" stroke-width="2"/>
+          </svg>
+        </div>
         <div class="catalog-item__colors colors" v-if="product.colors && product.colors.length > 0">
           <div class="colors__list">
             <div
@@ -153,10 +166,18 @@ const isFavourite = computed( () => {
     position: absolute;
     top: 1rem;
     left: 1rem;
-    border-radius: 2.4rem;
-    padding: 1rem .8rem 1rem 1rem;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-width: 7rem;
+    min-height: 7rem;
     background: var(--fg-white);
-    font-size: 1.2rem;
+    font-size: 1.3rem;
+    text-align: center;
+    background: var(--fg-red);
+    color: var(--fg-white);
   }
 
   &__fav {
@@ -199,13 +220,19 @@ const isFavourite = computed( () => {
     align-items: flex-start;
     position: absolute;
     bottom: 1.7rem;
-    left: 1.5rem;
+    right: 1.5rem;
+
+    & svg {
+      width: 1.5rem;
+      height: auto;
+    }
 
     & span {
       margin-top: .6rem;
       line-height: 100%;
-      font-weight: 300;
+      font-weight: 700;
       margin-right: .1rem;
+      font-size: 1.4rem;
     }
   }
 
@@ -332,6 +359,22 @@ const isFavourite = computed( () => {
     @media (max-width: $mobile) {
       min-width: 9rem;
       text-align: center;
+    }
+  }
+
+  &__drop {
+    display: flex;
+    align-items: center;
+    margin-top: 1rem;
+
+    & svg {
+      width: 1.2rem;
+      height: auto;
+      margin-right: 1rem;
+
+      &:last-child {
+        margin-right: 0;
+      }
     }
   }
 }

@@ -16,21 +16,12 @@
               </svg>
             </button>
           </div>
-          <button class="product-reviews__button" @click="openModal">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M13.2594 3.59997L5.04936 12.29C4.73936 12.62 4.43936 13.27 4.37936 13.72L4.00936 16.96C3.87936 18.13 4.71936 18.93 5.87936 18.73L9.09936 18.18C9.54936 18.1 10.1794 17.77 10.4894 17.43L18.6994 8.73997C20.1194 7.23997 20.7594 5.52997 18.5494 3.43997C16.3494 1.36997 14.6794 2.09997 13.2594 3.59997Z" stroke="#4B4B4B" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M11.8906 5.05005C12.3206 7.81005 14.5606 9.92005 17.3406 10.2" stroke="#4B4B4B" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M3 22H21" stroke="#4B4B4B" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            <span>Написать отзыв</span>
-          </button>
         </div>
       </div>
       <ClientOnly>
         <swiper-container
             v-if="reviews?.success && reviews.data.length"
             class="swiper product-reviews__swiper"
-            :auto-height="true"
             :slidesPerView="1.3"
             :spaceBetween="10"
             :navigation="{
@@ -57,21 +48,12 @@
                 :rating="review.rating"
                 :content="review.content"
                 :user-name="review?.client?.name"
-                :date="review.published_at"
+                :date="review.created_at"
             />
           </swiper-slide>
         </swiper-container>
         <div v-else>Отзывов не добавлено</div>
       </ClientOnly>
-      <!--    <button class="product-reviews__more">Показать еще отзывы</button>-->
-      <button class="product-reviews__button _mobile" @click="openModal">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M13.2594 3.59997L5.04936 12.29C4.73936 12.62 4.43936 13.27 4.37936 13.72L4.00936 16.96C3.87936 18.13 4.71936 18.93 5.87936 18.73L9.09936 18.18C9.54936 18.1 10.1794 17.77 10.4894 17.43L18.6994 8.73997C20.1194 7.23997 20.7594 5.52997 18.5494 3.43997C16.3494 1.36997 14.6794 2.09997 13.2594 3.59997Z" stroke="#4B4B4B" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M11.8906 5.05005C12.3206 7.81005 14.5606 9.92005 17.3406 10.2" stroke="#4B4B4B" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M3 22H21" stroke="#4B4B4B" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        <span>Написать отзыв</span>
-      </button>
     </div>
   </section>
 </template>
@@ -203,6 +185,10 @@ const openModal = () => {
   margin-top: 1rem;
   color: var(--fg-gray);
   opacity: .5;
+}
+
+.reviews swiper-slide {
+  height: auto;
 }
 
 </style>

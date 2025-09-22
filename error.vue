@@ -3,7 +3,6 @@
     <Top />
     <Header />
       <div class="error__page">
-        {{ error }}
         <div class="error__page-container container">
           <NuxtLayout name="default" v-if="error.statusCode !== 404">
             <!-- Content for general errors (e.g., 500) -->

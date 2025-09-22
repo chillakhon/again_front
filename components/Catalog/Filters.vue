@@ -48,6 +48,7 @@ type Colors = {
 const isActive = ref( false );
 const toggleTabletFilter = () => {
   isActive.value = !isActive.value;
+  lockUnlockBody().toggle();
 }
 
 const { data: colors } = await useApi<Colors>( '/colors/used-in-catalog' );
@@ -141,11 +142,12 @@ const emitResetFilter = () => {
     right: 0;
     width: 100%;
     height: 100%;
-    z-index: -1;
+    z-index: 9999;
     transition: z-index .5s;
+    pointer-events: none;
 
     &._active {
-      z-index: 999;
+      pointer-events: auto;
 
       & .filter__view-bg {
         opacity: 1;

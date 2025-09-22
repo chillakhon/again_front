@@ -7,24 +7,24 @@
           <h1 class="block__header-title">Контакты</h1>
         </div>
         <div class="contacts__menu contacts-menu">
-          <div class="contacts-menu__item">
+          <NuxtLink to="/returns" class="contacts-menu__item">
             <div class="contacts-menu__item-icon">
               <img src="/img/contacts.again/icon-1.svg" alt="">
             </div>
             <div class="contacts-menu__item-text">Как вернуть или обменять товар</div>
-          </div>
-          <div class="contacts-menu__item">
+          </NuxtLink>
+          <NuxtLink to="/selection" class="contacts-menu__item">
             <div class="contacts-menu__item-icon">
               <img src="/img/contacts.again/icon-2.svg" alt="">
             </div>
             <div class="contacts-menu__item-text">Как выбрать размер и впитываемость</div>
-          </div>
-          <div class="contacts-menu__item">
+          </NuxtLink>
+          <NuxtLink to="/profile/history" class="contacts-menu__item">
             <div class="contacts-menu__item-icon">
               <img src="/img/contacts.again/icon-3.svg" alt="">
             </div>
             <div class="contacts-menu__item-text">Отследить заказ</div>
-          </div>
+          </NuxtLink>
         </div>
       </div>
       <ContactsForm />
