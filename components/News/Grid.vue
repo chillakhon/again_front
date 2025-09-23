@@ -1,13 +1,19 @@
 <template>
   <div class="news__grid">
-    <NewsCard />
-    <NewsCard />
-    <NewsCard />
+    <NewsCard
+        v-for="( item, key ) in list"
+        :key="key"
+        :title="item.title"
+        :text="item.text.short"
+        :slug="item.slug"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
+import {blogQuery} from "~/stores/blog";
 
+const list = blogQuery().getList();
 </script>
 
 <style scoped lang="scss">

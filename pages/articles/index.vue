@@ -14,7 +14,7 @@
 <script setup lang="ts">
 definePageMeta( {
   title: 'Статьи',
-} )
+} );
 </script>
 
 <style scoped lang="scss">

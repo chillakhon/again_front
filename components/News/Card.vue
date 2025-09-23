@@ -8,9 +8,9 @@
       </div>
       <div class="news-item__content">
         <div class="news-item__date">1 января 2021</div>
-        <NuxtLink :to="to" class="news-item__title fz-h3">Заголовок новости</NuxtLink>
+        <NuxtLink :to="to" class="news-item__title fz-h3">{{ title }}</NuxtLink>
         <p class="news-item__text">
-          Описание новости в 2-3 строки для продажи идеи прочтения и погружения в контекст
+          {{ text }}
         </p>
         <NuxtLink :to="to" class="news-item__link">
           <span>Подробнее</span>
@@ -24,11 +24,17 @@
 </template>
 
 <script setup lang="ts">
+const props = defineProps<{
+  title: string,
+  text: string,
+  slug: string
+}>();
+
 const to = computed( () => {
   return {
     name: 'articles-slug',
     params: {
-      slug: 'test'
+      slug: props.slug
     }
   }
 } )
