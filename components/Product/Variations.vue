@@ -51,7 +51,7 @@
 </template>
 
 <script setup lang="ts">
-import type {Variation, Color, AvailableVariation} from "~/types/catalog";
+import type {AvailableVariation, Color} from "~/types/catalog";
 import {ModalsSizes} from "#components";
 
 const props = defineProps<{
@@ -95,7 +95,17 @@ const sizes = computed( () => {
     return [];
   }
 
-  return props.variations.filter(item => item.color_id === selectedColor.value.id );
+  const data = props.variations.filter(item => item.color_id === selectedColor.value.id );
+  if ( ! data ){
+    return data;
+  }
+
+  const sizeOrder = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'];
+  return data.sort((a, b) => {
+    const indexA = sizeOrder.indexOf(a.size) === -1 ? Infinity : sizeOrder.indexOf(a.size);
+    const indexB = sizeOrder.indexOf(b.size) === -1 ? Infinity : sizeOrder.indexOf(b.size);
+    return indexA - indexB;
+  });
 } );
 </script>
 

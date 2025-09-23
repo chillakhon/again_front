@@ -30,15 +30,33 @@
 </template>
 
 <script setup lang="ts">
-import {FormInput, ModalsSuccess} from "#components";
+import {FormInput, FormTextarea, ModalsSuccess} from "#components";
 
 const form = ref( {
+  name: {
+    template: FormInput,
+    value: '',
+    placeholder: 'Введите ваше имя',
+    error: ''
+  },
   phone: {
     template: FormInput,
     type: 'tel',
     name: 'phone',
     placeholder: 'Введите номер телефона*',
     value: '',
+    error: ''
+  },
+  email: {
+    template: FormInput,
+    value: '',
+    placeholder: 'Введите вашу email почту',
+    error: ''
+  },
+  message: {
+    template: FormTextarea,
+    value: '',
+    placeholder: 'Задайте свой вопрос',
     error: ''
   }
 } );
@@ -105,5 +123,7 @@ const send = async () => {
 }
 .modal-callback__title {
   margin-bottom: 1.9rem;
+  font-size: 4rem;
+  line-height: 100%;
 }
 </style>

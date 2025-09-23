@@ -9,6 +9,21 @@ const lockUnlockBody = ( remove = false ) => {
     }
 }
 
+const isScrollableFunc = () => {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            const modal = document.querySelector(".modal");
+            const content = modal.querySelector(".modal__content");
+
+            if (content.getBoundingClientRect().height > window.innerHeight) {
+                resolve(true );
+            } else {
+                resolve(false );
+            }
+        }, 5);
+    });
+}
+
 export const useModal = defineStore('useModal', () => {
     const isActive = ref( false );
     const isScrollable = ref( false );
@@ -19,6 +34,10 @@ export const useModal = defineStore('useModal', () => {
         isActive.value = true;
         view.value = openView;
         props.value = openProps;
+
+        isScrollableFunc().then( (value) => {
+            isScrollable.value = value;
+        } );
 
         lockUnlockBody();
     }
