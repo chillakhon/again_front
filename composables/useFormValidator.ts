@@ -7,6 +7,12 @@ export function useFormValidator( form: Ref ) {
         }
     }
 
+    const resetForm = () => {
+        for ( const key in form.value ) {
+            form.value[ key ].value = '';
+        }
+    }
+
     const validateForm = () => {
         for ( const key in form.value ) {
             if ( ! form.value[key].hasOwnProperty( 'validation' ) ) {
@@ -26,6 +32,7 @@ export function useFormValidator( form: Ref ) {
     return {
         isFormError,
         resetErrors,
-        validateForm
+        validateForm,
+        resetForm
     };
 }

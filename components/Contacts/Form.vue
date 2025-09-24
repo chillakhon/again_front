@@ -32,6 +32,7 @@
 
 <script setup lang="ts">
 import {FormInput, FormTextarea, ModalsSuccess} from "#components";
+import {useFormValidator} from "~/composables/useFormValidator";
 
 const form = ref( {
   name: {
@@ -50,13 +51,10 @@ const form = ref( {
     template: FormInput,
     value: '',
     placeholder: 'Введите ваш номер телефона',
-    error: ''
-  },
-  theme: {
-    template: FormInput,
-    value: '',
-    placeholder: 'Тема вопроса',
-    error: ''
+    error: '',
+    validation: {
+      required: true
+    }
   },
   message: {
     template: FormTextarea,
@@ -76,8 +74,12 @@ watch( ( isChecked ), ( oldValue, newValue ) => {
 const modal = useModal();
 
 const send = async () => {
-  for ( let key in form.value ) {
-    form.value[key].error = '';
+  const { isFormError, validateForm, resetErrors, resetForm } = useFormValidator( form );
+  resetErrors();
+  validateForm();
+
+  if ( isFormError.value ) {
+    return;
   }
 
   const { data, status, error } = await useApi('/contact-requests', {
@@ -101,9 +103,8 @@ const send = async () => {
       text: 'Ваша заявка отправлена'
     } )
 
-    for ( let key in form.value ) {
-      form.value[key].value = '';
-    }
+    resetErrors();
+    resetForm();
   }
 }
 </script>

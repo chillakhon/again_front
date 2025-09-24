@@ -65,6 +65,7 @@ const close = ( event : any ) => {
     opacity: 0;
     transform: translateY(25rem) scale(0.8);
     transition: all 0.5s var(--tr-jolly-leave), opacity 0.3s var(--tr-jolly-leave);
+    overflow-y: auto;
   }
 
   &__content {
@@ -176,6 +177,12 @@ const close = ( event : any ) => {
     & .modal__content {
       max-width: 40rem;
       padding-bottom: 4rem;
+    }
+  }
+
+  &--scrollable {
+    :deep(.modal__overflow) {
+      align-items: flex-start;
     }
   }
 }

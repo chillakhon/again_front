@@ -1,6 +1,17 @@
 <template>
   <div class="top">
-    Мы доставляем по всему миру!
+    <Vue3Marquee :clone="true" :duration="25">
+      <span>Мы доставляем по всему миру!</span>
+      <span>Мы доставляем по всему миру!</span>
+      <span>Мы доставляем по всему миру!</span>
+      <span>Мы доставляем по всему миру!</span>
+      <span>Мы доставляем по всему миру!</span>
+      <span>Мы доставляем по всему миру!</span>
+      <span>Мы доставляем по всему миру!</span>
+      <span>Мы доставляем по всему миру!</span>
+      <span>Мы доставляем по всему миру!</span>
+      <span>Мы доставляем по всему миру!</span>
+    </Vue3Marquee>
   </div>
 </template>
 
@@ -21,9 +32,20 @@
   font-family: var(--ff-mulish);
   position: relative;
   z-index: 1000;
+  display: flex;
+  align-items: center;
+
+  & span {
+    margin-right: 1.5rem;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
 
   @media (max-width: $tablet) {
-    font-size: 1.4rem;
+    font-size: 1.2rem;
+    padding: .3rem 0;
   }
 }
 </style>

@@ -118,8 +118,20 @@ const clickToMenu = () => {
     width: .9rem;
     height: .9rem;
     font-size: .55rem;
+    line-height: 1rem;
     top: -.45rem;
     right: -.45rem;
+  }
+}
+
+.header__fav-count {
+  @media (max-width: $mobile) {
+    width: 0.9rem;
+    height: 0.9rem;
+    font-size: 0.55rem;
+    line-height: 1rem;
+    top: -0.3rem;
+    right: -0.35rem;
   }
 }
 </style>

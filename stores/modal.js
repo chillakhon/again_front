@@ -15,13 +15,13 @@ const isScrollableFunc = () => {
             const modal = document.querySelector(".modal");
             const content = modal.querySelector(".modal__content");
 
-            if (content.getBoundingClientRect().height > window.innerHeight) {
+            if (content.clientHeight > window.innerHeight) {
                 resolve(true );
             } else {
                 resolve(false );
             }
         }, 5);
-    });
+    } );
 }
 
 export const useModal = defineStore('useModal', () => {
