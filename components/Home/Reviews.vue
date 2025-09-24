@@ -20,7 +20,7 @@
       </div>
       <ClientOnly>
         <swiper-container
-            v-if="reviews?.success && reviews.data.length"
+            v-if="reviews?.success && reviewsList.length"
             class="swiper product-reviews__swiper"
             :slidesPerView="1.3"
             :spaceBetween="10"
@@ -43,7 +43,7 @@
             }
           }"
         >
-          <swiper-slide v-for="review in reviews.data" :key="review.id">
+          <swiper-slide v-for="review in reviewsList" :key="review.id">
             <ReviewsCard
                 :rating="review.rating"
                 :content="review.content"
@@ -78,6 +78,10 @@ const openModal = () => {
     customClass: 'review'
   } )
 }
+
+const reviewsList = computed( () => {
+  return reviews.value.data.reverse();
+} );
 </script>
 
 <style scoped lang="scss">

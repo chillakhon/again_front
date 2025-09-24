@@ -41,13 +41,11 @@ const modal = useModal();
 
 <style scoped lang="scss">
 .header {
-  position: -webkit-sticky;
   position: sticky;
   top: 0;
   z-index: 1000;
   background: var(--fg-white);
-
-  $root: &;
+  transform: translateZ(0);
 }
 
 .header__bottom {

@@ -30,7 +30,7 @@
 </template>
 
 <script setup lang="ts">
-import {FormInput, FormTextarea, ModalsSuccess} from "#components";
+import {FormInput, FormPhone, FormTextarea, ModalsSuccess} from "#components";
 import {useFormValidator} from "~/composables/useFormValidator";
 
 const form = ref( {
@@ -41,7 +41,7 @@ const form = ref( {
     error: ''
   },
   phone: {
-    template: FormInput,
+    template: FormPhone,
     type: 'tel',
     name: 'phone',
     placeholder: 'Введите номер телефона*',

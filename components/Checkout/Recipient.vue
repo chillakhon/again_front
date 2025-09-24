@@ -12,7 +12,7 @@
           placeholder="Введите фамилию*"
           v-model="lastName"
       />
-      <FormInput
+      <FormPhone
           name="phone"
           placeholder="Введите номер телефона*"
           v-model="phone"
