@@ -16,6 +16,8 @@
               :is="view"
               v-model="model"
           ></component>
+
+          <button class="modal__close modal__close--mobile" @click="modal.closeModal"></button>
         </div>
       </div>
 
@@ -75,6 +77,10 @@ const close = ( event : any ) => {
     background: var(--fg-white);
     border-radius: 2rem;
     max-width: 100%;
+
+    @media (max-width: $mobile){
+      position: relative;
+    }
   }
 
   &__close {
@@ -109,6 +115,23 @@ const close = ( event : any ) => {
 
     &:after {
       transform: rotate(-45deg);
+    }
+
+    &--mobile {
+      display: none;
+
+      @media (max-width: $mobile) {
+        display: block;
+        z-index: 5;
+        width: 2.5rem;
+        height: 2.5rem;
+        background: none;
+
+        &:before,
+        &:after {
+          --closer-color: var(--fg-black);
+        }
+      }
     }
   }
 
