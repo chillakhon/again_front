@@ -4,7 +4,8 @@
       <div class="news__header block__header _left">
         <div class="block__header-title">Вам может быть это&nbsp;интересно!</div>
       </div>
-      <NewsGrid />
+
+      <NewsGrid :list="list" />
 
       <div class="news__more">
         <NuxtLink to="/articles" class="btn _border _gray">читать все статьи</NuxtLink>
@@ -15,7 +16,7 @@
 </template>
 
 <script setup lang="ts">
-
+const list = blogQuery().getLast();
 </script>
 
 <style scoped lang="scss">

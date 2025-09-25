@@ -6,7 +6,7 @@
       <div class="news__header block__header @@title_class">
         <div class="block__header-title">Вам может быть это&nbsp;интересно!</div>
       </div>
-      <NewsGrid />
+      <NewsGrid :list="list" />
     </div>
   </section>
 </template>
@@ -15,6 +15,8 @@
 definePageMeta( {
   title: 'Статьи',
 } );
+
+const list = blogQuery().getList();
 </script>
 
 <style scoped lang="scss">

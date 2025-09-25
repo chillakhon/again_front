@@ -1,5 +1,5 @@
 <template>
-  <header class="header">
+  <header class="header" :class="{ '_fixed': isFixed }">
     <div class="header__container container">
       <div class="header__top">
         <NuxtLink to="/" class="header__logo">
@@ -37,6 +37,20 @@
 import {ModalsCallback} from "#components";
 const mobileMenuStore = useMobileMenuStore();
 const modal = useModal();
+
+const isFixed = ref(false)
+
+const handleScroll = () => {
+  isFixed.value = window.scrollY > 100
+}
+
+onMounted(() => {
+  window.addEventListener('scroll', handleScroll)
+} )
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll)
+} )
 </script>
 
 <style scoped lang="scss">
@@ -46,6 +60,18 @@ const modal = useModal();
   z-index: 1000;
   background: var(--fg-white);
   transform: translateZ(0);
+
+  @media (max-width: $mobile) {
+    position: fixed;
+    left: 0;
+    top: 3.3rem;
+    width: 100%;
+    transition: var(--tr-regular);
+
+    &._fixed {
+      top: 0;
+    }
+  }
 }
 
 .header__bottom {

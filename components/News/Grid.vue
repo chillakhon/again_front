@@ -11,9 +11,9 @@
 </template>
 
 <script setup lang="ts">
-import {blogQuery} from "~/stores/blog";
-
-const list = blogQuery().getList();
+defineProps<{
+  list: string[]
+}>();
 </script>
 
 <style scoped lang="scss">

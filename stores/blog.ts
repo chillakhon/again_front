@@ -126,6 +126,28 @@ export const blogQuery = () => {
         return list;
     }
 
+    const getRandomItems = () => {
+        const shuffled = [...list];
+        let currentIndex = shuffled.length;
+        let randomIndex;
+
+        while (currentIndex !== 0) {
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex--;
+
+            [shuffled[currentIndex], shuffled[randomIndex]] = [
+                shuffled[randomIndex],
+                shuffled[currentIndex],
+            ];
+        }
+
+        return shuffled.slice(0, 5);
+    }
+
+    const getLast = ( number: number = 3 ) => {
+        return list.slice(0, number);
+    }
+
     const getBySlug = ( slug: string ) => {
         return list.find( (item) => item.slug === slug );
     }
@@ -133,5 +155,7 @@ export const blogQuery = () => {
     return {
         getList,
         getBySlug,
+        getRandomItems,
+        getLast
     }
 }

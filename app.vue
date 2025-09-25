@@ -4,7 +4,9 @@
     <NuxtLayout>
       <Top />
       <Header />
-       <NuxtPage/>
+        <div class="wrapper">
+          <NuxtPage/>
+        </div>
       <Footer />
     </NuxtLayout>
   </div>
