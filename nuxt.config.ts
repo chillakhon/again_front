@@ -27,7 +27,7 @@ export default defineNuxtConfig({
   css: ['~/assets/css/style.scss'],
   runtimeConfig: {
     public: {
-      DEV_URI: 'http://193.233.84.235/api'
+      DEV_URI: 'http://127.0.0.1:8000/api'
     }
   },
   build: {
