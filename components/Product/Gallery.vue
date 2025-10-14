@@ -1,64 +1,66 @@
 <template>
   <ClientOnly>
     <div class="product-gallery" v-if="images.length > 0">
-      <swiper-container
-          ref="mainSwiperEl"
-          :key="galleryKey"
-          thumbs-swiper=".my-thumbs"
-          :spaceBetween="15"
-      >
-        <swiper-slide v-for="(image, index) in images" :key="image.id ?? index">
-          <a :href="getImage(image.path)" data-fancybox="gallery">
-            <picture class="product-gallery__main-pic">
-              <img
-                  :src="getImage(image.path)"
-                  class="product-gallery__main-img"
-                  :alt="product.name"
-              />
-            </picture>
-          </a>
-        </swiper-slide>
-      </swiper-container>
-
-      <div class="product-gallery__flex" v-if="images.length > 1">
-        <div class="product-gallery__thumbs">
+      <!-- transition оборачивает и главный слайдер, и миниатюры -->
+      <transition name="fade-slide" mode="out-in">
+        <div :key="galleryKey" class="gallery-inner">
+          <!-- главный слайдер -->
           <swiper-container
-              ref="thumbsSwiperEl"
-              class="my-thumbs"
-              :key="galleryKey + '-thumbs'"
-              :slidesPerView="4"
+              ref="mainSwiperEl"
+              thumbs-swiper=".my-thumbs"
+              :spaceBetween="15"
           >
-            <swiper-slide v-for="(image, index) in images" :key="image.id ?? 't' + index">
-              <button
-                  class="product-gallery__thumbs-item"
-                  :class="{ '_active': activeItemIndex === index }"
-                  @click="goTo(index)"
-                  type="button"
-              >
-                <img
-                    :src="getImage(image.path)"
-                    class="product-gallery__thumbs-img"
-                    :alt="product.name"
-                />
-              </button>
+            <swiper-slide v-for="(image, index) in images" :key="image.id ?? index">
+              <a :href="getImage(image.path)" data-fancybox="gallery">
+                <picture class="product-gallery__main-pic">
+                  <img
+                      :src="getImage(image.path)"
+                      class="product-gallery__main-img"
+                      :alt="product.name"
+                  />
+                </picture>
+              </a>
             </swiper-slide>
           </swiper-container>
+
+          <!-- миниатюры -->
+          <div class="product-gallery__flex" v-if="images.length > 1">
+            <div class="product-gallery__thumbs">
+              <swiper-container
+                  ref="thumbsSwiperEl"
+                  class="my-thumbs"
+                  :slidesPerView="4"
+              >
+                <swiper-slide v-for="(image, index) in images" :key="image.id ?? 't' + index">
+                  <button
+                      class="product-gallery__thumbs-item"
+                      :class="{ '_active': activeItemIndex === index }"
+                      @click="goTo(index)"
+                      type="button"
+                  >
+                    <img
+                        :src="getImage(image.path)"
+                        class="product-gallery__thumbs-img"
+                        :alt="product.name"
+                    />
+                  </button>
+                </swiper-slide>
+              </swiper-container>
+            </div>
+          </div>
         </div>
-      </div>
+      </transition>
     </div>
-
-
-<!--    {{selectedSize}}-->
-
   </ClientOnly>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, nextTick, onMounted, onBeforeUnmount } from 'vue';
-import type { Product } from '~/types/catalog';
-import { Fancybox as NativeFancybox } from '@fancyapps/ui';
+import {ref, computed, watch, nextTick, onMounted, onBeforeUnmount} from 'vue';
+import type {Product} from '~/types/catalog';
+import {Fancybox as NativeFancybox} from '@fancyapps/ui';
 import '@fancyapps/ui/dist/fancybox/fancybox.css';
-import { register } from 'swiper/element/bundle';
+import {register} from 'swiper/element/bundle';
+
 register();
 
 const props = defineProps<{
@@ -126,7 +128,7 @@ watch(images, async () => {
       }
     }, 50);
   }
-}, { immediate: true });
+}, {immediate: true});
 
 onMounted(() => {
   NativeFancybox.bind('[data-fancybox]', {});
@@ -145,4 +147,35 @@ onBeforeUnmount(() => {
 swiper-container::part(container) {
   touch-action: pan-y;
 }
+
+.fade-slide-enter-active,
+.fade-slide-leave-active {
+  transition: opacity 300ms cubic-bezier(.2,.9,.2,1), transform 320ms cubic-bezier(.2,.9,.2,1);
+}
+
+.fade-slide-enter-from {
+  opacity: 0;
+  transform: translateX(-20px);
+}
+
+.fade-slide-enter-to {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.fade-slide-leave-from {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.fade-slide-leave-to {
+  opacity: 0;
+  transform: translateX(20px);
+}
+
+.product-gallery__main-img {
+  transition: opacity 260ms ease, transform 260ms ease;
+  will-change: opacity, transform;
+}
+
 </style>

@@ -120,7 +120,6 @@ const {data: product} = await useApi<Product>('/products', {
   }
 });
 
-const renderProductGallery = ref(1)
 const isAddedMessageActive = ref(false);
 
 const quantity = ref(1);
@@ -132,9 +131,7 @@ const selectedColor: Ref = ref(null);
 const selectedSize: Ref = ref(null);
 
 const getColor = (value: object) => {
-  // console.log(5446)
   selectedColor.value = value;
-  // renderProductGallery.value++
 }
 
 const getSize = (value: object) => {
