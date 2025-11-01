@@ -9,8 +9,11 @@
             class="product-variables__color"
             v-for="(color, key) in colors"
             :key="color.id"
-            :style="{ '--color': color.code }"
-            :class="{ '_white': color.code === '#FFFFFF' }"
+            :style="isPrintColor(color.code) ? {} : { '--color': color.code }"
+            :class="{
+              '_white': color.code === '#FFFFFF',
+              '_print': isPrintColor(color.code)
+            }"
         >
           <input
               type="radio"
@@ -19,7 +22,15 @@
               :checked="selectedColor && selectedColor.id === color.id"
               @change="emitColor(color)"
           >
-          <label for=""></label>
+          <label for="">
+            <img
+                v-if="isPrintColor(color.code)"
+                :src="`/img_colors_print/${color.name}.jpg`"
+                :alt="color.name"
+                class="product-variables__print-img"
+                :class="{ '_active': selectedColor && selectedColor.id === color.id }"
+            >
+          </label>
         </div>
       </div>
     </div>
@@ -30,7 +41,8 @@
         <button
             class="product-variables__link"
             @click="modal.openModal( ModalsSizes, { customClass: 'sizes' } )"
-        >Таблица размеров</button>
+        >Таблица размеров
+        </button>
       </div>
       <div class="product-variables__values">
         <div class="product-variables__size" v-for="(size, key) in sizes" :key="size.id">
@@ -50,9 +62,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
-import type { AvailableVariation, Color } from '~/types/catalog';
-import { ModalsSizes } from '#components';
+import {ref, computed, onMounted} from 'vue';
+import type {AvailableVariation, Color} from '~/types/catalog';
+import {ModalsSizes} from '#components';
 
 const props = defineProps<{
   variations?: AvailableVariation[],
@@ -80,6 +92,11 @@ const sizes = computed(() => {
     return indexA - indexB;
   });
 });
+
+// Проверка, является ли цвет принтом
+const isPrintColor = (code: string) => {
+  return code && code.toLowerCase().includes('print');
+};
 
 onMounted(() => {
   const variations = props.variations ?? [];
@@ -125,5 +142,27 @@ const emitColor = (color: Color) => {
 </script>
 
 <style scoped lang="scss">
-/* ваш стиль */
+.product-variables__print-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+
+
+  &._active {
+    padding: 2px;
+    //border: 2px solid #ff0000;
+  }
+}
+
+.product-variables__color._print label {
+  background: transparent;
+  border: 2px solid #9a9a9a;
+  overflow: hidden;
+
+  &::after {
+    display: none;
+  }
+}
 </style>

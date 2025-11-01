@@ -1,12 +1,15 @@
-import { useRoute } from '#app/composables/router';
+import {useRoute} from '#app/composables/router';
 
-export function useApi<T>(url: string, options: object = {}, slug?: string, method: string = 'GET') {
+export async function useApi<T>(url: string, options: object = {}, slug?: string, method: string = 'GET') {
+
+
     const route = useRoute();
     const DEV_URI = useRuntimeConfig().public.DEV_URI;
     const authStore = useAuthStore();
 
     if (!slug) {
     }
+
 
     options = {
         ...options,
@@ -16,7 +19,8 @@ export function useApi<T>(url: string, options: object = {}, slug?: string, meth
         }
     };
 
-    return useFetch<T>( DEV_URI + url, options );
+
+    return useFetch<T>(DEV_URI + url, options);
 }
 
 export default useApi;

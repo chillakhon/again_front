@@ -52,7 +52,7 @@
           <ReviewsCard
             :rating="review.rating"
             :content="review.content"
-            :user-name="review.client.name"
+            :user-name="review.client?.name ?? ''"
             :date="review.published_at"
           />
         </swiper-slide>

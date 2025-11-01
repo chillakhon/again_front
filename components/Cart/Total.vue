@@ -4,40 +4,61 @@
       <div class="cart__summary cart-summary">
         <div class="cart-summary__item">
           <span class="cart-summary__item-title">Всего</span>
-          <span class="cart-summary__item-price">{{ getFormatPrice().formattedPrice( cart.subtotal ) }} ₽</span>
+          <span class="cart-summary__item-price">{{ getFormatPrice().formattedPrice(cart.subtotal) }} ₽</span>
         </div>
         <div class="cart-summary__item" v-if="cart.sale">
           <span class="cart-summary__item-title">Скидка</span>
-          <span class="cart-summary__item-price">{{ getFormatPrice().formattedPrice( cart.sale ) }} ₽</span>
+          <span class="cart-summary__item-price">{{ getFormatPrice().formattedPrice(cart.sale) }} ₽</span>
         </div>
       </div>
+
+
+<!--      <div class="cart__promo-message" :class="[cart.promoClass ]">{{ cart.promoMessage }}</div>-->
+
     </div>
+
     <div class="cart__total-bottom">
-      <CartSubtotal />
+      <CartSubtotal/>
       <NuxtLink v-if="withButton" to="/checkout" class="cart__checkout btn _wide _15 _60">Оформить заказ</NuxtLink>
-      <CartPromocode v-if="isPromocode" />
+      <CartPromocode v-if="isPromocode"/>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-withDefaults( defineProps<{
+withDefaults(defineProps<{
   isBorder?: boolean,
   isPromocode?: boolean,
   withButton?: boolean
-}>(),{
+}>(), {
   isBorder: false,
   isPromocode: true,
   withButton: true
-} );
+});
 
 const cart = useCartStore();
-const getTotal = computed( () => {
+
+
+const getTotal = computed(() => {
   return cart.total;
-} )
+})
 </script>
 
 <style scoped lang="scss">
+
+.cart__promo-message {
+  margin-top: 1rem;
+  font-size: 1.2rem;
+
+  &--error {
+    color: var(--fg-red);
+  }
+
+  &--success {
+    color: var(--fg-green);
+  }
+}
+
 .cart__total {
   border-radius: var(--br-regular);
   border: .1rem solid #E5E5E5;

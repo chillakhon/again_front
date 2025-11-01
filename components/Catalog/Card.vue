@@ -2,45 +2,73 @@
   <article class="catalog-item" :data-id="product.id">
     <div class="catalog-item__card">
       <NuxtLink :to="to" class="catalog-item__media">
-        <picture class="catalog-item__media-pic">
-          <img
-              :src="getImage( product.main_image?.path ? product.main_image?.path : '' )"
-              alt=""
-              class="catalog-item__media-img catalog-item__media-main"
-          >
-          <img v-if="product.images?.length"
-               :src="getImage( product.images[0].path )"
-               alt=""
-               class="catalog-item__media-img catalog-item__media-on-hover"
-          >
-        </picture>
-        <div class="catalog-item__sale" v-if="product.total_discount">
-          <span>Выгода</span>
-          {{ formattedPrice(product.total_discount) }} ₽
-          <!--          2 490 Р-->
-        </div>
-        <div class="catalog-item__status" v-if="product.stock_quantity === 0">Нет в наличии</div>
-        <div class="catalog-item__rating" v-if="product.avg_rating">
-          <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path
-                d="M5 0L6.41068 3.05836L9.75528 3.45492L7.28254 5.74164L7.93893 9.04508L5 7.4L2.06107 9.04508L2.71746 5.74164L0.244718 3.45492L3.58932 3.05836L5 0Z"
-                fill="black"/>
-          </svg>
-          <span>{{ product.avg_rating }}</span>
-        </div>
-        <ClientOnly>
-          <button
-              class="catalog-item__fav add-to-fav"
-              :class="{ '_active': isFavourite }"
-              @click="favouritesStore.toggleFavourites( product )"
-          >
-            <svg width="22" height="20" viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <div class="catalog-item__media-container"
+             @mousemove="handleMouseMove"
+             @mouseenter="handleMouseEnter"
+             @mouseleave="handleMouseLeave"
+             @touchstart="handleTouchStart"
+             @touchmove="handleTouchMove"
+             @touchend="handleTouchEnd">
+          <picture class="catalog-item__media-pic">
+            <img
+                :src="getImage( product.main_image?.path ? product.main_image?.path : '' )"
+                alt=""
+                class="catalog-item__media-img catalog-item__media-main"
+                :class="{ '_hidden': currentImageIndex !== 0 }"
+            >
+            <img v-for="(image, index) in displayedImages"
+                 :key="image.id || index"
+                 :src="getImage(image.path)"
+                 alt=""
+                 class="catalog-item__media-img catalog-item__media-hover"
+                 :class="{
+                   '_active': currentImageIndex === index + 1,
+                   '_hidden': currentImageIndex !== index + 1
+                 }"
+            >
+          </picture>
+          <div class="catalog-item__sale" v-if="product.total_discount">
+            <span>Выгода</span>
+            {{ formattedPrice(product.total_discount) }} ₽
+          </div>
+          <div class="catalog-item__status" v-if="product.stock_quantity === 0">Нет в наличии</div>
+          <div class="catalog-item__rating" v-if="product.avg_rating">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path
-                  d="M11.62 18.8101C11.28 18.9301 10.72 18.9301 10.38 18.8101C7.48 17.8201 1 13.6901 1 6.6901C1 3.6001 3.49 1.1001 6.56 1.1001C8.38 1.1001 9.99 1.9801 11 3.3401C12.01 1.9801 13.63 1.1001 15.44 1.1001C18.51 1.1001 21 3.6001 21 6.6901C21 13.6901 14.52 17.8201 11.62 18.8101Z"
-                  stroke="#4F4F4F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  d="M5 0L6.41068 3.05836L9.75528 3.45492L7.28254 5.74164L7.93893 9.04508L5 7.4L2.06107 9.04508L2.71746 5.74164L0.244718 3.45492L3.58932 3.05836L5 0Z"
+                  fill="black"/>
             </svg>
-          </button>
-        </ClientOnly>
+            <span>{{ product.avg_rating }}</span>
+          </div>
+          <ClientOnly>
+            <button
+                class="catalog-item__fav add-to-fav"
+                :class="{ '_active': isFavourite }"
+                @click="favouritesStore.toggleFavourites( product )"
+            >
+              <svg width="22" height="20" viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                    d="M11.62 18.8101C11.28 18.9301 10.72 18.9301 10.38 18.8101C7.48 17.8201 1 13.6901 1 6.6901C1 3.6001 3.49 1.1001 6.56 1.1001C8.38 1.1001 9.99 1.9801 11 3.3401C12.01 1.9801 13.63 1.1001 15.44 1.1001C18.51 1.1001 21 3.6001 21 6.6901C21 13.6901 14.52 17.8201 11.62 18.8101Z"
+                    stroke="#4F4F4F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </ClientOnly>
+
+          <!-- Mobile swipe indicators -->
+          <div class="catalog-item__swipe-indicators" v-if="isMobile && displayedImages.length > 1">
+            <div v-for="(_, index) in displayedImagesWithMain"
+                 :key="index"
+                 class="catalog-item__swipe-indicator"
+                 :class="{ '_active': currentImageIndex === index }"></div>
+          </div>
+
+          <!-- Desktop hover indicator -->
+          <div class="catalog-item__hover-indicator" v-if="!isMobile && isHovering && displayedImages.length > 1">
+            <div class="catalog-item__hover-track">
+              <div class="catalog-item__hover-thumb" :style="thumbStyle"></div>
+            </div>
+          </div>
+        </div>
       </NuxtLink>
       <div class="catalog-item__content">
         <div class="catalog-item__header">
@@ -85,14 +113,38 @@
                 stroke="#CB0B13" stroke-width="2"/>
           </svg>
         </div>
+        <!--        <div class="catalog-item__colors colors" v-if="product.colors && product.colors.length > 0">-->
+        <!--          <div class="colors__list">-->
+        <!--            <div-->
+        <!--                v-for="(color, key) in product.colors"-->
+        <!--                :key="color.id"-->
+        <!--                class="colors__item"-->
+        <!--                :class="{ '_white': isWhiteColor( color.code ) }"-->
+        <!--                :style="{ '&#45;&#45;color': color.code }"-->
+        <!--            >-->
+        <!--              <input-->
+        <!--                  type="radio"-->
+        <!--                  class="colors__input"-->
+        <!--                  :value="color.id"-->
+        <!--                  :checked="product.colors[key] === color"-->
+        <!--              >-->
+        <!--              <label for="color" class="colors__label"><span></span></label>-->
+        <!--            </div>-->
+        <!--          </div>-->
+        <!--        </div>-->
+
+
         <div class="catalog-item__colors colors" v-if="product.colors && product.colors.length > 0">
           <div class="colors__list">
             <div
                 v-for="(color, key) in product.colors"
                 :key="color.id"
                 class="colors__item"
-                :class="{ '_white': isWhiteColor( color.code ) }"
-                :style="{ '--color': color.code }"
+                :class="{
+          '_white': isWhiteColor(color.code),
+          '_print': isPrintColor(color.code)
+        }"
+                :style="isPrintColor(color.code) ? {} : { '--color': color.code }"
             >
               <input
                   type="radio"
@@ -100,25 +152,42 @@
                   :value="color.id"
                   :checked="product.colors[key] === color"
               >
-              <label for="color" class="colors__label"><span></span></label>
+              <label for="color" class="colors__label">
+                <span v-if="!isPrintColor(color.code)"></span>
+                <img
+                    v-else
+                    :src="`/img_colors_print/${color.name}.jpg`"
+                    :alt="color.name"
+                    class="colors__print-img"
+                >
+              </label>
             </div>
           </div>
         </div>
-        <NuxtLink :to="to" class="catalog-item__btn">
-          <span>Подробнее</span>
-          <svg width="11" height="11" viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path
-                d="M0.0920253 9.11633L7.20409 2.00427H0.676418V0.350437H10.0267V9.70073L8.37287 9.70073L8.37287 3.17306L1.26081 10.2851L0.0920253 9.11633Z"
-                fill="#3F3F3F"/>
-          </svg>
-        </NuxtLink>
+
       </div>
+    </div>
+    <div class="cart_btns">
+      <MarketplaceLinksButtons
+          v-if="product.marketplace_links"
+          :marketplace-links="product.marketplace_links"
+      />
+
+      <NuxtLink :to="to" class="catalog-item__btn" v-else>
+        <span>Подробнее</span>
+        <svg width="11" height="11" viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path
+              d="M0.0920253 9.11633L7.20409 2.00427H0.676418V0.350437H10.0267V9.70073L8.37287 9.70073L8.37287 3.17306L1.26081 10.2851L0.0920253 9.11633Z"
+              fill="#3F3F3F"/>
+        </svg>
+      </NuxtLink>
     </div>
   </article>
 </template>
 
 <script setup lang="ts">
 import type {Product} from "~/types/catalog";
+import MarketplaceLinksButtons from "~/components/Catalog/MarketplaceLinksButtons.vue";
 
 const props = defineProps<{
   product: Product
@@ -127,6 +196,26 @@ const props = defineProps<{
 const {formattedPrice, getNormalPrice} = getFormatPrice();
 const favouritesStore = useFavouritesStore();
 
+// Image display logic
+const currentImageIndex = ref(0);
+const isHovering = ref(false);
+const mouseX = ref(0);
+const containerWidth = ref(0);
+const touchStartX = ref(0);
+const touchEndX = ref(0);
+const isMobile = ref(false);
+
+// Limit images to maximum 7 (main + 6 additional)
+const displayedImages = computed(() => {
+  if (!props.product.images || props.product.images.length === 0) return [];
+  return props.product.images.slice(0, 6); // Take max 6 additional images
+});
+
+const displayedImagesWithMain = computed(() => {
+  const images = [props.product.main_image].filter(Boolean);
+  return images.concat(displayedImages.value);
+});
+
 const to = computed(() => {
   return {
     name: 'catalog-slug',
@@ -134,17 +223,119 @@ const to = computed(() => {
       slug: props.product.id
     }
   }
-})
+});
 
 const isFavourite = computed(() => {
   return favouritesStore.isFavorite(props.product.id)
-})
+});
+
+const isPrintColor = (code: string) => {
+  return code && code.toLowerCase().includes('print');
+};
+
+// Desktop mouse movement effect
+const handleMouseEnter = (event: MouseEvent) => {
+  if (isMobile.value || displayedImages.value.length === 0) return;
+
+  isHovering.value = true;
+  const target = event.currentTarget as HTMLElement;
+  containerWidth.value = target.offsetWidth;
+  handleMouseMove(event);
+};
+
+const handleMouseLeave = () => {
+  isHovering.value = false;
+  currentImageIndex.value = 0; // Reset to main image when mouse leaves
+};
+
+const handleMouseMove = (event: MouseEvent) => {
+  if (!isHovering.value || displayedImages.value.length === 0) return;
+
+  const rect = (event.currentTarget as HTMLElement).getBoundingClientRect();
+  const x = event.clientX - rect.left;
+  mouseX.value = x;
+
+  // Calculate image index based on mouse position
+  const segmentWidth = containerWidth.value / (displayedImages.value.length + 1);
+  const newIndex = Math.min(Math.floor(x / segmentWidth), displayedImages.value.length);
+
+  if (newIndex !== currentImageIndex.value) {
+    currentImageIndex.value = newIndex;
+  }
+};
+
+// Thumb position for visual indicator
+const thumbStyle = computed(() => {
+  if (!isHovering.value || displayedImages.value.length === 0) return {};
+
+  const totalSegments = displayedImages.value.length + 1;
+  const segmentWidth = 100 / totalSegments;
+  const position = (currentImageIndex.value * segmentWidth) + (segmentWidth / 2);
+
+  return {
+    left: `${position}%`
+  };
+});
+
+// Touch swipe for mobile
+const handleTouchStart = (e: TouchEvent) => {
+  if (!isMobile.value || displayedImages.value.length === 0) return;
+  touchStartX.value = e.changedTouches[0].screenX;
+};
+
+const handleTouchMove = (e: TouchEvent) => {
+  e.preventDefault(); // Prevent scrolling while swiping
+};
+
+const handleTouchEnd = (e: TouchEvent) => {
+  if (!isMobile.value || displayedImages.value.length === 0) return;
+  touchEndX.value = e.changedTouches[0].screenX;
+  handleSwipe();
+};
+
+const handleSwipe = () => {
+  const swipeThreshold = 50;
+  const diff = touchStartX.value - touchEndX.value;
+
+  if (Math.abs(diff) > swipeThreshold) {
+    if (diff > 0) {
+      // Swipe left - next image
+      currentImageIndex.value = (currentImageIndex.value + 1) % (displayedImages.value.length + 1);
+    } else {
+      // Swipe right - previous image
+      currentImageIndex.value = currentImageIndex.value === 0
+          ? displayedImages.value.length
+          : currentImageIndex.value - 1;
+    }
+  }
+};
+
+// Check if device is mobile
+onMounted(() => {
+  isMobile.value = window.innerWidth <= 768;
+
+  const handleResize = () => {
+    isMobile.value = window.innerWidth <= 768;
+  };
+
+  window.addEventListener('resize', handleResize);
+
+  onUnmounted(() => {
+    window.removeEventListener('resize', handleResize);
+  });
+});
 </script>
 
 <style scoped lang="scss">
+.cart_btns {
+  margin-top: 10px;
+}
+
 .catalog-item {
   position: relative;
-  padding-bottom: calc(5rem + 1.5rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 
   @media (max-width: $mobile) {
     padding-bottom: 5rem;
@@ -154,6 +345,12 @@ const isFavourite = computed(() => {
     $media: &;
     position: relative;
     display: block;
+
+    &-container {
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
 
     &-pic {
       min-height: 32.8rem;
@@ -170,24 +367,76 @@ const isFavourite = computed(() => {
       height: 100%;
       object-position: center;
       object-fit: cover;
-      transition: var(--tr-regular);
-    }
+      transition: opacity 0.3s ease;
 
-    &-on-hover {
-      opacity: 0;
-    }
-
-    @media (any-hover: hover) {
-      &:has(#{$media}-on-hover):hover {
-        #{$media}-main {
-          opacity: 0;
-        }
-
-        #{$media}-on-hover {
-          opacity: 1;
-        }
+      &._hidden {
+        opacity: 0;
+        pointer-events: none;
       }
 
+      &._active {
+        opacity: 1;
+      }
+    }
+
+    &-main {
+      opacity: 1;
+    }
+
+    &-hover {
+      opacity: 0;
+    }
+  }
+
+  &__hover-indicator {
+    position: absolute;
+    bottom: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 4;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 1rem;
+    padding: 0.5rem 1rem;
+  }
+
+  &__hover-track {
+    width: 12rem;
+    height: 0.3rem;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 0.15rem;
+    position: relative;
+  }
+
+  &__hover-thumb {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 1.2rem;
+    height: 1.2rem;
+    background: var(--fg-white);
+    border-radius: 50%;
+    transition: left 0.1s ease;
+  }
+
+  &__swipe-indicators {
+    position: absolute;
+    bottom: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 0.5rem;
+    z-index: 4;
+  }
+
+  &__swipe-indicator {
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    transition: background 0.3s ease;
+
+    &._active {
+      background: var(--fg-white);
     }
   }
 
@@ -207,6 +456,7 @@ const isFavourite = computed(() => {
     text-align: center;
     background: var(--fg-red);
     color: var(--fg-white);
+    z-index: 4;
   }
 
   &__fav {
@@ -250,6 +500,7 @@ const isFavourite = computed(() => {
     position: absolute;
     bottom: 1.7rem;
     right: 1.5rem;
+    z-index: 4;
 
     & svg {
       width: 1.5rem;
@@ -331,11 +582,28 @@ const isFavourite = computed(() => {
 
     & .colors__item {
       margin-right: .634rem;
+
+      &._print .colors__label {
+        background: transparent;
+        border: 2px solid #ccc;
+        overflow: hidden;
+
+        &::after {
+          display: none;
+        }
+      }
+
+      &._print .colors__label span {
+        display: none;
+      }
+
     }
   }
 
+
+
+
   &__btn {
-    position: absolute;
     bottom: 0;
     left: 0;
     width: 100%;
@@ -384,6 +652,7 @@ const isFavourite = computed(() => {
     font-size: 1rem;
     width: fit-content;
     min-width: fit-content;
+    z-index: 4;
 
     @media (max-width: $mobile) {
       min-width: 9rem;
@@ -408,11 +677,12 @@ const isFavourite = computed(() => {
   }
 }
 
-//.catalog-item__bottom {
-//  @media (max-width: $mobile) {
-//    display: flex;
-//    align-items: center;
-//    justify-content: space-between;
-//  }
-//}
+
+.colors__print-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+}
 </style>

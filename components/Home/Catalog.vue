@@ -17,7 +17,9 @@ const { data: products } = await useApi<{
 }>( '/products', {
   query: {
     per_page: 6,
-    in_stock: 1
+    in_stock: 1,
+    sort_by: 'display_order',
+    sort_order: 'asc',
   }
 } )
 </script>

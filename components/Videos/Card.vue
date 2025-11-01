@@ -1,26 +1,65 @@
 <script setup lang="ts">
+const props = defineProps<{
+  link: string
+  id?: number | string
+}>()
 
+const openVideo = (l: string) => window.open(l, "_blank")
 </script>
 
 <template>
-  <div class="videos__item item--center">
-    <button class="videos__play">
-      <svg width="51" height="37" viewBox="0 0 51 37" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M7.96561 0.191345C5.99934 0.527351 4.30685 1.42337 2.77615 2.96652C1.83034 3.92477 1.54412 4.29811 1.05877 5.28125C-0.0612577 7.58353 -0.0239234 7.0484 0.0134109 18.6718L0.0507451 28.8641L0.399198 29.8596C1.569 33.1575 4.02062 35.4473 7.25626 36.2687C8.2145 36.5176 8.67496 36.5176 25.5003 36.5176C42.3256 36.5176 42.786 36.5176 43.7443 36.2687C46.9799 35.4473 49.4315 33.1575 50.6013 29.8596L50.9498 28.8641L50.9871 18.7589C51.0245 7.83242 51.0245 7.81998 50.3524 6.15238C49.22 3.35231 46.8803 1.26159 43.8563 0.353127C43.1469 0.141563 42.1016 0.12912 25.8736 0.104229C16.0423 0.0917854 8.35139 0.12912 7.96561 0.191345ZM31.9591 18.3482C31.9591 18.3856 29.0221 20.1278 25.438 22.2186L18.9045 26.0391V18.3482V10.6574L25.438 14.4779C29.0221 16.5686 31.9591 18.3109 31.9591 18.3482Z" fill="#CB0B13"/>
+  <div class="videos__item item--center" @click="openVideo(link)">
+    <img
+        v-if="id"
+        :src="`/img_videos__thumbnail/${id}.png`"
+        alt="Video preview"
+        class="videos__thumbnail"
+    />
+    <video
+        v-else
+        :src="link"
+        class="videos__thumbnail"
+        muted
+        playsinline
+    ></video>
+
+    <button class="">
+      <svg
+          width="60"
+          height="60"
+          viewBox="0 0 100 100"
+          xmlns="http://www.w3.org/2000/svg"
+      >
+        <circle cx="50" cy="50" r="48" fill="rgba(255,255,255,0.7)" />
+        <polygon points="40,30 75,50 40,70" fill="#CB0B13" />
       </svg>
     </button>
   </div>
 </template>
 
 <style scoped lang="scss">
-
 .videos__item {
   min-height: 44rem;
   position: relative;
-  background: #D9D9D9;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 1rem;
 
-  @media (max-width: $mobile) {
-    min-height: 40rem;
+  .videos__thumbnail {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .videos__play {
+    position: absolute;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 50%;
+    padding: 1rem;
   }
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <Breadcrumbs />
+  <Breadcrumbs/>
   <div class="catalog-page page-padding">
     <div class="container catalog-page__container">
       <CatalogFilters
@@ -10,19 +10,19 @@
 
       <div class="catalog-page__body">
         <h1 class="catalog-page__title block__title _small">Каталог</h1>
-        <template v-if="nProducts.data.length > 0">
+        <template v-if="nProducts?.data?.length > 0">
           <CatalogGrid
               class="catalog-page__grid"
-              :list="nProducts.data"
+              :list="nProducts?.data"
           />
 
           <Loadmore
               class="catalog-page__loadmore"
-              v-if="nProducts.meta.last_page > 1 && page !== nProducts.meta.last_page"
+              v-if="nProducts?.meta.last_page > 1 && page !== nProducts?.meta.last_page"
               @load-more="loadMore"
           />
         </template>
-        <NotFound v-else />
+        <NotFound v-else/>
       </div>
     </div>
   </div>
@@ -31,58 +31,68 @@
 <script setup lang="ts">
 import type {Catalog} from "~/types/catalog";
 import {getFilterParams} from "~/utils/getFilterParams";
+import {useApi} from "~/composables/useApi";
 
-definePageMeta( {
-  title: 'Каталог',
-} );
+definePageMeta({
+  title: "Каталог",
+});
 
 const route = useRoute();
 const filters = getFilterParams();
-const page = ref( 1 );
+const page = ref(1);
 
-const { data: products, refresh } = await useAsyncData(
-    'products',
+const {data: products, refresh} = await useAsyncData(
+    "products",
     async () => {
-      const response = await $fetch('http://193.233.84.235/api/products', {
-        query: {
-            per_page: 9,
-            page: page.value,
-            color_id: filters.value.color || '',
-            price_before: filters.value.price.before || '',
-            price_after: filters.value.price.after || '',
-            in_stock: filters.value.in_stock || false,
-            search: filters.value.search || '',
-        }
-      } );
-      return response;
+      // формируем query параметры
+      const query = {
+        per_page: 9,
+        page: page.value,
+        color_id: filters.value.color || "",
+        price_before: filters.value.price.before || "",
+        price_after: filters.value.price.after || "",
+        in_stock: filters.value.in_stock || false,
+        search: filters.value.search || "",
+        sort_by: 'display_order',
+        sort_order: 'asc',
+      };
+
+      // Используем useApi (GET по умолчанию)
+      const {data, error} = await useApi<Catalog>("/products", {query});
+
+      if (error.value) {
+        console.error("Ошибка загрузки продуктов:", error.value);
+        return {data: [], meta: {}};
+      }
+
+      return data.value;
     },
     {
       server: true,
-      immediate: true
+      immediate: true,
     }
 );
 
-const nProducts = ref( products );
+const nProducts = ref(products);
 
-watch( products, ( newProducts, oldProducts ) => {
-  if ( newProducts?.data ){
-    if ( page.value === 1 ){
+watch(products, (newProducts, oldProducts) => {
+  if (newProducts?.data) {
+    if (page.value === 1) {
       nProducts.value.data = newProducts.data;
     } else {
-      nProducts.value.data = [ ...oldProducts.data, ...newProducts.data ];
+      nProducts.value.data = [...oldProducts.data, ...newProducts.data];
     }
   }
-} );
+});
 
-watch( route, ( newQuery, oldQuery ) => {
-  console.log( newQuery.query.search );
-  if ( newQuery.query.hasOwnProperty( 'search' ) && newQuery.query.search ) {
+watch(route, (newQuery) => {
+  if (newQuery.query.hasOwnProperty("search") && newQuery.query.search) {
     filters.value.search = newQuery.query.search;
     refresh();
   }
-} );
+});
 
-const submitFilter = ( args: object ) => {
+const submitFilter = (args: any) => {
   page.value = 1;
   filters.value.color = args.color;
   filters.value.price.after = args.price.before;
@@ -90,23 +100,24 @@ const submitFilter = ( args: object ) => {
   filters.value.in_stock = 1;
 
   refresh();
-}
+};
 
 const loadMore = () => {
   page.value += 1;
   refresh();
-}
+};
 
 const resetFilter = () => {
   page.value = 1;
-  filters.value.color = '';
-  filters.value.price.after = '';
-  filters.value.price.before = '';
-  filters.value.in_stock = 0
-
+  filters.value.color = "";
+  filters.value.price.after = "";
+  filters.value.price.before = "";
+  filters.value.search = ''
+  filters.value.in_stock = 0;
   refresh();
-}
+};
 </script>
+
 
 <style scoped lang="scss">
 .catalog-page__container {

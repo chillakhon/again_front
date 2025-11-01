@@ -74,32 +74,43 @@
               @get-size="getSize"
           />
 
-          <Quantity
-              class="product__quantity"
-              v-if="product.price && product.stock_quantity > 0"
-              @get-quantity="getQuantity"
+
+
+          <MarketplaceLinksButtons
+              class="cart_marketplace_links__btn"
+              v-if="product.marketplace_links"
+              :marketplace-links="product.marketplace_links"
           />
 
-          <div class="product__actions" v-if="product.stock_quantity > 0">
-            <div class="product__actions-buttons">
-              <ProductActionsAddToCart
-                  v-if="product.price"
-                  :quantity="quantity"
-                  :product="product"
-                  :variation="selectedSize"
-                  :color="selectedColor"
-                  @add-to-cart="addToCart"
-              />
-              <div class="product__actions-back">
-                <NuxtLink to="/catalog">Вернуться в каталог</NuxtLink>
+          <div v-else>
+            <Quantity
+                class="product__quantity"
+                v-if="product.price && product.stock_quantity > 0"
+                @get-quantity="getQuantity"
+            />
+
+            <div class="product__actions" v-if="product.stock_quantity > 0">
+              <div class="product__actions-buttons">
+                <ProductActionsAddToCart
+                    v-if="product.price"
+                    :quantity="quantity"
+                    :product="product"
+                    :variation="selectedSize"
+                    :color="selectedColor"
+                    @add-to-cart="addToCart"
+                />
+                <div class="product__actions-back">
+                  <NuxtLink to="/catalog">Вернуться в каталог</NuxtLink>
+                </div>
               </div>
+              <ProductActionsAddToFav :quantity="quantity" :product="product"/>
             </div>
-            <ProductActionsAddToFav :quantity="quantity" :product="product"/>
+
+            <div class="product__stock--not" v-else>
+              Нет в наличии
+            </div>
           </div>
 
-          <div class="product__stock--not" v-else>
-            Нет в наличии
-          </div>
         </div>
       </div>
 
@@ -112,6 +123,7 @@
 
 <script setup lang="ts">
 import type {Product} from '~/types/catalog';
+import MarketplaceLinksButtons from "~/components/Catalog/MarketplaceLinksButtons.vue";
 
 const route = useRoute();
 const {data: product} = await useApi<Product>('/products', {
@@ -151,6 +163,11 @@ const addToCart = () => {
 .product__stock--not {
   margin-top: 1.5rem;
 }
+
+.cart_marketplace_links__btn{
+  margin-top: 1rem;
+}
+
 
 .product {
   position: relative;
