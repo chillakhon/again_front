@@ -3,7 +3,7 @@ import {ModalsMessage} from "#components";
 
 export const useAuthStore = defineStore('authStore', () => {
     const user = ref( {} );
-    const token = useLocalStorage( 'auth_token', '' );
+    const token = useCookie('auth_token');
     const isAuthenticated  = ref( false );
     const isCodeActive = ref( false );
     const isChecked = ref( false );
@@ -47,9 +47,9 @@ export const useAuthStore = defineStore('authStore', () => {
             isCodeActive.value = false;
 
 
-            if (process.client) {
-                localStorage.setItem('auth_token', data.value.token)
-            }
+            // if (process.client) {
+            //     localStorage.setItem('auth_token', data.value.token)
+            // }
 
             return navigateTo( '/profile/settings' );
         } catch (error) {
@@ -62,9 +62,9 @@ export const useAuthStore = defineStore('authStore', () => {
         token.value = null;
         isAuthenticated.value = false;
 
-        if (process.client) {
-            localStorage.removeItem('auth_token');
-        }
+        // if (process.client) {
+        //     localStorage.removeItem('auth_token');
+        // }
 
         return navigateTo( '/' );
     }

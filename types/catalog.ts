@@ -1,6 +1,7 @@
 export interface Product {
     id: number,
     name: string,
+    marketplace_links: object,
     code: string,
     description?: string,
     slug: string,
