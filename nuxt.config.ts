@@ -32,6 +32,12 @@ export default defineNuxtConfig({
     runtimeConfig: {
         public: {
             DEV_URI: process.env.API_URL || 'http://localhost:3000',
+
+            API_BASE_URL: process.env.API_BASE_URL,
+            REVERB_KEY: process.env.REVERB_APP_KEY || '',
+            REVERB_HOST: process.env.REVERB_HOST || 'localhost',
+            REVERB_PORT: process.env.REVERB_PORT || '443',
+            REVERB_SCHEME: process.env.REVERB_SCHEME || 'wss',
         }
     },
     build: {

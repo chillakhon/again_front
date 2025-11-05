@@ -1,6 +1,5 @@
 <template>
   <div class="profile-settings__form form">
-    {{ isFormError }}
     <template v-for="( item, key ) in form" :key="key">
       <component :is="item.template"
         :name="key"
@@ -41,6 +40,7 @@ definePageMeta({
 const modal = useModal();
 const authStore = useAuthStore();
 const { user } = authStore;
+
 const form = ref( {
   first_name: {
     template: FormInput,

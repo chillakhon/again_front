@@ -10,12 +10,15 @@ export async function useApi<T>(url: string, options: object = {}, slug?: string
     if (!slug) {
     }
 
+    const finalMethod = (options as any).method || method;
 
     options = {
         ...options,
-        method: method,
+        method: finalMethod,
         headers: {
             'Authorization': `Bearer ${authStore.token}`,
+            'Content-Type': 'application/json',
+            ...(options as any).headers,
         }
     };
 

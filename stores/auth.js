@@ -2,27 +2,30 @@ import {defineStore, skipHydrate} from 'pinia';
 import {ModalsMessage} from "#components";
 
 export const useAuthStore = defineStore('authStore', () => {
-    const user = ref( {} );
+    const user = ref({
+        email: '',
+        id: '',
+    });
     const token = useCookie('auth_token');
-    const isAuthenticated  = ref( false );
-    const isCodeActive = ref( false );
-    const isChecked = ref( false );
+    const isAuthenticated = ref(false);
+    const isCodeActive = ref(false);
+    const isChecked = ref(false);
     const modal = useModal();
 
-    const sendCode = async ( email ) => {
-        const { data } = await useApi( '/login', {
+    const sendCode = async (email) => {
+        const {data} = await useApi('/login', {
             params: {
                 email: email,
             }
-        }, '', 'POST' );
+        }, '', 'POST');
 
-        if ( data.value.success ){
+        if (data.value.success) {
             isCodeActive.value = true;
-            modal.openModal( ModalsMessage, {
+            modal.openModal(ModalsMessage, {
                 customClass: 'message',
                 title: 'Код подтрвеждения',
                 text: 'На вашу почту был отправлен код для авторизации на сайте'
-            } )
+            })
         }
 
         return data;
@@ -30,14 +33,14 @@ export const useAuthStore = defineStore('authStore', () => {
 
     const login = async (email, code) => {
         try {
-            const { data, error } = await useApi( '/check-verification', {
+            const {data, error} = await useApi('/check-verification', {
                 body: {
                     email: email,
                     verification_code: code
                 }
             }, '', 'POST');
 
-            if ( ! data.value?.user || ! data.value?.token ){
+            if (!data.value?.user || !data.value?.token) {
                 return error.value;
             }
 
@@ -51,7 +54,7 @@ export const useAuthStore = defineStore('authStore', () => {
             //     localStorage.setItem('auth_token', data.value.token)
             // }
 
-            return navigateTo( '/profile/settings' );
+            return navigateTo('/profile/settings');
         } catch (error) {
             throw error
         }
@@ -66,38 +69,38 @@ export const useAuthStore = defineStore('authStore', () => {
         //     localStorage.removeItem('auth_token');
         // }
 
-        return navigateTo( '/' );
+        return navigateTo('/');
     }
 
     const checkAuth = async () => {
-        if ( ! token.value) {
+        if (!token.value) {
             isAuthenticated.value = false;
             isChecked.value = true;
             return;
         }
 
         try {
-            const { data } = await useApi( '/client-user');
-            if ( data.value.success ){
+            const {data} = await useApi('/client-user');
+            if (data.value.success) {
                 user.value = data.value.user;
                 isAuthenticated.value = true;
             }
-        } catch ( error ) {
+        } catch (error) {
             return error;
         } finally {
             isChecked.value = true;
         }
     }
 
-    const updateProfile = ( form ) => {
-        user.value.profile.birthday = getDateFormat().formatDateOutput( form.value.birthday.value );
+    const updateProfile = (form) => {
+        user.value.profile.birthday = getDateFormat().formatDateOutput(form.value.birthday.value);
         user.value.profile.first_name = form.value.first_name.value;
         user.value.profile.last_name = form.value.last_name.value;
         user.value.profile.phone = form.value.phone.value;
         user.value.email = form.value.email.value;
     }
 
-    const updateAddress = ( form ) => {
+    const updateAddress = (form) => {
         user.value.profile.delivery_country_id = form.value.delivery_country_id.value;
         user.value.profile.delivery_postal_code = form.value.delivery_postal_code.value;
         user.value.profile.delivery_city_id = form.value.delivery_city_id.value;
@@ -106,7 +109,7 @@ export const useAuthStore = defineStore('authStore', () => {
 
     return {
         user,
-        token: skipHydrate( token ),
+        token: skipHydrate(token),
         isAuthenticated,
         isCodeActive,
         isChecked,
@@ -117,4 +120,4 @@ export const useAuthStore = defineStore('authStore', () => {
         updateProfile,
         updateAddress,
     }
-} )
+})

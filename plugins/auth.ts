@@ -1,7 +1,7 @@
 export default defineNuxtPlugin(async (nuxtApp) => {
     const authStore = useAuthStore();
 
-    if ( process.client && ! authStore.token ) {
+    if ( process.client && authStore.token ) {
         await authStore.checkAuth();
     }
 
