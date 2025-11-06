@@ -1,17 +1,18 @@
 <template>
-  <div class="fixed bottom-8 right-6 z-50 font-sans">
-    <!-- Collapsed state: только иконка -->
-    <ChatBadge v-if="!isOpen" @click="handleToggle"/>
+  <div class="fixed bottom-[60px] right-3 z-50 font-sans">
+
+    <SelectChat
+        v-if="!isOpen"
+        @open-chat="handleToggle"
+    />
 
     <Transition name="slide-fade">
 
       <div
           v-if="isOpen"
-          class="absolute bottom-0 right-0  rounded-lg flex flex-col overflow-hidden
+          class="absolute bottom-0 right-0  rounded-lg flex flex-col overflow-hidden shadow-md
              min-w-[340px] max-h-[500px] min-h-[450px] max-w-[450px]"
       >
-
-        <Chatsociallinks/>
 
         <!-- Loading state -->
         <div v-if="isLoading" class="flex-1 flex items-center justify-center bg-gray-50">
@@ -57,13 +58,12 @@
 <script setup lang="ts">
 import {computed, onMounted, watch} from 'vue'
 import {useLiveChatStore} from '~/features/LiveChat/stores/useLiveChatStore'
-import ChatBadge from './ChatBadge.vue'
 import ChatHeader from './ChatHeader.vue'
 import ChatMessages from './ChatMessages.vue'
 import ChatInput from './ChatInput.vue'
 import {getExternalIdClient} from "~/features/LiveChat/composables/useChatFunctions";
 import {usePublicConversationEvents} from "~/features/LiveChat/composables/usePublicConversationEvents";
-import Chatsociallinks from "~/features/LiveChat/components/Chatsociallinks.vue";
+import SelectChat from "~/features/LiveChat/components/SelectChat.vue";
 
 const store = useLiveChatStore()
 

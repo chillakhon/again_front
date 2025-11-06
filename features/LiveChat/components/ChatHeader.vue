@@ -2,7 +2,7 @@
 
 
   <div
-      class="h-25 bg-gradient-to-r from-red-300 to-red-600 text-white px-4 py-3 flex items-center justify-between border-b border-red-100 rounded-lg"
+      class="h-25 bg-gradient-to-r from-red-300 to-red-600 text-white px-4 py-3 flex items-center justify-between border-b border-red-100 "
   >
 
     <!-- Левая часть: аватар и инфо -->
