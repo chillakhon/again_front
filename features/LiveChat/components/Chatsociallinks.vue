@@ -53,7 +53,7 @@
 
     <!-- Telegram -->
     <a
-        href="https://t.me/"
+        href="https://t.me/againChilla_bot"
         target="_blank"
         rel="noopener noreferrer"
         class="w-[50px] h-[50px] rounded-full  text-white flex items-center justify-center transition-all duration-300 hover:scale-110  overflow-hidden"
