@@ -70,6 +70,22 @@
       </svg>
     </a>
 
+
+    <!-- Email -->
+    <a
+        href="mailto:help@again8.ru"
+        class="w-[48px] h-[48px] rounded-full text-white flex items-center justify-center transition-all duration-300 hover:scale-110 overflow-hidden"
+        title="Написать Email"
+    >
+
+      <img src="/icons/chat/email.png"
+           alt="Email"
+           class="w-[68x] h-[68px] object-cover"
+      >
+
+    </a>
+
+
     <!-- Кнопка: Закрыть меню -->
     <button
         type="button"
@@ -82,10 +98,6 @@
         <path
             d="M 7.7070312 6.2929688 L 6.2929688 7.7070312 L 23.585938 25 L 6.2929688 42.292969 L 7.7070312 43.707031 L 25 26.414062 L 42.292969 43.707031 L 43.707031 42.292969 L 26.414062 25 L 43.707031 7.7070312 L 42.292969 6.2929688 L 25 23.585938 L 7.7070312 6.2929688 z"></path>
       </svg>
-
-
-      <!--      <img src="/icons/close-ellipse.svg" alt="" class="">-->
-
 
     </button>
 
