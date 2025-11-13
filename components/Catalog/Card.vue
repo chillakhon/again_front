@@ -183,13 +183,36 @@ const isMobile = ref(false);
 
 // Limit images to maximum 7 (main + 6 additional)
 const displayedImages = computed(() => {
-  if (!props.product.images || props.product.images.length === 0) return [];
-  return props.product.images.slice(0, 6); // Take max 6 additional images
+  const imgs: Array<any> = props.product.images || [];
+  const main = props.product.main_image;
+  const mainId = main?.id;
+  const mainPath = main?.path;
+
+  // Фильтруем все изображения, которые совпадают с main по id или path
+  const filtered = imgs.filter(img => {
+    if (!img) return false;
+    if (mainId && img.id) return img.id !== mainId;
+    if (mainPath && img.path) return img.path !== mainPath;
+    return true;
+  });
+
+  // Ограничение: максимум 6 дополнительных
+  return filtered.slice(0, 6);
 });
 
 const displayedImagesWithMain = computed(() => {
-  const images = [props.product.main_image].filter(Boolean);
-  return images.concat(displayedImages.value);
+  const result: Array<any> = [];
+  if (props.product.main_image) result.push(props.product.main_image);
+
+  for (const img of displayedImages.value) {
+    // на всякий случай проверяем дубликаты (хотя displayedImages уже отфильтрован)
+    const exists = result.some(r =>
+        (r.id && img.id && r.id === img.id) || (r.path && img.path && r.path === img.path)
+    );
+    if (!exists) result.push(img);
+  }
+
+  return result;
 });
 
 const to = computed(() => {
@@ -225,15 +248,15 @@ const handleMouseLeave = () => {
 };
 
 const handleMouseMove = (event: MouseEvent) => {
-  if (!isHovering.value || displayedImages.value.length === 0) return;
+  if (!isHovering.value || displayedImagesWithMain.value.length === 0) return;
 
   const rect = (event.currentTarget as HTMLElement).getBoundingClientRect();
   const x = event.clientX - rect.left;
   mouseX.value = x;
 
-  // Calculate image index based on mouse position
-  const segmentWidth = containerWidth.value / (displayedImages.value.length + 1);
-  const newIndex = Math.min(Math.floor(x / segmentWidth), displayedImages.value.length);
+  const totalSegments = displayedImagesWithMain.value.length; // включает main
+  const segmentWidth = containerWidth.value / totalSegments;
+  const newIndex = Math.min(Math.floor(x / segmentWidth), totalSegments - 1);
 
   if (newIndex !== currentImageIndex.value) {
     currentImageIndex.value = newIndex;
@@ -272,16 +295,15 @@ const handleTouchEnd = (e: TouchEvent) => {
 const handleSwipe = () => {
   const swipeThreshold = 50;
   const diff = touchStartX.value - touchEndX.value;
+  const total = displayedImagesWithMain.value.length; // включает main
 
-  if (Math.abs(diff) > swipeThreshold) {
+  if (Math.abs(diff) > swipeThreshold && total > 0) {
     if (diff > 0) {
       // Swipe left - next image
-      currentImageIndex.value = (currentImageIndex.value + 1) % (displayedImages.value.length + 1);
+      currentImageIndex.value = (currentImageIndex.value + 1) % total;
     } else {
       // Swipe right - previous image
-      currentImageIndex.value = currentImageIndex.value === 0
-          ? displayedImages.value.length
-          : currentImageIndex.value - 1;
+      currentImageIndex.value = currentImageIndex.value === 0 ? total - 1 : currentImageIndex.value - 1;
     }
   }
 };
