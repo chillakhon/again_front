@@ -138,7 +138,7 @@
     </div>
     <div class="cart_btns">
       <MarketplaceLinksButtons
-          v-if="product.marketplace_links"
+          v-if="checkLinkMarketplace(product.marketplace_links)"
           :marketplace-links="product.marketplace_links"
       />
 
@@ -161,6 +161,13 @@ import MarketplaceLinksButtons from "~/components/Catalog/MarketplaceLinksButton
 const props = defineProps<{
   product: Product
 }>();
+
+
+function checkLinkMarketplace(links: Record<string, any>): boolean {
+  if (!links || typeof links !== 'object') return false;
+  return Object.values(links).some(link => link !== null && link !== '');
+}
+
 
 const {formattedPrice, getNormalPrice} = getFormatPrice();
 const favouritesStore = useFavouritesStore();
