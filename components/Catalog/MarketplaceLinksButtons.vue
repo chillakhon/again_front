@@ -27,8 +27,7 @@
         rel="noopener noreferrer"
         class="marketplace-btn zy-btn"
     >
-
-      Заказать на Золотое яблоко
+      Заказать в Золотом Яблоке
     </a>
   </div>
 </template>

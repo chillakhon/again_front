@@ -13,13 +13,10 @@
            class="absolute bottom-0 right-0 max-md:right-[-18px]"
       >
 
-
         <Chatsociallinks
             @open-chat="handleOpenChat"
             @close-menu="showMenu = false"
         />
-
-
 
       </div>
     </Transition>
