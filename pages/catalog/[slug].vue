@@ -75,10 +75,9 @@
           />
 
 
-
           <MarketplaceLinksButtons
               class="cart_marketplace_links__btn"
-              v-if="product.marketplace_links"
+              v-if="checkLinkMarketplace(product.marketplace_links)"
               :marketplace-links="product.marketplace_links"
           />
 
@@ -132,6 +131,12 @@ const {data: product} = await useApi<Product>('/products', {
   }
 });
 
+
+function checkLinkMarketplace(links: Record<string, any>): boolean {
+  if (!links || typeof links !== 'object') return false;
+  return Object.values(links).some(link => link !== null && link !== '');
+}
+
 const isAddedMessageActive = ref(false);
 
 const quantity = ref(1);
@@ -164,7 +169,7 @@ const addToCart = () => {
   margin-top: 1.5rem;
 }
 
-.cart_marketplace_links__btn{
+.cart_marketplace_links__btn {
   margin-top: 1rem;
 }
 
