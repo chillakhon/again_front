@@ -9,7 +9,7 @@
       />
 
       <div class="catalog-page__body">
-        <h1 class="catalog-page__title block__title _small">Каталог</h1>
+<!--        <h1 class="catalog-page__title block__title _small">Каталог</h1>-->
         <template v-if="nProducts?.data?.length > 0">
           <CatalogGrid
               class="catalog-page__grid"

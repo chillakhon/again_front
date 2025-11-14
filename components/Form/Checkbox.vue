@@ -84,12 +84,12 @@ const handleInput = ($event: InputEvent) => {
   color: var(--fg-gray);
   font-family: var(--ff-regular);
 
-  :deep(a) {
-    position: relative;
-    z-index: 15;
-    color: var(--fg-red);
-    border-bottom: .1rem solid var(--fg-red);
-  }
+  //:deep(a) {
+  //  position: relative;
+  //  z-index: 15;
+  //  color: var(--fg-red);
+  //  border-bottom: .1rem solid var(--fg-red);
+  //}
 
   @media (max-width: $mobile) {
     padding-left: 2.6rem;
