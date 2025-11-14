@@ -1,5 +1,6 @@
 export interface Product {
     id: number,
+    absorbency_level: number,
     name: string,
     marketplace_links: object,
     code: string,

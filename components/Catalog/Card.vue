@@ -1,6 +1,7 @@
 <template>
   <article class="catalog-item" :data-id="product.id">
     <div class="catalog-item__card">
+
       <NuxtLink :to="to" class="catalog-item__media">
         <div class="catalog-item__media-container"
              @mousemove="handleMouseMove"
@@ -59,11 +60,13 @@
             <div v-for="(_, index) in displayedImagesWithMain"
                  :key="index"
                  class="catalog-item__swipe-indicator"
-                 :class="{ '_active': currentImageIndex === index }"></div>
+                 :class="{ '_active': currentImageIndex === index }">
+            </div>
           </div>
 
           <!-- Desktop hover indicator (bars) -->
-          <div class="catalog-item__swipe-indicators_desktop" v-if="!isMobile && isHovering && displayedImages.length > 1">
+          <div class="catalog-item__swipe-indicators_desktop"
+               v-if="!isMobile && isHovering && displayedImages.length > 1">
             <div class="catalog-item__hover-track">
               <div v-for="(_, index) in displayedImagesWithMain"
                    :key="index"
@@ -84,23 +87,13 @@
             </div>
           </div>
         </div>
-        <div class="catalog-item__drop">
-          <svg width="35" height="53" viewBox="0 0 35 53" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <div class="catalog-item__drop" v-if="product.absorbency_level > 0">
+          <svg width="35" height="53" viewBox="0 0 35 53" fill="none" xmlns="http://www.w3.org/2000/svg"
+               v-for="() in product.absorbency_level">
             <path
                 d="M17.5 2.44238C17.9642 3.22192 18.5965 4.2922 19.3438 5.5791C20.9647 8.37082 23.1253 12.1781 25.2842 16.2441C27.4447 20.3133 29.5956 24.6268 31.2041 28.4336C32.0084 30.3371 32.6709 32.0998 33.1309 33.6328C33.5953 35.181 33.8339 36.4317 33.834 37.333C33.834 45.0358 26.6503 51.5 17.5 51.5C8.3499 51.4998 1.16699 45.0357 1.16699 37.333C1.16705 36.4317 1.40466 35.181 1.86914 33.6328C2.3291 32.0997 2.99251 30.3372 3.79688 28.4336C5.40542 24.6268 7.55625 20.3133 9.7168 16.2441C11.8757 12.1782 14.0363 8.37079 15.6572 5.5791C16.4043 4.29242 17.0359 3.22186 17.5 2.44238Z"
                 stroke="#CB0B13" stroke-width="2" fill="#CB0B13"/>
           </svg>
-          <svg width="35" height="53" viewBox="0 0 35 53" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path
-                d="M17.5 2.44238C17.9642 3.22192 18.5965 4.2922 19.3438 5.5791C20.9647 8.37082 23.1253 12.1781 25.2842 16.2441C27.4447 20.3133 29.5956 24.6268 31.2041 28.4336C32.0084 30.3371 32.6709 32.0998 33.1309 33.6328C33.5953 35.181 33.8339 36.4317 33.834 37.333C33.834 45.0358 26.6503 51.5 17.5 51.5C8.3499 51.4998 1.16699 45.0357 1.16699 37.333C1.16705 36.4317 1.40466 35.181 1.86914 33.6328C2.3291 32.0997 2.99251 30.3372 3.79688 28.4336C5.40542 24.6268 7.55625 20.3133 9.7168 16.2441C11.8757 12.1782 14.0363 8.37079 15.6572 5.5791C16.4043 4.29242 17.0359 3.22186 17.5 2.44238Z"
-                stroke="#CB0B13" stroke-width="2" fill="#CB0B13"/>
-          </svg>
-          <svg width="35" height="53" viewBox="0 0 35 53" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path
-                d="M17.5 2.44238C17.9642 3.22192 18.5965 4.2922 19.3438 5.5791C20.9647 8.37082 23.1253 12.1781 25.2842 16.2441C27.4447 20.3133 29.5956 24.6268 31.2041 28.4336C32.0084 30.3371 32.6709 32.0998 33.1309 33.6328C33.5953 35.181 33.8339 36.4317 33.834 37.333C33.834 45.0358 26.6503 51.5 17.5 51.5C8.3499 51.4998 1.16699 45.0357 1.16699 37.333C1.16705 36.4317 1.40466 35.181 1.86914 33.6328C2.3291 32.0997 2.99251 30.3372 3.79688 28.4336C5.40542 24.6268 7.55625 20.3133 9.7168 16.2441C11.8757 12.1782 14.0363 8.37079 15.6572 5.5791C16.4043 4.29242 17.0359 3.22186 17.5 2.44238Z"
-                stroke="#CB0B13" stroke-width="2" fill="#CB0B13"/>
-          </svg>
-          <!-- ... (оставил остальные svg как есть) -->
         </div>
 
         <div class="catalog-item__colors colors" v-if="product.colors && product.colors.length > 0">
@@ -409,8 +402,8 @@ onMounted(() => {
 
   /* Segments (bars) for desktop hover */
   &__hover-seg {
-    width: 30px;             /* длина черточки */
-    height: 3px;             /* толщина */
+    width: 30px; /* длина черточки */
+    height: 3px; /* толщина */
     border-radius: 2px;
     background: rgba(255, 106, 106, 0.5); /* неактивная — полупрозрачная белая */
     transition: background 0.2s ease, transform 0.15s ease;
@@ -434,6 +427,7 @@ onMounted(() => {
     align-items: center;
     justify-content: center;
   }
+
   &__swipe-indicators_desktop {
     position: absolute;
     bottom: 0.1rem;
@@ -618,8 +612,6 @@ onMounted(() => {
 
     }
   }
-
-
 
 
   &__btn {
