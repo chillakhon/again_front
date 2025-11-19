@@ -2,12 +2,12 @@
 export default defineNuxtConfig({
     ssr: true,
 
-    nitro: {
-        prerender: {
-            crawlLinks: true,
-            routes: ['/sitemap.xml', '/'],
-        }
-    },
+    // nitro: {
+    //     prerender: {
+    //         crawlLinks: true,
+    //         routes: ['/sitemap.xml', '/'],
+    //     }
+    // },
 
     app: {
         head: {

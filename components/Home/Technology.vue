@@ -1,6 +1,7 @@
 <template>
   <section class="section technology">
     <div class="technology__container container">
+
       <div class="technology__features technology-features">
         <div class="technology-features__item" style="background-image: url(/img/technology.again/item-1.jpg)">
           <div class="technology-features__item-header">
@@ -52,6 +53,7 @@
           </picture>
         </div>
       </div>
+
       <div class="technology__advantages technology-advantages">
 
       </div>
