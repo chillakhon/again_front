@@ -1,18 +1,19 @@
 <template>
   <div class="profile-sales__item">
-    <div class="profile-sales__item-media" v-if="item.image_url">
+    <div class="profile-sales__item-media">
       <picture class="profile-sales__item-pic">
-        <img :src="item.image_url" class="profile-sales__item-img" alt="">
+        <img :src="item.image_url ?? '/icons/promo-code/default.png'" class="profile-sales__item-img" alt="">
       </picture>
     </div>
     <div class="profile-sales__item-title" v-if="item.code">{{ item.code }}</div>
     <div class="profile-sales__item-text" v-if="item.description">{{ item.description }}</div>
     <div class="profile-sales__item-info">
-      <p><strong>Дата окончания: </strong> {{ getDateFormat().formattedDate( item.expires_at ) }}</p>
-      <p><strong>Тип: </strong> {{ discountType[ item.discount_type ] }}</p>
-      <p><strong>Сумма: </strong> {{ getFormatPrice().formattedPrice( item.discount_amount ) }} {{ discountCurrency[ item.discount_type ] }}</p>
+      <p><strong>Дата окончания: </strong> {{ getDate(item) }}</p>
+      <p><strong>Тип: </strong> {{ discountType[item.discount_type] }}</p>
+      <p><strong>Сумма: </strong> {{ getFormatPrice().formattedPrice(item.discount_amount) }}
+        {{ discountCurrency[item.discount_type] }}</p>
     </div>
-<!--    <div class="profile-sales__item-alert">Скидка 25% на первый заказ</div>-->
+    <!--    <div class="profile-sales__item-alert">Скидка 25% на первый заказ</div>-->
     <button
         class="profile-sales__item-btn btn _border _thin"
         :class="{ '_active': buttonActive }"
@@ -30,20 +31,43 @@ const props = defineProps<{
   item: Sale
 }>();
 
-const buttonActive = ref( false );
-const buttonTitle = ref( 'Скопировать' );
+const buttonActive = ref(false);
+const buttonTitle = ref('Скопировать');
 
 const copyClick = () => {
   //navigator.clipboard.writeText( props.item.code );
-  copy( props.item.code );
+  copy(props.item.code);
   buttonTitle.value = 'Скопирован';
   buttonActive.value = true;
 
-  setTimeout( () => {
+  setTimeout(() => {
     buttonTitle.value = 'Скопировать';
     buttonActive.value = false;
-  }, 1500 )
+  }, 1500)
 }
+
+
+const getDate = (item: Sale) => {
+
+  const date = item.notified_at
+      ? addDays(item.notified_at, 6)
+      : item.expires_at
+          ? item.expires_at
+          : null;
+
+  if (date) {
+    return getDateFormat().formattedDate(date)
+  } else {
+    return '';
+  }
+}
+
+function addDays(dateString: string, days: number) {
+  const date = new Date(dateString.replace(" ", "T"));
+  date.setDate(date.getDate() + days);
+  return date.toISOString().slice(0, 19).replace("T", " ");
+}
+
 </script>
 
 <style scoped lang="scss">

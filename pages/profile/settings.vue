@@ -101,8 +101,8 @@ onMounted( () => {
 //
 const isLoading = ref( false );
 
-const isChecked = ref( true );
-const isButtonDisabled = ref( false );
+const isChecked = ref( false );
+const isButtonDisabled = ref( true );
 
 watch( ( isChecked ), ( oldValue, newValue ) => {
   isButtonDisabled.value = newValue;

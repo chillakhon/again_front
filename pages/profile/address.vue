@@ -112,8 +112,8 @@ onMounted( () => {
   form.value.delivery_address.value = user?.profile?.delivery_address || '';
 } )
 
-const isChecked = ref( true );
-const isButtonDisabled = ref( false );
+const isChecked = ref( false );
+const isButtonDisabled = ref( true );
 
 watch( ( isChecked ), ( oldValue, newValue ) => {
   isButtonDisabled.value = newValue;

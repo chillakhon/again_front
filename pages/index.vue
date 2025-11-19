@@ -3,7 +3,7 @@
   <HomeTechnology />
   <HomeCatalog />
   <HomeRecommend />
-  <HomePayment />
+<!--  <HomePayment />-->
   <HomeReviews />
   <HomeVideos />
   <HomeFaq />

@@ -1,5 +1,5 @@
 <template>
-  <div class="modal-callback__title modal__title">Перезвоним<br> вам в&nbsp;течение нескольких минут</div>
+  <div class="modal-callback__title modal__title">Задайте ваш вопрос</div>
   <div class="modal-callback__form form">
     <template v-for="( item, key ) in form" :key="key">
       <component
@@ -17,7 +17,7 @@
           class="modal-callback__btn btn _loader _wide"
           @click="send"
           :disabled="isButtonDisabled"
-      >Оставить заявку</button>
+      >Отправить</button>
     </div>
 
     <FormCheckbox
@@ -65,8 +65,8 @@ const form = ref( {
   }
 } );
 
-const isChecked = ref( true );
-const isButtonDisabled = ref( false );
+const isChecked = ref( false );
+const isButtonDisabled = ref( true );
 
 watch( ( isChecked ), ( oldValue, newValue ) => {
   isButtonDisabled.value = newValue;

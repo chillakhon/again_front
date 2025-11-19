@@ -8,6 +8,8 @@ export interface Sale {
     code: string,
     image_url?: string,
     expires_at: string
+    birthday_discount: boolean,
+    notified_at: string
 }
 
 export const discountType = {

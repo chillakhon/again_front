@@ -1,6 +1,6 @@
 <template>
   <div class="product__variables product-variables">
-    <div class="product-variables__block" data-type="color" v-if="colors">
+    <div class="product-variables__block" data-type="color" v-if="colors?.length">
       <div class="product-variables__header">
         <div class="product-variables__title">Цвет:</div>
       </div>
@@ -35,40 +35,73 @@
       </div>
     </div>
 
-    <div class="product-variables__block" data-type="size" v-if="sizes && sizes.length > 0">
-      <div class="product-variables__header">
-        <div class="product-variables__title">Размер:</div>
-        <button
-            class="product-variables__link"
-            @click="modal.openModal( ModalsSizes, { customClass: 'sizes' } )"
-        >Таблица размеров
-        </button>
-      </div>
-      <div class="product-variables__values">
-        <div class="product-variables__size" v-for="(size, key) in sizes" :key="size.id">
-          <input
-              type="radio"
-              name="size"
-              :value="size.id"
-              :checked="selectedSize && selectedSize.id === size.id"
-              :disabled="size.quantity === 0"
-              @change="emitSize(size)"
-          >
-          <label>{{ size.size }}</label>
+
+    <div class="product-variables__block" data-type="size" v-if="sizes && sizes.length > 0 ">
+
+      <div v-if="product?.name != GIFT_CERTIFICATE">
+        <div class="product-variables__header">
+          <div class="product-variables__title">Размер:</div>
+          <button
+              class="product-variables__link"
+              @click="modal.openModal( ModalsSizes, { customClass: 'sizes' } )">
+            Таблица размеров
+          </button>
+        </div>
+        <div class="product-variables__values">
+          <div class="product-variables__size" v-for="(size, key) in sizes" :key="size.id">
+            <input
+                type="radio"
+                name="size"
+                :value="size.id"
+                :checked="selectedSize && selectedSize.id === size.id"
+                :disabled="size.quantity === 0"
+                @change="emitSize(size)"
+            >
+            <label>{{ size.size }}</label>
+          </div>
         </div>
       </div>
+
+
+      <div v-else>
+
+        <div class="product-variables__header">
+          <div class="product-variables__title">Номинал:</div>
+        </div>
+
+        <div class="product-variables__values">
+          <div class="product-variables__size" v-for="(size, key) in sizes.sort((a,b) => a.price - b.price)"
+               :key="size.id">
+            <input
+                type="radio"
+                name="size"
+                :value="size.id"
+                :checked="selectedSize && selectedSize.id === size.id"
+                :disabled="size.quantity === 0"
+                @change="emitSize(size)"
+            >
+            <label>{{ getNormPrice(size.price) }}</label>
+          </div>
+        </div>
+
+      </div>
+
     </div>
+
   </div>
 </template>
 
 <script setup lang="ts">
 import {ref, computed, onMounted} from 'vue';
-import type {AvailableVariation, Color} from '~/types/catalog';
+import type {AvailableVariation, Color, Product} from '~/types/catalog';
 import {ModalsSizes} from '#components';
+import {getFormatPrice} from "~/utils/getFormatPrice";
+import {GIFT_CERTIFICATE} from "~/constants";
 
 const props = defineProps<{
   variations?: AvailableVariation[],
-  colors?: Color[]
+  colors?: Color[],
+  product: Product,
 }>();
 
 const modal = useModal();
@@ -139,6 +172,16 @@ const emitColor = (color: Color) => {
   selectedSize.value = newSize;
   emit('getSize', newSize);
 }
+
+
+const getNormPrice = (price: number | string): string => {
+  if (!price) return ''
+
+  const priceNorm = Number(price).toFixed(0);
+
+  return priceNorm.toString();
+}
+
 </script>
 
 <style scoped lang="scss">

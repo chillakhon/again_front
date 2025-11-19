@@ -1,9 +1,6 @@
 <template>
   <section class="catalog section">
     <div class="catalog__container container">
-      <div class="catalog-block__header block__header">
-        <h2 class="block__header-title">Каталог</h2>
-      </div>
       <CatalogGrid v-if="products" :list="products.data" />
     </div>
   </section>

@@ -1,6 +1,14 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
     ssr: true,
+
+    nitro: {
+        prerender: {
+            crawlLinks: true,
+            routes: ['/sitemap.xml', '/'],
+        }
+    },
+
     app: {
         head: {
             link: [{rel: 'icon', href: "/favicon.ico"}],

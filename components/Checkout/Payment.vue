@@ -46,7 +46,7 @@ withDefaults( defineProps<{
 } )
 const emit = defineEmits(['clickToButton']);
 const isDisabled = ref( false );
-const isChecked = ref( true );
+const isChecked = ref( false );
 
 watch( isChecked, ( isChecked: boolean, newValue: boolean ) => {
   isDisabled.value = newValue;

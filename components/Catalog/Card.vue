@@ -76,6 +76,7 @@
           </div>
         </div>
       </NuxtLink>
+
       <div class="catalog-item__content">
         <div class="catalog-item__header">
           <NuxtLink :to="to" class="catalog-item__title">
@@ -131,12 +132,13 @@
     </div>
     <div class="cart_btns">
       <MarketplaceLinksButtons
+          class="mb-2"
           v-if="checkLinkMarketplace(product.marketplace_links)"
           :marketplace-links="product.marketplace_links"
       />
 
-      <NuxtLink :to="to" class="catalog-item__btn" v-else>
-        <span>Подробнее</span>
+      <NuxtLink :to="to" class="catalog-item__btn">
+        <span>Заказать</span>
         <svg width="11" height="11" viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path
               d="M0.0920253 9.11633L7.20409 2.00427H0.676418V0.350437H10.0267V9.70073L8.37287 9.70073L8.37287 3.17306L1.26081 10.2851L0.0920253 9.11633Z"

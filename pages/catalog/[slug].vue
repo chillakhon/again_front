@@ -8,6 +8,7 @@
       Товар добавлен в корзину
     </div>
 
+
     <div class="product__container container">
       <div class="product__top">
         <ProductGallery
@@ -54,6 +55,7 @@
 
           <ProductVariations
               v-if="product.available_variants?.length || product.colors?.length"
+              :product="product"
               :variations="product.available_variants"
               :colors="product.colors"
               @get-color="getColor"
@@ -61,39 +63,45 @@
           />
 
 
-          <MarketplaceLinksButtons
-              class="cart_marketplace_links__btn"
-              v-if="checkLinkMarketplace(product.marketplace_links)"
-              :marketplace-links="product.marketplace_links"
-          />
-
-          <div v-else>
+          <div>
             <Quantity
                 class="product__quantity"
-                v-if="product.price && product.stock_quantity > 0"
+                v-if="product.price && product.stock_quantity > 0 || product.name == GIFT_CERTIFICATE"
                 @get-quantity="getQuantity"
             />
 
             <div class="product__actions" v-if="product.stock_quantity > 0">
               <div class="product__actions-buttons">
                 <ProductActionsAddToCart
-                    v-if="product.price"
+                    v-if="product.price || product.name == GIFT_CERTIFICATE"
                     :quantity="quantity"
                     :product="product"
                     :variation="selectedSize"
                     :color="selectedColor"
                     @add-to-cart="addToCart"
                 />
-                <div class="product__actions-back">
-                  <NuxtLink to="/catalog">Вернуться в каталог</NuxtLink>
-                </div>
+
               </div>
               <ProductActionsAddToFav :quantity="quantity" :product="product"/>
             </div>
 
+
             <div class="product__stock--not" v-else>
               Нет в наличии
             </div>
+
+
+            <MarketplaceLinksButtons
+                class="pt-2"
+                v-if="checkLinkMarketplace(product.marketplace_links)"
+                :marketplace-links="product.marketplace_links"
+            />
+
+
+            <div class="product__actions-back">
+              <NuxtLink to="/catalog">Вернуться в каталог</NuxtLink>
+            </div>
+
           </div>
 
         </div>
@@ -103,12 +111,15 @@
       <ProductReviews :product-id="product.id"/>
       <ProductRelated/>
     </div>
+
+
   </div>
 </template>
 
 <script setup lang="ts">
 import type {Product} from '~/types/catalog';
 import MarketplaceLinksButtons from "~/components/Catalog/MarketplaceLinksButtons.vue";
+import {GIFT_CERTIFICATE} from "~/constants";
 
 const route = useRoute();
 const {data: product} = await useApi<Product>('/products', {
@@ -139,6 +150,11 @@ const getColor = (value: object) => {
 
 const getSize = (value: object) => {
   selectedSize.value = value;
+
+  if (product.value) {
+    product.value.price = selectedSize.value.price;
+  }
+
 }
 
 const addToCart = () => {
