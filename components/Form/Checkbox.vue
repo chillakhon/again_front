@@ -7,7 +7,7 @@
         :checked="isChecked"
         v-model="model"
     >
-    <span  class="checkbox__icon"></span>
+    <span class="checkbox__icon"></span>
     <label class="checkbox__label" v-if="label" :class="{ 'checkbox__flex': isLabelObject }">
       <template v-if="isLabelObject">
         <div class="сheckbox__main">
@@ -17,7 +17,7 @@
         <div class="checkbox__price" v-if="label.price" v-html="label.price"></div>
       </template>
       <template v-else>
-        <span v-html="label"></span>
+        <div v-html="label"></div>
       </template>
     </label>
   </div>
@@ -30,7 +30,7 @@ type objectLabel = {
   price?: string
 }
 
-const props = withDefaults( defineProps<{
+const props = withDefaults(defineProps<{
   name: string,
   label: string | objectLabel,
   isChecked?: boolean,
@@ -38,17 +38,17 @@ const props = withDefaults( defineProps<{
   value?: string,
 }>(), {
   isChecked: false
-} );
+});
 
-const isLabelObject = ref( false );
-onMounted( () => {
+const isLabelObject = ref(false);
+onMounted(() => {
   isLabelObject.value = typeof props.label === 'object';
-} )
+})
 
 const model = defineModel<boolean>();
 const emit = defineEmits(['update:modelValue']);
 const handleInput = ($event: InputEvent) => {
-  emit('update:modelValue', ( $event.target as HTMLInputElement ).value)
+  emit('update:modelValue', ($event.target as HTMLInputElement).value)
 }
 </script>
 
@@ -84,12 +84,12 @@ const handleInput = ($event: InputEvent) => {
   color: var(--fg-gray);
   font-family: var(--ff-regular);
 
-  //:deep(a) {
-  //  position: relative;
-  //  z-index: 15;
-  //  color: var(--fg-red);
-  //  border-bottom: .1rem solid var(--fg-red);
-  //}
+  :deep(a) {
+    position: relative;
+    z-index: 15;
+    color: var(--fg-red);
+    border-bottom: .1rem solid var(--fg-red);
+  }
 
   @media (max-width: $mobile) {
     padding-left: 2.6rem;
@@ -152,7 +152,7 @@ const handleInput = ($event: InputEvent) => {
 
 .checkbox__link {
   display: inline-block;
-  color: rgba(0,0,0,.29) !important;
+  color: rgba(0, 0, 0, .29) !important;
   font-size: 1.4rem;
   text-decoration: underline !important;
   margin-top: .2rem;
