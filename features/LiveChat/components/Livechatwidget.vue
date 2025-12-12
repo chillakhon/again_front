@@ -56,17 +56,17 @@
 </template>
 
 <script setup lang="ts">
-import {computed, onMounted, watch} from 'vue'
-import {useLiveChatStore} from '~/features/LiveChat/stores/useLiveChatStore'
+import { computed, onMounted, watch } from 'vue'
+import { useLiveChatStore } from '~/features/LiveChat/stores/useLiveChatStore'
 import ChatHeader from './ChatHeader.vue'
 import ChatMessages from './ChatMessages.vue'
 import ChatInput from './ChatInput.vue'
-import {getExternalIdClient} from "~/features/LiveChat/composables/useChatFunctions";
-import {usePublicConversationEvents} from "~/features/LiveChat/composables/usePublicConversationEvents";
-import SelectChat from "~/features/LiveChat/components/SelectChat.vue";
+import { getExternalIdClient } from "~/features/LiveChat/composables/useChatFunctions"
+import { usePublicConversationEvents } from "~/features/LiveChat/composables/usePublicConversationEvents"
+import SelectChat from "~/features/LiveChat/components/SelectChat.vue"
+import type { PendingFile } from '~/features/LiveChat/types'
 
 const store = useLiveChatStore()
-
 const authUser = useAuthStore()
 
 const isOpen = computed(() => store.isOpen)
@@ -76,12 +76,10 @@ const inputError = computed(() => store.inputError)
 const conversation = computed(() => store.conversation)
 const messages = computed(() => store.messages)
 
-
 // Инициализация при монтировании
 onMounted(async () => {
   // Генерируем или получаем external_id
   let externalId = await getExternalIdClient()
-
   const userId = authUser.user.id ?? null
 
   // Устанавливаем информацию о клиенте
@@ -99,9 +97,7 @@ onMounted(async () => {
     const events = usePublicConversationEvents(conversation.value.id)
     events?.subscribeToEvents()
   }
-
 })
-
 
 // Отмечаем как прочитанное при открытии
 watch(isOpen, async (newVal) => {
@@ -110,7 +106,6 @@ watch(isOpen, async (newVal) => {
     store.resetUnreadCount()
   }
 })
-
 
 const handleToggle = () => {
   store.toggleChat()
@@ -124,8 +119,9 @@ const handleMinimize = () => {
   store.closeChat()
 }
 
-const handleSendMessage = async (content: string) => {
-  await store.sendMessage(content)
+// ← ОБНОВИЛИ: Добавили файлы
+const handleSendMessage = async (content: string, files: PendingFile[]) => {
+  await store.sendMessage(content, files)
 }
 
 const handleRetry = async () => {

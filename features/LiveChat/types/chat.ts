@@ -1,15 +1,6 @@
-// Attachment Model
-export interface Attachment {
-    id: number
-    message_id: number
-    type: 'image' | 'file' | 'video' | 'audio'
-    url: string
-    name: string
-    size?: number
-    mime_type?: string
-}
-
 // Message Model
+import type {Attachment} from './file'
+
 export interface Message {
     // Идентификаторы
     id: string | number
@@ -19,6 +10,8 @@ export interface Message {
     content: string
     direction: 'incoming' | 'outgoing'
     status: 'sending' | 'sent' | 'delivered' | 'read' | 'failed'
+
+    content_type?: 'text' | 'image' | 'file' | 'audio' | 'video'  // ← добавили
 
     // Временные метки
     created_at: string // ISO8601

@@ -1,6 +1,6 @@
-import {defineStore} from 'pinia'
-import {ref, computed} from 'vue'
-import type {Conversation, Message} from '~/features/LiveChat/types/chat'
+import { defineStore } from 'pinia'
+import { ref, computed } from 'vue'
+import type { Conversation, Message, PendingFile } from '~/features/LiveChat/types'
 import {
     useGetOrCreateConversation,
     useSendMessage,
@@ -13,10 +13,8 @@ export const useLiveChatStore = defineStore('liveChat', () => {
     const isAnimating = ref<boolean>(false)
     const isLoading = ref<boolean>(false)
 
-
     const hasUnreadMessages = ref<boolean>(false)
     const unreadCount = ref<number>(0)
-
 
     const conversation = ref<Conversation | null>(null)
 
@@ -97,12 +95,10 @@ export const useLiveChatStore = defineStore('liveChat', () => {
     const setUnreadCountFronLS = () => {
         const stored = localStorage.getItem('chat_unread_count')
         if (stored) {
-
             if (parseInt(stored) > 0) {
                 hasUnreadMessages.value = true
                 unreadCount.value = parseInt(stored)
             }
-
         }
     }
 
@@ -111,12 +107,11 @@ export const useLiveChatStore = defineStore('liveChat', () => {
      * Загрузить или создать conversation
      */
     const fetchOrCreateConversation = async () => {
-
         try {
             setLoading(true)
             setInputError(null)
 
-            const {data, error} = await useGetOrCreateConversation(
+            const { data, error } = await useGetOrCreateConversation(
                 externalId.value!,
                 clientId.value,
                 'web_chat'
@@ -141,9 +136,15 @@ export const useLiveChatStore = defineStore('liveChat', () => {
 
     /**
      * Отправить сообщение
+     * ← ОБНОВИЛИ: Добавили поддержку файлов
      */
-    const sendMessage = async (content: string) => {
-        if (!content.trim() || !conversation.value) {
+    const sendMessage = async (content: string, files: PendingFile[] = []) => {
+        // Валидация: должен быть текст или файлы
+        if (!content.trim() && files.length === 0) {
+            return
+        }
+
+        if (!conversation.value) {
             return
         }
 
@@ -155,19 +156,21 @@ export const useLiveChatStore = defineStore('liveChat', () => {
             const tempMessage: Message = {
                 id: Date.now().toString(),
                 conversation_id: conversation.value.id,
-                content: content,
+                content: content || '📎 Файлы', // Если нет текста, показываем иконку
                 direction: 'incoming',
                 status: 'sending',
                 created_at: new Date().toISOString(),
-                attachments: [],
+                attachments: [], // Временно пустой массив, после загрузки придут реальные
             }
 
             addMessage(tempMessage)
             clearInputMessage()
-            // Отправляем на сервер
-            const {data, error} = await useSendMessage(
+
+            // Отправляем на сервер (с файлами)
+            const { data, error } = await useSendMessage(
                 conversation.value.id,
-                content
+                content || 'Файлы',
+                files
             )
 
             if (error.value) {
@@ -175,7 +178,7 @@ export const useLiveChatStore = defineStore('liveChat', () => {
             }
 
             if (data.value?.data && conversation.value) {
-                // Заменяем временное сообщение на реальное
+                // Заменяем временное сообщение на реальное (с attachments)
                 const index = conversation.value.messages.findIndex(
                     (m) => m.id === tempMessage.id
                 )
@@ -189,12 +192,14 @@ export const useLiveChatStore = defineStore('liveChat', () => {
             setInputError(errorMessage)
             console.error('sendMessage error:', err)
 
-            // Удаляем временное сообщение при ошибке
+            // Помечаем временное сообщение как failed
             if (conversation.value) {
-                conversation.value.messages =
-                    conversation.value.messages.filter(
-                        (m) => m.status !== 'sending'
-                    )
+                const tempMsg = conversation.value.messages.find(
+                    (m) => m.status === 'sending'
+                )
+                if (tempMsg) {
+                    tempMsg.status = 'failed'
+                }
             }
         } finally {
             setSending(false)
@@ -210,7 +215,7 @@ export const useLiveChatStore = defineStore('liveChat', () => {
         }
 
         try {
-            const {error} = await useMarkConversationAsRead(
+            const { error } = await useMarkConversationAsRead(
                 conversation.value.id
             )
 
@@ -222,7 +227,6 @@ export const useLiveChatStore = defineStore('liveChat', () => {
             console.error('markAsRead error:', err)
         }
     }
-
 
     const incrementUnreadCount = () => {
         unreadCount.value++
@@ -271,7 +275,6 @@ export const useLiveChatStore = defineStore('liveChat', () => {
         decrementUnreadCount,
         setUnreadCountFronLS,
 
-
         // Actions: Data
         setConversation,
         addMessage,
@@ -292,7 +295,5 @@ export const useLiveChatStore = defineStore('liveChat', () => {
         fetchOrCreateConversation,
         sendMessage,
         markAsRead,
-
-
     }
 })

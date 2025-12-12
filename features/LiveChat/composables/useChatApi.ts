@@ -1,4 +1,4 @@
-import type {Conversation, Message} from '~/features/LiveChat/types/chat'
+import type {Conversation, Message, PendingFile} from '~/features/LiveChat/types'
 import useApi from '~/composables/useApi'
 
 export async function useGetOrCreateConversation(
@@ -26,12 +26,36 @@ export async function useGetOrCreateConversation(
     })
 }
 
+// ← ОБНОВИЛИ: Добавили поддержку файлов
 export async function useSendMessage(
     conversationId: number | string,
-    content: string
+    content: string,
+    files?: PendingFile[]
 ) {
     const url = `/public/conversations/${conversationId}/reply`
 
+    // Если есть файлы - используем FormData
+    if (files && files.length > 0) {
+        const formData = new FormData()
+
+        // Добавляем текст сообщения
+        formData.append('content', content)
+
+        // Добавляем файлы
+        files.forEach((pendingFile, index) => {
+            formData.append(`attachments[${index}]`, pendingFile.file)
+        })
+
+        return useApi<{
+            data: Message,
+        }>(url, {
+            method: 'POST',
+            body: formData,
+            // НЕ указываем Content-Type - браузер сам установит с boundary
+        })
+    }
+
+    // Если нет файлов - отправляем JSON как раньше
     return useApi<{
         data: Message,
     }>(url, {
@@ -44,7 +68,6 @@ export async function useSendMessage(
         }
     })
 }
-
 
 export async function useMarkConversationAsRead(
     conversationId: number | string
