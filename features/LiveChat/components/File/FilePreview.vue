@@ -6,12 +6,12 @@
     >
       <!-- Header -->
       <div class="flex items-center justify-between mb-2">
-        <span class="text-sm text-gray-600 font-medium">
+        <span class="text-lg text-gray-600 font-medium">
           Файлов: {{ files.length }}
         </span>
         <button
             @click="emit('clearAll')"
-            class="text-xs text-red-500 hover:text-red-600 font-medium"
+            class="text-lg text-red-500 hover:text-red-600 font-medium"
         >
           Очистить все
         </button>
