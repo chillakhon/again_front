@@ -1,5 +1,5 @@
 <template>
-  <Breadcrumbs />
+  <Breadcrumbs/>
 
   <ClientOnly>
     <div class="checkout">
@@ -14,9 +14,15 @@
               <div class="block__header-title">Оформление заказа</div>
             </div>
             <div class="checkout__row">
+
               <div class="checkout__block">
-                <CheckoutUser />
+                <CheckoutUser/>
               </div>
+
+              <CheckoutGiftCardData
+                  ref="giftCardDataRef"
+              />
+
               <CheckoutDelivery
                   v-model:country-code="form.value.country_code"
                   v-model:city-name="form.value.city_name"
@@ -28,7 +34,11 @@
                   v-model:last-name="form.value.user.last_name"
                   v-model:phone="form.value.user.phone"
               />
-              <CheckoutPayment @click-to-button="submit" :is-loading="isLoading" />
+
+              <CheckoutPayment
+                  @click-to-button="submit"
+                  :is-loading="isLoading"
+              />
             </div>
           </div>
           <div class="checkout__items">
@@ -47,51 +57,101 @@
                   :with-button="false"
                   v-model:promo-code="form.value.promo_code"
               />
+
+              <CheckoutGiftCard/>
+
             </div>
           </div>
         </template>
-        <NotFound v-else-if="cartStore.cart.length === 0" class="cart__not" :is-title="true" to="/catalog" />
+        <NotFound v-else-if="cartStore.cart.length === 0" class="cart__not" :is-title="true" to="/catalog"/>
       </div>
     </div>
+
   </ClientOnly>
 </template>
 
 <script setup lang="ts">
+import {useCartStore} from '~/stores/cart';
+import {useAuthStore} from '~/stores/auth';
+import {useGiftCardPaymentStore} from '~/stores/giftCardPayment';
+import {useGiftCardPurchaseStore} from '~/stores/giftCardPurchase';
+
 const cartStore = useCartStore();
 const userStore = useAuthStore();
-const isLoading = ref( false );
+const giftCardPaymentStore = useGiftCardPaymentStore();
+const giftCardPurchaseStore = useGiftCardPurchaseStore();
+const isLoading = ref(false);
+const giftCardDataRef = ref(null);
 
-const form = computed( () => {
-  return ref( {
+const form = computed(() => {
+  return ref({
     promo_code: cartStore.promoCode,
+    gift_card_data: '',
+    gift_card_code: giftCardPaymentStore.giftCardCode,
     user: {
       first_name: userStore.user?.profile?.first_name || '',
-      last_name: userStore.user?.profile?.last_name|| '',
+      last_name: userStore.user?.profile?.last_name || '',
       phone: userStore.user?.profile?.phone || ''
     },
     country_code: 'RU',
     city_name: 'Москва',
     delivery_address: 'Ленина 12',
-    //delivery_method_id: 2,
-    //delivery_type_code: 'cdek_courier',
     notes: 'Комментарий',
-    //tariff: {},
     items: cartStore.getCartForCheckout()
-  } );
-} );
+  });
+});
 
 const submit = async () => {
+  // Валидация данных сертификата (если есть в корзине)
+
+
+  if (cartStore.hasGiftCertificateInCart) {
+
+
+    const isValid = giftCardDataRef.value?.validate();
+
+    if (!isValid) {
+      // Скроллим к форме с ошибками
+      giftCardDataRef.value?.$el?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center'
+      });
+      return;
+    }
+  }
+
   isLoading.value = true;
 
-  const { data, error } = await useApi('/orders', {
-    body: form.value
+  // Добавляем данные сертификата в запрос
+  const requestData = {
+    ...form.value.value,
+  };
+
+
+  if (cartStore.hasGiftCertificateInCart) {
+    requestData.gift_card_data = giftCardPurchaseStore.getDataForAPI(
+        userStore.user?.email,
+        userStore.user?.profile?.phone
+    );
+  }
+
+  console.log(requestData);
+
+
+  const {data, error} = await useApi('/orders', {
+    body: requestData
   }, '', 'POST');
 
   isLoading.value = false;
 
-  if ( data.value.success === true ){
+  if (data.value?.success === true) {
     cartStore.setEmptyCart();
-    return navigateTo( '/success?id=' + data.value.order.id );
+    return navigateTo('/success?id=' + data.value.order.id);
+  }
+
+  if (error.value) {
+    console.error('Order error:', error.value);
+    // TODO: Показать ошибку пользователю
   }
 }
 </script>

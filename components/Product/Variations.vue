@@ -70,7 +70,8 @@
         </div>
 
         <div class="product-variables__values">
-          <div class="product-variables__size" v-for="(size, key) in sizes.sort((a,b) => a.price - b.price)"
+          <div class="product-variables__size"
+               v-for="(size, key) in sizes.sort((a,b) => a.price - b.price)"
                :key="size.id">
             <input
                 type="radio"

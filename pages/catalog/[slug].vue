@@ -25,10 +25,11 @@
           />
           <h1 class="product__title">{{ product.name }}</h1>
 
+
           <ProductPrice
-              v-if="product.price"
-              :price="product.price"
-              :sale="product.old_price"
+              v-if="getCurrentPrice()"
+              :price="getCurrentPrice()"
+              :old-price="getCurrentOldPrice()"
           />
 
           <div class="product__drops" v-if="product.absorbency_level > 0">
@@ -61,7 +62,6 @@
               @get-color="getColor"
               @get-size="getSize"
           />
-
 
           <div>
             <Quantity
@@ -122,11 +122,7 @@ import MarketplaceLinksButtons from "~/components/Catalog/MarketplaceLinksButton
 import {GIFT_CERTIFICATE} from "~/constants";
 
 const route = useRoute();
-const {data: product} = await useApi<Product>('/products', {
-  query: {
-    product_id: route.params.slug
-  }
-});
+const {data: product} = await useApi<Product>(`/public/catalog/products/${route.params.slug}`)
 
 
 function checkLinkMarketplace(links: Record<string, any>): boolean {
@@ -151,10 +147,6 @@ const getColor = (value: object) => {
 const getSize = (value: object) => {
   selectedSize.value = value;
 
-  if (product.value) {
-    product.value.price = selectedSize.value.price;
-  }
-
 }
 
 const addToCart = () => {
@@ -164,6 +156,27 @@ const addToCart = () => {
     isAddedMessageActive.value = false;
   }, 1500);
 }
+
+
+const getCurrentPrice = () => {
+  // Если выбран размер - берём его цену
+  if (selectedSize.value?.price) {
+    return selectedSize.value.price;
+  }
+  // Иначе цену продукта
+  return product.value?.price;
+}
+
+const getCurrentOldPrice = () => {
+  // Если выбран размер и у него есть old_price - берём его
+  if (selectedSize.value?.old_price) {
+    return selectedSize.value.old_price;
+  }
+  // Иначе old_price продукта
+  return product.value?.old_price;
+}
+
+
 </script>
 
 <style scoped lang="scss">

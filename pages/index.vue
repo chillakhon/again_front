@@ -1,13 +1,14 @@
 <template>
-  <HomeHero />
-  <HomeTechnology />
-  <HomeCatalog />
-  <HomeRecommend />
-<!--  <HomePayment />-->
-  <HomeReviews />
-  <HomeVideos />
-  <HomeFaq />
-  <HomeNews />
+  <HomeHero/>
+  <HomeTechnology/>
+  <HomeCatalog/>
+  <HomeBanners/>
+  <HomeRecommend/>
+  <!--  <HomePayment />-->
+  <HomeReviews/>
+  <HomeVideos/>
+  <HomeFaq/>
+  <HomeNews/>
 </template>
 
 <script setup lang="ts">

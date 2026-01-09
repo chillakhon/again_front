@@ -9,15 +9,15 @@
             :image="item.main_image?.path"
             :quantity="item.quantity"
             :title="item.name"
-            :price="item.price"
-            :old-price="item.old_price"
+            :price="getPrice(item)"
+            :old-price="getOldPrice(item)"
             :item-key="item.item_key"
             :selected-color="item.selected_color"
             :selected-variant="item.selected_variant"
         />
       </div>
       <div class="mini-cart__bottom">
-        <MiniCartTotal />
+        <MiniCartTotal/>
         <NuxtLink
             to="/checkout"
             class="mini-cart__btn btn _60"
@@ -28,13 +28,37 @@
       </div>
     </div>
 
-    <NotFound v-else class="mini-cart__not" to="/catalog" @click-to-button="asideMenu.close()" />
+    <NotFound v-else class="mini-cart__not" to="/catalog" @click-to-button="asideMenu.close()"/>
   </ClientOnly>
 </template>
 
 <script setup lang="ts">
+import type {Product} from "~/types/catalog";
+
 const cartStore = useCartStore();
 const asideMenu = useAsideMenuStore();
+
+
+const getPrice = (p: Product) => {
+  let price = undefined;
+  if (p.selected_variant) {
+    price = p.selected_variant.price
+  } else {
+    price = p.price
+  }
+  return Number(price);
+}
+
+const getOldPrice = (p: Product) => {
+  let oldPrice = undefined
+  if (p.selected_variant) {
+    oldPrice = p.selected_variant.old_price
+  } else {
+    oldPrice = p.old_price
+  }
+  return Number(oldPrice)
+}
+
 </script>
 
 <style scoped lang="scss">

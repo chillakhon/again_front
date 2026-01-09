@@ -1,6 +1,7 @@
 export interface User {
     id: string;
     email: string;
+    profile: Profile
 }
 
 export interface Profile {

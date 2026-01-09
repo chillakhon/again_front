@@ -1,3 +1,5 @@
+import type {Category} from "~/types/category";
+
 export interface Product {
     id: number,
     absorbency_level: number,
@@ -31,7 +33,7 @@ export interface Product {
     main_image?: Image,
     quantity?: number,
     item_key?: string,
-    selected_variant?: object,
+    selected_variant?: Product,
     selected_color?: object,
     stock_quantity: number
 }
@@ -63,6 +65,7 @@ export interface Image {
 export interface Catalog {
     data: Product[],
     meta: {
-        last_page: number
+        last_page: number,
+        category?: Category,
     }
 }

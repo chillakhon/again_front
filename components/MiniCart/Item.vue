@@ -20,7 +20,7 @@
         </div>
         <div class="mini-cart__item-content__bottom">
           <div class="price">
-            <div class="price__new">{{ priceFormat.getNormalPrice( price, oldPrice ) }} ₽</div>
+            <div class="price__new">{{ priceFormat.getNormalPrice( Number(price), Number(oldPrice) ) }} ₽</div>
             <div class="price__old" v-if="oldPrice">{{ priceFormat.formattedPrice( oldPrice ) }} ₽</div>
           </div>
         </div>
@@ -57,8 +57,8 @@ const props = defineProps<{
   id: number,
   title: string,
   quantity: number,
-  price: string,
-  oldPrice?: string,
+  price: string | number,
+  oldPrice?: string | number,
   itemKey: string,
   selectedColor?: object,
   selectedVariant?: object,

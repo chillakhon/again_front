@@ -2,23 +2,45 @@
   <div class="cart__total" :class="{ '_border': isBorder }">
     <div class="cart__total-top">
       <div class="cart__summary cart-summary">
+        <!-- Промежуточный итог -->
         <div class="cart-summary__item">
           <span class="cart-summary__item-title">Всего</span>
           <span class="cart-summary__item-price">{{ getFormatPrice().formattedPrice(cart.subtotal) }} ₽</span>
         </div>
-        <div class="cart-summary__item" v-if="cart.sale">
-          <span class="cart-summary__item-title">Скидка</span>
-          <span class="cart-summary__item-price">{{ getFormatPrice().formattedPrice(cart.sale) }} ₽</span>
+
+        <!-- Скидка на товары -->
+        <div class="cart-summary__item" v-if="cart.regularDiscount > 0">
+          <span class="cart-summary__item-title">Скидка на товары</span>
+          <span class="cart-summary__item-price discount">-{{ getFormatPrice().formattedPrice(cart.regularDiscount) }} ₽</span>
+        </div>
+
+        <!-- Скидка по промокоду -->
+        <div class="cart-summary__item" v-if="cart.promoDiscount > 0">
+          <span class="cart-summary__item-title promo">Промокод</span>
+          <span class="cart-summary__item-price discount promo">-{{ getFormatPrice().formattedPrice(cart.promoDiscount) }} ₽</span>
+        </div>
+
+        <!-- 🆕 НОВОЕ: Подарочная карта -->
+        <div class="cart-summary__item" v-if="giftCardStore.giftCardAmount > 0">
+          <span class="cart-summary__item-title gift-card">Подарочная карта</span>
+          <span class="cart-summary__item-price discount gift-card">-{{ getFormatPrice().formattedPrice(giftCardStore.giftCardAmount) }} ₽</span>
         </div>
       </div>
-
-
-<!--      <div class="cart__promo-message" :class="[cart.promoClass ]">{{ cart.promoMessage }}</div>-->
-
     </div>
 
     <div class="cart__total-bottom">
       <CartSubtotal/>
+
+      <!-- 🆕 НОВОЕ: Уведомление если полностью оплачено картой -->
+      <div v-if="giftCardStore.giftCardAmount > 0 && cart.getFinalTotal() === 0" class="cart__total-message success">
+        🎉 Заказ полностью оплачен подарочной картой!
+      </div>
+
+      <!-- 🆕 НОВОЕ: Остаток к оплате -->
+      <div v-if="giftCardStore.giftCardAmount > 0 && cart.getFinalTotal() > 0" class="cart__total-message info">
+        💳 Остаток {{ getFormatPrice().formattedPrice(cart.getFinalTotal()) }} ₽ будет оплачен картой/СБП
+      </div>
+
       <NuxtLink v-if="withButton" to="/checkout" class="cart__checkout btn _wide _15 _60">Оформить заказ</NuxtLink>
       <CartPromocode v-if="isPromocode"/>
     </div>
@@ -26,6 +48,9 @@
 </template>
 
 <script setup lang="ts">
+import { useCartStore } from '~/stores/cart';
+import { useGiftCardPaymentStore } from '~/stores/giftCardPayment';
+
 withDefaults(defineProps<{
   isBorder?: boolean,
   isPromocode?: boolean,
@@ -37,11 +62,7 @@ withDefaults(defineProps<{
 });
 
 const cart = useCartStore();
-
-
-const getTotal = computed(() => {
-  return cart.total;
-})
+const giftCardStore = useGiftCardPaymentStore();
 </script>
 
 <style scoped lang="scss">
@@ -131,4 +152,110 @@ const getTotal = computed(() => {
   margin-top: 3.5rem;
 }
 
+
+.cart-summary__item-title {
+  &.promo {
+    color: #2e7d32;
+  }
+
+  &.gift-card {
+    color: #FFB800;
+    font-weight: 600;
+  }
+}
+
+.cart-summary__item-price {
+  &.discount {
+    color: var(--fg-red, #d32f2f);
+
+    &.promo {
+      color: #2e7d32;
+    }
+
+    &.gift-card {
+      color: #FFB800;
+      font-weight: 600;
+    }
+  }
+}
+
+.cart__total-message {
+  margin-top: 1.5rem;
+  padding: 1rem 1.2rem;
+  border-radius: 0.6rem;
+  font-size: 1.2rem;
+  line-height: 1.4;
+
+  &.success {
+    background: rgba(46, 125, 50, 0.1);
+    border-left: 3px solid #2e7d32;
+    color: #2e7d32;
+    font-weight: 600;
+  }
+
+  &.info {
+    background: rgba(255, 215, 0, 0.1);
+    border-left: 3px solid #FFB800;
+    color: #666;
+  }
+
+  @media (max-width: $tablet) {
+    font-size: 1.1rem;
+    padding: 0.8rem 1rem;
+  }
+}
+
+
+
+.cart-summary__item-title {
+  &.promo {
+    color: #2e7d32;
+  }
+
+  &.gift-card {
+    color: #FFB800;
+    font-weight: 600;
+  }
+}
+
+.cart-summary__item-price {
+  &.discount {
+    color: var(--fg-red, #d32f2f);
+
+    &.promo {
+      color: #2e7d32;
+    }
+
+    &.gift-card {
+      color: #FFB800;
+      font-weight: 600;
+    }
+  }
+}
+
+.cart__total-message {
+  margin-top: 1.5rem;
+  padding: 1rem 1.2rem;
+  border-radius: 0.6rem;
+  font-size: 1.2rem;
+  line-height: 1.4;
+
+  &.success {
+    background: rgba(46, 125, 50, 0.1);
+    border-left: 3px solid #2e7d32;
+    color: #2e7d32;
+    font-weight: 600;
+  }
+
+  &.info {
+    background: rgba(255, 215, 0, 0.1);
+    border-left: 3px solid #FFB800;
+    color: #666;
+  }
+
+  @media (max-width: $tablet) {
+    font-size: 1.1rem;
+    padding: 0.8rem 1rem;
+  }
+}
 </style>

@@ -1,11 +1,13 @@
 <template>
-  <div class="cart__subtotal">
-    <span class="cart__subtotal-title">Итого:</span>
-    <span class="cart__subtotal-price">{{ getFormatPrice().formattedPrice( cart.total ) }} ₽</span>
+  <div class="cart__subtotal cart-subtotal">
+    <div class="cart-subtotal__title">Итого</div>
+    <div class="cart-subtotal__price">{{ getFormatPrice().formattedPrice(cart.getFinalTotal()) }} ₽</div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { useCartStore } from '~/stores/cart';
+
 const cart = useCartStore();
 </script>
 

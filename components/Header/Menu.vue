@@ -1,7 +1,7 @@
 <template>
   <ul class="menu">
     <li
-        v-for="( item, key ) in menuItems"
+        v-for="(item, key) in menuItems"
         :key="key"
         class="menu__item"
         :class="{ 'menu__item--children': item.sublist && item.sublist.length }"
@@ -15,7 +15,9 @@
         </span>
       </NuxtLink>
       <ul class="menu__sub" v-if="item.sublist && item.sublist.length > 0">
-        <li v-for="( subItem, subKey ) in item.sublist" :key="subKey" class="menu__item" @click="clickMenuItem">
+        <li v-for="(subItem, subKey) in item.sublist" :key="subKey" class="menu__item"
+            @click="clickMenuItem"
+        >
           <NuxtLink :to="subItem.link" class="menu__link">{{ subItem.title }}</NuxtLink>
         </li>
       </ul>
@@ -24,72 +26,114 @@
 </template>
 
 <script setup lang="ts">
-const menuItems = [
-  {
-    link: '/',
-    title: 'Главная'
-  },
-  {
-    link: '/catalog',
-    title: 'Каталог'
-  },
-  {
-    link: '#',
-    title: 'Информация для клиентов',
-    sublist: [
-      {
-        link: '/delivery',
-        title: 'Доставка и оплата',
-      },
-      {
-        link: '/returns',
-        title: 'Обмен и возврат',
-      },
-      {
-        link: '/care',
-        title: 'Уход и использование',
-      },
-      {
-        link: '/sertificates',
-        title: 'Сертификаты',
-      },
-      {
-        link: '/selection',
-        title: 'Подбор по впитываемости и по размеру',
-      },
-    ]
-  },
-  {
-    link: '/faq',
-    title: 'Отвечаем на ваши вопросы'
-  },
-  {
-    link: '/articles',
-    title: 'Полезное'
-  },
-  {
-    link: '/contacts',
-    title: 'Контакты'
-  },
-];
+import { useApi } from '~/composables/useApi'
 
-const mobileMenuStore = useMobileMenuStore();
+const mobileMenuStore = useMobileMenuStore()
 
-const clickMenuItem = ( event ) => {
-  const item = event.target;
-  const liItem = item.closest('li');
+// Загружаем категории из API
+const { data: categories } = await useAsyncData(
+    'catalog-menu-categories',
+    async () => {
+      const { data, error } = await useApi('/public/catalog/menu-categories')
 
-  if ( liItem.classList.contains('menu__item--children') ){
-    event.preventDefault();
-    const subList = liItem.querySelector('ul');
-    if ( subList ){
-      liItem.classList.toggle('_active');
+      if (error.value) {
+        console.error('Ошибка загрузки категорий меню:', error.value)
+        return []
+      }
+
+      return data.value?.data || []
+    },
+    {
+      server: true,
+      lazy: false,
     }
-  } else {
-    mobileMenuStore.close();
+)
+
+// Формируем меню
+const menuItems = computed(() => {
+  // Подменю каталога - начинаем с "Все товары"
+  const catalogSublist = [
+    {
+      link: '/catalog',
+      title: 'Все товары'
+    }
+  ]
+
+  // Добавляем категории из API
+  if (categories.value && categories.value.length > 0) {
+    categories.value.forEach((category: any) => {
+      catalogSublist.push({
+        link: `/catalog?category=${category.slug}`,
+        title: category.name
+      })
+    })
   }
 
-  //mobileMenuStore.isActive = false;
+  // Возвращаем полное меню
+  return [
+    {
+      link: '/',
+      title: 'Главная'
+    },
+    {
+      link: '#',
+      title: 'Каталог',
+      sublist: catalogSublist
+    },
+    {
+      link: '#',
+      title: 'Информация для клиентов',
+      sublist: [
+        {
+          link: '/delivery',
+          title: 'Доставка и оплата',
+        },
+        {
+          link: '/returns',
+          title: 'Обмен и возврат',
+        },
+        {
+          link: '/care',
+          title: 'Уход и использование',
+        },
+        {
+          link: '/sertificates',
+          title: 'Сертификаты',
+        },
+        {
+          link: '/selection',
+          title: 'Подбор по впитываемости и по размеру',
+        },
+      ]
+    },
+    {
+      link: '/faq',
+      title: 'Отвечаем на ваши вопросы'
+    },
+    {
+      link: '/articles',
+      title: 'Полезное'
+    },
+    {
+      link: '/contacts',
+      title: 'Контакты'
+    },
+  ]
+})
+
+const clickMenuItem = (event: any) => {
+  const item = event.target
+  const liItem = item.closest('li')
+
+  if (liItem.classList.contains('menu__item--children')) {
+    event.preventDefault()
+    const subList = liItem.querySelector('ul')
+    if (subList) {
+      liItem.classList.toggle('_active')
+    }
+  } else {
+    mobileMenuStore.close()
+  }
 }
 </script>
 

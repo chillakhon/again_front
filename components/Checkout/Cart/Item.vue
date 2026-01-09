@@ -20,9 +20,9 @@
       </div>
     </div>
     <div class="checkout-cart__item-quantity">{{ product.quantity }}</div>
-    <div class="checkout-cart__item-price price" v-if="product.price">
-      <div class="price__new">{{ getNormalPrice( product.price, product.old_price ) }} ₽</div>
-      <div class="price__old" v-if="product.old_price">{{ formattedPrice( product.old_price ) }} ₽</div>
+    <div class="checkout-cart__item-price price" v-if="getPriceFromProduct(product)">
+      <div class="price__new">{{ getPriceFromProduct(product) }} ₽</div>
+      <div class="price__old" v-if="getOldPriceFromProduct(product)">{{ getOldPriceFromProduct(product) }} ₽</div>
     </div>
   </div>
 </template>
@@ -34,7 +34,9 @@ defineProps<{
   product: Product
 }>();
 
-const { getNormalPrice, formattedPrice } = getFormatPrice();
+const {getPriceFromProduct, getOldPriceFromProduct} = getFormatPrice();
+
+
 </script>
 
 <style scoped lang="scss">

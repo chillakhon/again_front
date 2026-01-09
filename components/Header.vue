@@ -6,17 +6,17 @@
           <img src="/img/logo.again/logo.svg" alt="">
         </NuxtLink>
         <div class="header__top-left">
-          <HeaderSocials />
+          <HeaderSocials/>
           <button
-            class="header__call"
-            @click="modal.openModal( ModalsCallback )"
+              class="header__call"
+              @click="modal.openModal( ModalsCallback )"
           >
             Связаться с нами
           </button>
         </div>
         <div class="header__top-right">
-          <HeaderSearch />
-          <HeaderActions />
+          <HeaderSearch/>
+          <HeaderActions/>
         </div>
       </div>
     </div>
@@ -24,10 +24,10 @@
 
   <div class="header__bottom" :class="{ '_active': mobileMenuStore.isActive }">
     <div class="container">
-      <HeaderMenu class="header__menu" />
+      <HeaderMenu class="header__menu"/>
       <div class="header__mobile">
         <button class="header__call" @click="modal.openModal( ModalsCallback )">Связаться с нами</button>
-        <HeaderSocials />
+        <HeaderSocials/>
       </div>
     </div>
   </div>
@@ -35,6 +35,7 @@
 
 <script setup lang="ts">
 import {ModalsCallback} from "#components";
+
 const mobileMenuStore = useMobileMenuStore();
 const modal = useModal();
 
@@ -46,11 +47,11 @@ const handleScroll = () => {
 
 onMounted(() => {
   window.addEventListener('scroll', handleScroll)
-} )
+})
 
 onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll)
-} )
+})
 </script>
 
 <style scoped lang="scss">
@@ -188,7 +189,7 @@ onUnmounted(() => {
       }
     }
 
-    :deep(a){
+    :deep(a) {
       display: inline-block;
       font-size: 1.4rem;
 

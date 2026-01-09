@@ -1,6 +1,11 @@
 <template>
   <div class="form__row radio">
-    <input type="radio" class="radio__input" :name="name">
+    <input
+        type="radio"
+        class="radio__input"
+        :name="name"
+        :checked="checked"
+    >
     <div class="radio__icon"></div>
     <label class="radio__label">
       <span class="radio__label-title" v-html="title"></span>
@@ -10,14 +15,14 @@
 </template>
 
 <script setup lang="ts">
-withDefaults( defineProps<{
+withDefaults(defineProps<{
   checked?: boolean,
   name: string
   title: string,
   text?: string
 }>(), {
   checked: false
-} )
+})
 </script>
 
 <style scoped lang="scss">
@@ -82,7 +87,7 @@ withDefaults( defineProps<{
 .radio__label-text {
   display: block;
   font-size: var(--fz-secondary);
-  color: rgba(0,0,0,.29);
+  color: rgba(0, 0, 0, .29);
   margin-top: .5rem;
   line-height: normal;
   text-decoration: underline;

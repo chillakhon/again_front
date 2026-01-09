@@ -1,5 +1,8 @@
-import {defineStore, skipHydrate} from 'pinia';
-import {v4 as uuidv4} from 'uuid';
+import { defineStore, skipHydrate } from 'pinia';
+import { v4 as uuidv4 } from 'uuid';
+import { GIFT_CERTIFICATE } from "~/constants/index.js";
+import { useGiftCardPaymentStore } from './giftCardPayment';
+import { useGiftCardPurchaseStore } from './giftCardPurchase';
 
 export const useCartStore = defineStore('cartStore', () => {
     const quantity = ref(0);
@@ -14,8 +17,20 @@ export const useCartStore = defineStore('cartStore', () => {
     const promoMessage = ref('');
     const promoClass = ref('');
     const promoType = ref('');
-    const promoDiscount = ref(0); // Скидка только от промокода
-    const regularDiscount = ref(0); // Скидка только от товаров
+    const promoDiscount = ref(0);
+    const regularDiscount = ref(0);
+
+    // ========================================
+    // COMPUTED
+    // ========================================
+
+    const hasGiftCertificateInCart = computed(() => {
+        return cart.value.some(item => item.name === GIFT_CERTIFICATE);
+    });
+
+    // ========================================
+    // МЕТОДЫ
+    // ========================================
 
     const init = () => {
         countInCart();
@@ -34,7 +49,6 @@ export const useCartStore = defineStore('cartStore', () => {
             if (variant) {
                 item = cart.value.find((item) => item.id === product.product_variant_id);
             }
-
             if (color) {
                 item = cart.value.find((item) => item.id === product.product_variant_id);
             }
@@ -58,13 +72,43 @@ export const useCartStore = defineStore('cartStore', () => {
 
         countCartTotal();
         countInCart();
+
+        // 🔧 ОБНОВЛЕНО: Используем giftCardPaymentStore
+        if (product.name === GIFT_CERTIFICATE) {
+            const giftCardPaymentStore = useGiftCardPaymentStore();
+            if (giftCardPaymentStore.giftCardCode) {
+                giftCardPaymentStore.removeGiftCard();
+                giftCardPaymentStore.giftCardMessage = 'Подарочную карту нельзя использовать для оплаты сертификатов. Карта удалена.';
+                giftCardPaymentStore.giftCardClass = 'warning';
+
+                setTimeout(() => {
+                    giftCardPaymentStore.giftCardMessage = '';
+                    giftCardPaymentStore.giftCardClass = '';
+                }, 5000);
+            }
+        }
     }
 
     const removeFromCart = async (itemKey) => {
         const item = cart.value.find((item) => item.item_key === itemKey);
 
         if (item) {
-            cart.value = cart.value.filter((item) => item.item_key !== itemKey)
+            cart.value = cart.value.filter((item) => item.item_key !== itemKey);
+
+            // 🔧 ОБНОВЛЕНО: Используем giftCardPaymentStore
+            const giftCardPaymentStore = useGiftCardPaymentStore();
+            if (giftCardPaymentStore.giftCardCode) {
+                giftCardPaymentStore.calculateGiftCardAmount(total.value);
+
+                const hasOnlyGiftCertificate = cart.value.length > 0 &&
+                    cart.value.every(item => item.name === GIFT_CERTIFICATE);
+
+                if (hasOnlyGiftCertificate) {
+                    giftCardPaymentStore.removeGiftCard();
+                    giftCardPaymentStore.giftCardMessage = 'Подарочную карту нельзя использовать для оплаты сертификатов';
+                    giftCardPaymentStore.giftCardClass = 'warning';
+                }
+            }
 
             countInCart();
             countCartTotal();
@@ -78,7 +122,6 @@ export const useCartStore = defineStore('cartStore', () => {
 
     const countInCart = () => {
         quantity.value = 0;
-
         cart.value.forEach((item) => {
             quantity.value += item.quantity ? item.quantity : 1;
         });
@@ -94,9 +137,7 @@ export const useCartStore = defineStore('cartStore', () => {
         cart.value.forEach((item) => {
             const qty = item.quantity ?? 1;
 
-            // Если есть данные с промокодом, используем их
             if (item.promo_code_applied && item.final_price) {
-
                 const finalPrice = parseFloat(item.final_price);
                 const originalPrice = parseFloat(item.original_price || item.old_price || item.price);
                 const priceAfterDiscount = parseFloat(item.price_after_discount || item.price);
@@ -104,22 +145,24 @@ export const useCartStore = defineStore('cartStore', () => {
                 total.value += qty * finalPrice;
                 subtotal.value += qty * originalPrice;
 
-                // Считаем скидку от товара (до промокода)
                 const itemRegularDiscount = originalPrice - priceAfterDiscount;
                 regularDiscount.value += qty * itemRegularDiscount;
 
-                // Считаем скидку от промокода
                 const itemPromoDiscount = item.savings?.promo_savings || 0;
                 promoDiscount.value += qty * itemPromoDiscount;
 
-                // Общая скидка
                 sale.value += qty * (originalPrice - finalPrice);
             } else {
+                let unitPrice = 0;
+                let unitOldPrice = 0;
 
-                // Обычный расчет без промокода
-                const unitPrice = parseFloat(item.price ?? 0);
-                const unitOldPrice = item.old_price ? parseFloat(item.old_price) : unitPrice;
-
+                if (item.selected_variant) {
+                    unitPrice = item.selected_variant.price;
+                    unitOldPrice = item.selected_variant.old_price ?? item.selected_variant.price;
+                } else {
+                    unitPrice = item.price;
+                    unitOldPrice = item.old_price ?? item.price;
+                }
 
                 total.value += qty * unitPrice;
                 subtotal.value += qty * unitOldPrice;
@@ -156,7 +199,6 @@ export const useCartStore = defineStore('cartStore', () => {
         const item = cart.value.find((item) => item.item_key === itemKey);
         if (item) {
             item.quantity = quantity;
-
             countInCart();
             countCartTotal();
         }
@@ -164,14 +206,17 @@ export const useCartStore = defineStore('cartStore', () => {
 
     const getCartForCheckout = () => {
         const items = [];
+
         cart.value.forEach((item) => {
+            const price = item.selected_variant?.price ?? item.price;
+
             items.push({
                 product_id: item.id,
                 product_variant_id: item.product_variant_id,
                 color_id: item.color_id,
                 quantity: item.quantity,
-                price: item.final_price || item.price // Используем финальную цену с промокодом
-            })
+                price: price
+            });
         });
 
         return items;
@@ -186,18 +231,24 @@ export const useCartStore = defineStore('cartStore', () => {
         promoDiscount.value = 0;
         regularDiscount.value = 0;
 
-        // Очищаем промокод
         promoCode.value = '';
         promoData.value = null;
         promoMessage.value = '';
         promoClass.value = '';
         promoType.value = '';
 
-        localStorage.removeItem('promoCode')
+        // 🔧 ОБНОВЛЕНО: Очищаем через stores
+        const giftCardPaymentStore = useGiftCardPaymentStore();
+        const giftCardPurchaseStore = useGiftCardPurchaseStore();
+
+        giftCardPaymentStore.reset();
+        giftCardPurchaseStore.reset();
+
+        localStorage.removeItem('promoCode');
     }
 
     const applyPromoToCart = (responseData) => {
-        const {promo_code, applicable_products, not_applicable_products, message} = responseData;
+        const { promo_code, applicable_products, not_applicable_products, message } = responseData;
 
         if (!promo_code || !applicable_products) {
             console.error('Invalid promo data');
@@ -206,7 +257,6 @@ export const useCartStore = defineStore('cartStore', () => {
 
         promoCode.value = promo_code.code;
         promoData.value = promo_code;
-
 
         switch (promo_code.discount_behavior) {
             case 'replace':
@@ -222,9 +272,6 @@ export const useCartStore = defineStore('cartStore', () => {
                 promoMessage.value = message || 'Промокод применен';
         }
 
-        // promoMessage.value =  message;
-
-        // Определяем тип сообщения
         if (not_applicable_products && not_applicable_products.length > 0) {
             promoType.value = 'warning';
             promoClass.value = 'warning';
@@ -234,12 +281,7 @@ export const useCartStore = defineStore('cartStore', () => {
             promoClass.value = 'success';
         }
 
-        // Обновляем товары в корзине
-        let appliedCount = 0;
-        let notAppliedCount = 0;
-
         cart.value.forEach((item) => {
-            // Ищем этот товар в applicable_products
             const foundApplicable = applicable_products.find(
                 (product) =>
                     (product.product_id === item.id && !product.variant_id && !item.product_variant_id) ||
@@ -247,9 +289,7 @@ export const useCartStore = defineStore('cartStore', () => {
                     (product.product_id === item.id && product.variant_id === item.selected_variant?.id)
             );
 
-
             if (foundApplicable) {
-                // Применяем данные с промокодом
                 item.price = parseFloat(foundApplicable.final_price);
                 item.final_price = parseFloat(foundApplicable.final_price);
                 item.original_price = parseFloat(foundApplicable.original_price);
@@ -259,9 +299,7 @@ export const useCartStore = defineStore('cartStore', () => {
                 item.promo_code_info = foundApplicable.promo_code_info;
                 item.promo_code_applied = foundApplicable.promo_code_applied;
                 item.discount = foundApplicable.discount;
-                appliedCount++;
             } else {
-                // Ищем в not_applicable_products
                 const foundNotApplicable = not_applicable_products?.find(
                     (product) =>
                         (product.product_id === item.id && !product.variant_id && !item.product_variant_id) ||
@@ -270,7 +308,6 @@ export const useCartStore = defineStore('cartStore', () => {
                 );
 
                 if (foundNotApplicable) {
-                    // Обновляем данные без промокода
                     item.final_price = parseFloat(foundNotApplicable.final_price);
                     item.original_price = parseFloat(foundNotApplicable.original_price);
                     item.old_price = parseFloat(foundNotApplicable.old_price || foundNotApplicable.original_price);
@@ -279,27 +316,19 @@ export const useCartStore = defineStore('cartStore', () => {
                     item.promo_code_applied = false;
                     item.promo_code_info = null;
                     item.discount = foundNotApplicable.discount;
-                    notAppliedCount++;
                 }
             }
         });
 
         countCartTotal();
-
         return true;
     };
 
-    /**
-     * Удалить промокод из корзины
-     */
     const removePromoFromCart = () => {
-        // Очищаем данные промокода из товаров
-
         localStorage.removeItem('promoCode');
 
         cart.value.forEach((item) => {
             if (item.promo_code_applied) {
-                // Возвращаем цену после скидки товара (без промокода)
                 item.final_price = item.price_after_discount || item.price;
                 item.price = item.price_after_discount || item.price;
                 delete item.promo_code_info;
@@ -308,20 +337,15 @@ export const useCartStore = defineStore('cartStore', () => {
             }
         });
 
-        // Очищаем данные промокода
         promoCode.value = '';
         promoData.value = null;
         promoMessage.value = '';
         promoClass.value = '';
         promoType.value = '';
 
-        // Пересчитываем
         countCartTotal();
     };
 
-    /**
-     * Получить информацию о товаре (для отображения)
-     */
     const getItemInfo = (item) => {
         return {
             hasPromo: item.promo_code_applied || false,
@@ -331,6 +355,12 @@ export const useCartStore = defineStore('cartStore', () => {
             savings: item.savings || null,
             promoInfo: item.promo_code_info || null
         };
+    };
+
+    // 🔧 НОВОЕ: Метод для получения итога с учётом карты
+    const getFinalTotal = () => {
+        const giftCardPaymentStore = useGiftCardPaymentStore();
+        return giftCardPaymentStore.getFinalTotal(total.value);
     };
 
     return {
@@ -356,6 +386,8 @@ export const useCartStore = defineStore('cartStore', () => {
         promoMessage,
         promoType,
         promoDiscount,
-        regularDiscount
+        regularDiscount,
+        hasGiftCertificateInCart,
+        getFinalTotal
     }
-})
+});
