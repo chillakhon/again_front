@@ -4,13 +4,25 @@
     <div class="form__inputs">
       <template v-for="( item, key ) in form" :key="key">
         <component
-            v-if="item.template"
+            v-if="key !== 'phone' && item.template"
             :is="item.template"
             :name="key"
             :placeholder="item.placeholder"
             :error="item.error"
             row-class="_18"
             v-model="item.value"
+        />
+
+        <!-- Телефон с выбором страны -->
+        <FormPhoneWithCountry
+            v-else-if="countries"
+            :countries="countries.countries"
+            :default-country-id="0"
+            :placeholder="item.placeholder"
+            v-model="item.value"
+            :error="item.error"
+            row-class="_18"
+            @country-changed="handleCountryChange"
         />
       </template>
     </div>
@@ -31,10 +43,14 @@
 </template>
 
 <script setup lang="ts">
-import {FormInput, FormPhone, FormTextarea, ModalsSuccess} from "#components";
-import {useFormValidator} from "~/composables/useFormValidator";
+import { FormInput, FormPhoneWithCountry, FormTextarea, ModalsSuccess } from "#components";
+import { useFormValidator } from "~/composables/useFormValidator";
+import type { Countries, Country } from "~/types/countries";
 
-const form = ref( {
+// Загружаем страны
+const { data: countries } = await useApi<Countries>('/countries');
+
+const form = ref({
   name: {
     template: FormInput,
     value: '',
@@ -48,7 +64,7 @@ const form = ref( {
     error: ''
   },
   phone: {
-    template: FormPhone,
+    template: FormPhoneWithCountry,
     value: '',
     placeholder: 'Введите ваш номер телефона',
     error: '',
@@ -62,24 +78,44 @@ const form = ref( {
     placeholder: 'Задайте свой вопрос',
     error: ''
   }
-} );
+});
 
-const isChecked = ref( false );
-const isButtonDisabled = ref( true );
+const selectedCountry = ref<Country | null>(null);
+const isChecked = ref(false);
+const isButtonDisabled = ref(true);
 
-watch( ( isChecked ), ( oldValue, newValue ) => {
+watch((isChecked), (oldValue, newValue) => {
   isButtonDisabled.value = newValue;
-} )
+});
 
 const modal = useModal();
 
+const handleCountryChange = (country: Country) => {
+  selectedCountry.value = country;
+};
+
 const send = async () => {
-  const { isFormError, validateForm, resetErrors, resetForm } = useFormValidator( form );
+  const { isFormError, validateForm, resetErrors, resetForm } = useFormValidator(form);
   resetErrors();
   validateForm();
 
-  if ( isFormError.value ) {
+  if (isFormError.value) {
     return;
+  }
+
+  // Валидация длины телефона
+  if (selectedCountry.value) {
+    const { validatePhoneLength } = usePhoneMask();
+    const isPhoneValid = validatePhoneLength(
+        form.value.phone.value,
+        selectedCountry.value.phone_code,
+        selectedCountry.value.phone_length
+    );
+
+    if (!isPhoneValid) {
+      form.value.phone.error = `Номер должен содержать ${selectedCountry.value.phone_length} цифр`;
+      return;
+    }
   }
 
   const { data, status, error } = await useApi('/contact-requests', {
@@ -89,24 +125,24 @@ const send = async () => {
       phone: form.value.phone.value,
       message: form.value.message.value,
     }
-  }, 'contact', 'POST' );
+  }, 'contact', 'POST');
 
-  if ( status.value === 'error' && error?.value?.data?.errors ){
-    for ( const item in error.value.data.errors ){
-      if ( form.value[ item ] ){
-        form.value[ item ].error = error.value.data.errors[ item ][0];
+  if (status.value === 'error' && error?.value?.data?.errors) {
+    for (const item in error.value.data.errors) {
+      if (form.value[item]) {
+        form.value[item].error = error.value.data.errors[item][0];
       }
     }
   } else {
-    modal.openModal( ModalsSuccess, {
+    modal.openModal(ModalsSuccess, {
       title: 'Спасибо!',
       text: 'Ваша заявка отправлена'
-    } )
+    });
 
     resetErrors();
     resetForm();
   }
-}
+};
 </script>
 
 <style scoped lang="scss">

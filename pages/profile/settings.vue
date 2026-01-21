@@ -1,13 +1,27 @@
 <template>
   <div class="profile-settings__form form">
     <template v-for="( item, key ) in form" :key="key">
-      <component :is="item.template"
-        :name="key"
-        :placeholder="item.placeholder"
-         v-model="item.value"
-         :error="item.error"
+      <component
+          v-if="key !== 'phone'"
+          :is="item.template"
+          :name="key"
+          :placeholder="item.placeholder"
+          v-model="item.value"
+          :error="item.error"
+      />
+
+      <!-- Телефон с выбором страны -->
+      <FormPhoneWithCountry
+          v-else-if="countries"
+          :countries="countries.countries"
+          :default-country-id="userPhoneCountryId"
+          :placeholder="item.placeholder"
+          v-model="item.value"
+          :error="item.error"
+          @country-changed="handleCountryChange"
       />
     </template>
+
     <div class="form__button">
       <button
           class="profile-settings__form-btn btn _border _loader"
@@ -28,20 +42,24 @@
 </template>
 
 <script setup lang="ts">
-import {FormDatepicker, FormInput, ModalsSuccess} from "#components";
-import {useFormValidator} from "~/composables/useFormValidator";
+import { FormDatepicker, FormInput, FormPhoneWithCountry, ModalsSuccess } from "#components";
+import { useFormValidator } from "~/composables/useFormValidator";
+import type { Countries, Country } from "~/types/countries";
 
 definePageMeta({
   layout: 'profile',
   title: 'Контактные данные',
   middleware: 'auth',
-} );
+});
+
+// Загружаем страны
+const { data: countries } = await useApi<Countries>('/countries');
 
 const modal = useModal();
 const authStore = useAuthStore();
 const { user } = authStore;
 
-const form = ref( {
+const form = ref({
   first_name: {
     template: FormInput,
     value: '',
@@ -70,8 +88,7 @@ const form = ref( {
     }
   },
   phone: {
-    template: FormInput,
-    type: 'tel',
+    template: FormPhoneWithCountry,
     value: '',
     placeholder: 'Телефон',
     error: '',
@@ -89,32 +106,72 @@ const form = ref( {
       required: true
     }
   },
-} );
+});
 
-onMounted( () => {
+// Определяем страну пользователя
+const userPhoneCountryId = ref(0);
+const selectedCountry = ref<Country | null>(null);
+
+onMounted(() => {
   form.value.first_name.value = user?.profile?.first_name || '';
   form.value.last_name.value = user?.profile?.last_name || '';
   form.value.birthday.value = user?.profile?.birthday || '';
-  form.value.phone.value = user?.profile?.phone || '';
   form.value.email.value = user.email;
-} );
-//
-const isLoading = ref( false );
 
-const isChecked = ref( false );
-const isButtonDisabled = ref( true );
+  // Определяем страну по номеру телефона
+  if (user?.profile?.phone && countries.value?.countries) {
+    const phoneCode = user.profile.phone.match(/^\+\d+/)?.[0];
+    if (phoneCode) {
+      const foundCountry = countries.value.countries.find(c => c.phone_code === phoneCode);
+      if (foundCountry) {
+        userPhoneCountryId.value = foundCountry.id;
+        selectedCountry.value = foundCountry;
 
-watch( ( isChecked ), ( oldValue, newValue ) => {
+        // Убираем код страны из номера для отображения
+        const phoneWithoutCode = user.profile.phone.replace(phoneCode, '').trim();
+        form.value.phone.value = phoneCode + ' ' + phoneWithoutCode;
+      }
+    } else {
+      // Если код не найден, используем номер как есть
+      form.value.phone.value = user.profile.phone;
+    }
+  }
+});
+
+const isLoading = ref(false);
+const isChecked = ref(false);
+const isButtonDisabled = ref(true);
+
+watch((isChecked), (oldValue, newValue) => {
   isButtonDisabled.value = newValue;
-} )
+});
+
+const handleCountryChange = (country: Country) => {
+  selectedCountry.value = country;
+};
 
 const save = async () => {
-  const { isFormError, validateForm, resetErrors } = useFormValidator( form );
+  const { isFormError, validateForm, resetErrors } = useFormValidator(form);
   resetErrors();
   validateForm();
 
-  if ( isFormError.value ) {
+  if (isFormError.value) {
     return;
+  }
+
+  // Валидация длины телефона
+  if (selectedCountry.value) {
+    const { validatePhoneLength } = usePhoneMask();
+    const isPhoneValid = validatePhoneLength(
+        form.value.phone.value,
+        selectedCountry.value.phone_code,
+        selectedCountry.value.phone_length
+    );
+
+    if (!isPhoneValid) {
+      form.value.phone.error = `Номер должен содержать ${selectedCountry.value.phone_length} цифр`;
+      return;
+    }
   }
 
   isLoading.value = true;
@@ -124,26 +181,26 @@ const save = async () => {
       last_name: form.value.last_name.value,
       phone: form.value.phone.value,
       email: form.value.email.value,
-      birthday: getDateFormat().formatDateOutput( form.value.birthday.value )
+      birthday: getDateFormat().formatDateOutput(form.value.birthday.value)
     }
-  }, '', 'PUT' );
+  }, '', 'PUT');
 
-  if ( status.value === 'error' && error?.value?.data?.errors ){
-    for ( const item in error.value.data.errors ){
-      if ( form.value[ item ] ){
-        form.value[ item ].error = error.value.data.errors[ item ][0];
+  if (status.value === 'error' && error?.value?.data?.errors) {
+    for (const item in error.value.data.errors) {
+      if (form.value[item]) {
+        form.value[item].error = error.value.data.errors[item][0];
       }
     }
   } else {
-    authStore.updateProfile( form );
-    modal.openModal( ModalsSuccess, {
+    authStore.updateProfile(form);
+    modal.openModal(ModalsSuccess, {
       title: 'Спасибо!',
       text: 'Ваш профиль обновлен'
-    } )
+    });
   }
 
   isLoading.value = false;
-}
+};
 </script>
 
 <style scoped lang="scss">
@@ -174,5 +231,4 @@ const save = async () => {
 .profile-settings__form-policy {
   margin-top: 2rem;
 }
-
 </style>

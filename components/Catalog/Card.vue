@@ -41,19 +41,6 @@
             </svg>
             <span>{{ product.avg_rating }}</span>
           </div>
-          <ClientOnly>
-            <button
-                class="catalog-item__fav add-to-fav"
-                :class="{ '_active': isFavourite }"
-                @click="favouritesStore.toggleFavourites( product )"
-            >
-              <svg width="22" height="20" viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path
-                    d="M11.62 18.8101C11.28 18.9301 10.72 18.9301 10.38 18.8101C7.48 17.8201 1 13.6901 1 6.6901C1 3.6001 3.49 1.1001 6.56 1.1001C8.38 1.1001 9.99 1.9801 11 3.3401C12.01 1.9801 13.63 1.1001 15.44 1.1001C18.51 1.1001 21 3.6001 21 6.6901C21 13.6901 14.52 17.8201 11.62 18.8101Z"
-                    stroke="#4F4F4F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </button>
-          </ClientOnly>
 
           <!-- Mobile swipe indicators (bars) -->
           <div class="catalog-item__swipe-indicators" v-if="isMobile && displayedImages.length > 1">
@@ -76,6 +63,22 @@
           </div>
         </div>
       </NuxtLink>
+
+
+      <ClientOnly>
+        <button
+            :key="`fav-${product.id}-${favouritesStore.favourites.length}`"
+            class="catalog-item__fav add-to-fav"
+            :class="{ '_active': isFavourite }"
+            @click="favouritesStore.toggleFavourites( product )"
+        >
+          <svg width="22" height="20" viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M11.62 18.8101C11.28 18.9301 10.72 18.9301 10.38 18.8101C7.48 17.8201 1 13.6901 1 6.6901C1 3.6001 3.49 1.1001 6.56 1.1001C8.38 1.1001 9.99 1.9801 11 3.3401C12.01 1.9801 13.63 1.1001 15.44 1.1001C18.51 1.1001 21 3.6001 21 6.6901C21 13.6901 14.52 17.8201 11.62 18.8101Z"
+                stroke="#4F4F4F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </ClientOnly>
 
       <div class="catalog-item__content">
         <div class="catalog-item__header">
@@ -350,6 +353,9 @@ onMounted(() => {
       border-radius: 2rem;
       overflow: hidden;
       position: relative;
+      @media (min-width: $tablet + 1px) {
+        aspect-ratio: 3/4; // Только для десктопа
+      }
     }
 
     &-img {
@@ -457,8 +463,7 @@ onMounted(() => {
 
   &__sale {
     position: absolute;
-    top: 1rem;
-    left: 1rem;
+
     border-radius: 50%;
     display: flex;
     flex-direction: column;
@@ -466,12 +471,32 @@ onMounted(() => {
     align-items: center;
     min-width: 7rem;
     min-height: 7rem;
-    background: var(--fg-white);
     font-size: 1.3rem;
+    top: 1rem;
+    left: 1rem;
+
+    background: var(--fg-white);
     text-align: center;
     background: var(--fg-red);
     color: var(--fg-white);
     z-index: 4;
+
+
+    @media (max-width: $mobile) {
+      min-width: 4rem;    // Уменьшаем с 7rem до 5rem
+      min-height: 4rem;   // Уменьшаем с 7rem до 5rem
+      font-size: 1rem;    // Уменьшаем шрифт с 1.3rem до 1rem
+      top: 0.8rem;        // Немного корректируем отступ
+      left: 0.8rem;
+    }
+    @media (max-width: $tablet) {
+      min-width: 5rem;    // Уменьшаем с 7rem до 5rem
+      min-height: 5rem;   // Уменьшаем с 7rem до 5rem
+      font-size: 1rem;    // Уменьшаем шрифт с 1.3rem до 1rem
+      top: 0.8rem;        // Немного корректируем отступ
+      left: 0.8rem;
+    }
+
   }
 
   &__fav {
@@ -538,18 +563,33 @@ onMounted(() => {
 
   &__header {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: .5rem;
+    //align-items: center;
+    align-items: flex-start;
+    //justify-content: space-between;
+    flex-direction: column; // Переносим сюда!
+
+    //margin-bottom: .5rem;
+    gap: 0.5rem;
+
+    //@media (max-width: $mobile) {
+    //  flex-direction: column; // Переносим сюда!
+    //  align-items: flex-start;
+    //  gap: 0.5rem;
+    //}
+    //@media (max-width: $tablet) {
+    //  flex-direction: column; // Переносим сюда!
+    //  align-items: flex-start;
+    //  gap: 0.5rem;
+    //}
+
   }
 
   &__title {
     font-size: 1.8rem;
     font-weight: 300;
     color: #000;
-
     @media (max-width: $mobile) {
-      font-size: 1.6rem;
+      font-size: 1.6rem; // Оставляем только размер шрифта
     }
   }
 
@@ -558,7 +598,14 @@ onMounted(() => {
     align-items: flex-end;
     color: var(--fg-black);
     min-width: fit-content;
-    margin-left: 1.5rem;
+    //margin-left: 1.5rem;
+    margin-left: 0;
+    //@media (max-width: $mobile) {
+    //  margin-left: 0; // Убираем отступ слева
+    //}
+    //@media (max-width: $tablet) {
+    //  margin-left: 0; // Убираем отступ слева
+    //}
 
     &-new {
       font-size: 1.8rem;
@@ -566,6 +613,7 @@ onMounted(() => {
 
       @media (max-width: $mobile) {
         font-size: 1.4rem;
+
       }
     }
 

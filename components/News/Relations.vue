@@ -31,9 +31,11 @@
         >
           <swiper-slide v-for="(item, index) in list" :key="index">
             <NewsCard
-              :title="item.title"
-              :slug="item.slug"
-              :text="item.text.short"
+                :title="item.title"
+                :text="item.text.short"
+                :slug="item.slug"
+                :banner="item.banner"
+                :date="item.date"
             />
           </swiper-slide>
         </swiper-container>

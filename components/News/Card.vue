@@ -3,11 +3,16 @@
     <div class="news-item__card">
       <div class="news-item__media">
         <picture class="news-item__media-pic">
-          <img src="/img/news.again/item-1.jpg" class="news-item__media-img" alt="">
+          <img
+              :src="banner"
+              class="news-item__media-img"
+              :alt="title"
+              loading="lazy"
+          >
         </picture>
       </div>
       <div class="news-item__content">
-        <div class="news-item__date">1 января 2021</div>
+        <div class="news-item__date">{{ date }}</div>
         <NuxtLink :to="to" class="news-item__title fz-h3">{{ title }}</NuxtLink>
         <p class="news-item__text">
           {{ text }}
@@ -25,19 +30,21 @@
 
 <script setup lang="ts">
 const props = defineProps<{
-  title: string,
-  text: string,
-  slug: string
+  title: string;
+  text: string;
+  slug: string;
+  banner: string;
+  date: string;
 }>();
 
-const to = computed( () => {
+const to = computed(() => {
   return {
     name: 'articles-slug',
     params: {
       slug: props.slug
     }
   }
-} )
+});
 </script>
 
 <style scoped lang="scss">

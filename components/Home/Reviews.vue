@@ -49,6 +49,7 @@
                 :content="review.content"
                 :user-name="review?.client?.name"
                 :date="review.created_at"
+                :review="review"
             />
           </swiper-slide>
         </swiper-container>
@@ -193,6 +194,16 @@ const reviewsList = computed( () => {
 
 .reviews swiper-slide {
   height: auto;
+  display: flex;
+
+}
+
+
+
+.reviews swiper-slide .product-reviews__item {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 </style>

@@ -38,8 +38,11 @@
             <p>Наши изделия не имеют запаха, не вызывают чувство «прения» и не создают парникового эффекта, обеспечивая максимально комфортную носку в течение дня.</p>
           </div>
         </div>
-
       </div>
+
+      <!-- Товары после буллетов -->
+      <CatalogGrid v-if="products" :list="products.data" class="technology__products" />
+
       <div class="technology__flex">
         <div class="technology__content">
           <h2 class="technology__content-title">Технология белья&nbsp;AGAIN</h2>
@@ -62,7 +65,18 @@
 </template>
 
 <script setup lang="ts">
+import type {Product} from "~/types/catalog";
 
+const {data: products} = await useApi<{
+  data: Product[]
+}>('/public/catalog/products', {
+  query: {
+    per_page: 4,
+    in_stock: 1,
+    sort_by: 'display_order',
+    sort_order: 'asc',
+  }
+})
 </script>
 
 <style scoped lang="scss">
@@ -71,6 +85,14 @@
 
   @media (max-width: $mobile) {
     padding: 1.6rem 0 2.5rem;
+  }
+}
+
+.technology__products {
+  margin-top: 5rem;
+
+  @media (max-width: $mobile) {
+    margin-top: 3rem;
   }
 }
 
@@ -196,5 +218,4 @@
     margin-bottom: 1.8rem;
   }
 }
-
 </style>

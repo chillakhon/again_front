@@ -9,4 +9,8 @@ export interface Review {
         name: string;
     },
 
+
+    likes_count: number;
+    is_liked: boolean;
+
 }

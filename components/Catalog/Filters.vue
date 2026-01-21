@@ -28,14 +28,6 @@
         </div>
         <div class="filter__row">
 
-
-          <!--          <FilterBlock title="Новинки:">-->
-          <!--            <FilterIsNew-->
-          <!--                ref="isNewRef"-->
-          <!--                @select-is-new="emitIsNew"-->
-          <!--            />-->
-          <!--          </FilterBlock>-->
-
           <FilterBlock title="Цены:">
             <FilterPrice @select-prices="emitPrices"/>
           </FilterBlock>
@@ -158,7 +150,9 @@ const hasActiveFilters = computed(() => {
 
 
 const emitSubmitFilter = () => {
-  toggleTabletFilter()
+
+  isActive.value = false
+  lockUnlockBody().unlock() // Явно разблокируем
 
   emit('filterClick', {
     color: color.value,
@@ -184,7 +178,10 @@ const emitResetFilter = () => {
   fitType.value = null
   isNew.value = false
 
-  toggleTabletFilter()
+
+  isActive.value = false
+  lockUnlockBody().unlock() // Явно разблокируем
+
   emit('resetClick')
 }
 </script>

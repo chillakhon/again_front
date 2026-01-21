@@ -5,6 +5,7 @@
       :name="name"
       id=""
       :placeholder="placeholder"
+      :maxlength="maxlength"
       @input="handleInput($event)"
       v-model="model"
   ></textarea>
@@ -15,6 +16,7 @@
 defineProps<{
   name: string,
   placeholder?: string
+  maxlength?: number
 }>();
 
 const model = defineModel<string>();

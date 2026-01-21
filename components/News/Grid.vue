@@ -1,18 +1,22 @@
 <template>
   <div class="news__grid">
     <NewsCard
-        v-for="( item, key ) in list"
+        v-for="(item, key) in list"
         :key="key"
         :title="item.title"
         :text="item.text.short"
         :slug="item.slug"
+        :banner="item.banner"
+        :date="item.date"
     />
   </div>
 </template>
 
 <script setup lang="ts">
+import type { BlogArticle } from '~/types/blog';
+
 defineProps<{
-  list: string[]
+  list: BlogArticle[];
 }>();
 </script>
 

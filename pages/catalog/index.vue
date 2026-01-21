@@ -68,7 +68,7 @@ const {data: products, refresh} = await useAsyncData(
     async () => {
       // формируем query параметры
       const query = {
-        per_page: 9,
+        per_page: 12,
         page: page.value,
 
         category_id: route.query.category_id || "",

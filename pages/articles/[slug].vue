@@ -3,8 +3,17 @@
   <div class="news-article">
     <div class="news-article__container container">
       <div class="news-article__block">
-        <h1 class="news-article__title fz-h2">{{ post.title }}</h1>
-        <div class="news-article__content text__content" v-html="post.text.full"></div>
+        <div class="news-article__banner">
+          <img
+              :src="post?.banner"
+              :alt="post?.title"
+              class="news-article__banner-img"
+              loading="eager"
+          />
+        </div>
+        <div class="news-article__date">{{ post?.date }}</div>
+        <h1 class="news-article__title fz-h2">{{ post?.title }}</h1>
+        <div class="news-article__content text__content" v-html="post?.text.full"></div>
       </div>
     </div>
   </div>
@@ -14,7 +23,15 @@
 
 <script setup lang="ts">
 const route = useRoute();
-const post = blogQuery().getBySlug( route.params.slug );
+const post = blogQuery().getBySlug(route.params.slug as string);
+
+// Если статья не найдена, редирект на 404
+if (!post) {
+  throw createError({
+    statusCode: 404,
+    message: 'Статья не найдена'
+  });
+}
 </script>
 
 <style scoped lang="scss">
@@ -25,6 +42,38 @@ const post = blogQuery().getBySlug( route.params.slug );
 
   @media (max-width: $mobile) {
     padding: 1.7rem 1.5rem 2rem;
+  }
+}
+
+.news-article__banner {
+  margin: 0 0 2rem;
+  width: 100%;
+  max-height: 50rem;
+  overflow: hidden;
+  border-radius: .8rem;
+
+  @media (max-width: $mobile) {
+    margin: 0 0 1.5rem;
+    max-height: 30rem;
+  }
+}
+
+.news-article__banner-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.news-article__date {
+  font-size: var(--fz-secondary);
+  line-height: 140%;
+  margin-bottom: 1rem;
+  color: var(--fg-black);
+  opacity: .3;
+
+  @media (max-width: $mobile) {
+    margin-bottom: .8rem;
   }
 }
 
@@ -62,6 +111,17 @@ const post = blogQuery().getBySlug( route.params.slug );
     }
   }
 
+  & img {
+    width: 100%;
+    height: auto;
+    margin: 3rem 0;
+    border-radius: .8rem;
+
+    @media (max-width: $mobile) {
+      margin: 2rem 0;
+    }
+  }
+
   & ol li {
     list-style-position: outside;
   }
@@ -84,6 +144,22 @@ const post = blogQuery().getBySlug( route.params.slug );
       margin-bottom: 0;
     }
   }
+
+  & a {
+    color: var(--fg-red);
+    text-decoration: underline;
+    transition: var(--tr-regular);
+
+    @media(any-hover: hover) {
+      &:hover {
+        color: var(--bg-button-primary-hover);
+      }
+    }
+  }
+
+  & strong {
+    font-weight: 700;
+  }
 }
 
 .text__content ol li {
@@ -93,5 +169,4 @@ const post = blogQuery().getBySlug( route.params.slug );
 .news__related {
   padding-bottom: 7rem;
 }
-
 </style>

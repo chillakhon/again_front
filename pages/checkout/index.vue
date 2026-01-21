@@ -30,6 +30,7 @@
                   v-model:notes="form.value.notes"
               />
               <CheckoutRecipient
+                  ref="recipientRef"
                   v-model:first-name="form.value.user.first_name"
                   v-model:last-name="form.value.user.last_name"
                   v-model:phone="form.value.user.phone"
@@ -75,6 +76,7 @@ import {useCartStore} from '~/stores/cart';
 import {useAuthStore} from '~/stores/auth';
 import {useGiftCardPaymentStore} from '~/stores/giftCardPayment';
 import {useGiftCardPurchaseStore} from '~/stores/giftCardPurchase';
+import type {Country} from "~/types/countries";
 
 const cartStore = useCartStore();
 const userStore = useAuthStore();
@@ -82,6 +84,10 @@ const giftCardPaymentStore = useGiftCardPaymentStore();
 const giftCardPurchaseStore = useGiftCardPurchaseStore();
 const isLoading = ref(false);
 const giftCardDataRef = ref(null);
+
+const recipientRef = ref<{
+  selectedCountry: Country | null
+} | null>(null);
 
 const form = computed(() => {
   return ref({
@@ -100,6 +106,34 @@ const form = computed(() => {
     items: cartStore.getCartForCheckout()
   });
 });
+
+
+const validateRecipientPhone = () => {
+  const selectedCountry = recipientRef.value?.selectedCountry ?? null;
+
+  if (!selectedCountry || !form.value.value.user.phone) {
+    return true;
+  }
+
+  const { validatePhoneLength } = usePhoneMask();
+  const isPhoneValid = validatePhoneLength(
+      form.value.value.user.phone,
+      selectedCountry.phone_code,
+      selectedCountry.phone_length
+  );
+
+  if (!isPhoneValid) {
+    console.error(`Номер должен содержать ${selectedCountry.phone_length} цифр`);
+    recipientRef.value?.$el?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'center'
+    });
+    return false;
+  }
+
+  return true;
+};
+
 
 const submit = async () => {
   // Валидация данных сертификата (если есть в корзине)
@@ -120,6 +154,13 @@ const submit = async () => {
     }
   }
 
+
+  // Валидация телефона
+  if (!validateRecipientPhone()) {
+    return;
+  }
+
+
   isLoading.value = true;
 
   // Добавляем данные сертификата в запрос
@@ -135,7 +176,6 @@ const submit = async () => {
     );
   }
 
-  console.log(requestData);
 
 
   const {data, error} = await useApi('/orders', {
@@ -154,6 +194,10 @@ const submit = async () => {
     // TODO: Показать ошибку пользователю
   }
 }
+
+
+
+
 </script>
 
 <style scoped lang="scss">

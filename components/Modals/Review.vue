@@ -4,25 +4,20 @@
     <div class="modal-review__grid">
       <div class="modal-review__col">
         <ModalsReviewStars @set-stars="getStarSelected" />
-<!--        <FormInput-->
-<!--          row-class="_15"-->
-<!--          name="name"-->
-<!--          placeholder="Введите ваше имя*"-->
-<!--          v-model="form.name"-->
-<!--        />-->
-<!--        <FormInput-->
-<!--            row-class="_15"-->
-<!--            type="email"-->
-<!--            name="email"-->
-<!--            placeholder="Введите вашу email почту*"-->
-<!--            v-model="form.email"-->
-<!--        />-->
+
         <FormTextarea
             row-class="_15"
             name="comment"
             placeholder="Напишите отзыв*"
             v-model="form.message"
+            maxlength="200"
         />
+
+        <!-- Счётчик символов -->
+        <div class="modal-review__counter">
+          {{ form.message.length }} / 200
+        </div>
+
       </div>
     </div>
     <div class="modal-review__actions">
@@ -39,8 +34,6 @@
 import {ModalsSuccess} from "#components";
 
 const form = ref( {
-  // name: '',
-  // email: '',
   message: '',
   rating: 5
 } );
@@ -71,6 +64,15 @@ const submit = async () => {
 </script>
 
 <style scoped lang="scss">
+
+
+.modal-review__counter {
+  margin-top: 0.5rem;
+  font-size: 1.2rem;
+  color: #999;
+  text-align: right;
+}
+
 .modal-review__title {
   text-align: center;
   margin-bottom: 6.4rem;

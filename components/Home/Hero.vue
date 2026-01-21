@@ -26,20 +26,17 @@
         >
           <swiper-slide v-for="(slide, index) in slides" :key="index">
             <HeroSlide
-              :title="slide.title"
-              :subtitle="slide.subtitle"
-              :text="slide.text"
-              :image="{
-                original: slide?.image_urls?.original,
-                sm: slide?.image_urls?.sm
-              }"
+                :title="slide.title"
+                :subtitle="slide.subtitle"
+                :text="slide.text"
+                :desktop-image="slide?.image_urls"
+                :mobile-image="slide?.mobile_image_urls"
             />
           </swiper-slide>
         </swiper-container>
       </ClientOnly>
     </div>
   </section>
-
 </template>
 
 <script setup lang="ts">
@@ -54,8 +51,14 @@ type Slide = {
   title: string,
   subtitle: string,
   text: string,
-  image_urls: {
-    original: string,
+  image_urls?: {
+    original?: string,
+    lg?: string,
+    md?: string,
+    sm?: string
+  },
+  mobile_image_urls?: {
+    original?: string,
     sm?: string
   }
 }
@@ -81,5 +84,4 @@ const { data: slides } = await useApi<Slide[]>( '/get_slides' );
     margin-top: 1.8rem;
   }
 }
-
 </style>

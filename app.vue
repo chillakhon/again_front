@@ -12,6 +12,9 @@
 
     <Livechatwidget/>
   </div>
+  <ClientOnly>
+    <OtoBannerInit/>
+  </ClientOnly>
 </template>
 
 <script setup lang="ts">
@@ -19,6 +22,7 @@ import Livechatwidget from "~/features/LiveChat/components/Livechatwidget.vue";
 
 const {init: cartInit} = useCartStore();
 const {init: cookieInit} = useCookieStore();
+
 onMounted(() => {
   cartInit();
   cookieInit();

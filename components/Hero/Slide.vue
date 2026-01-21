@@ -4,11 +4,33 @@
     <h1 class="hero-slide__title" v-if="title" v-html="title"></h1>
     <p class="hero-slide__text" v-if="text" v-html="text"></p>
     <NuxtLink to="/catalog" class="hero-slide__btn btn">КУПИТЬ</NuxtLink>
-    <div class="hero-slide__media" v-if="image?.original">
+    <div class="hero-slide__media" v-if="desktopImage?.original || mobileImage?.original">
       <picture class="hero-slide__media-pic">
-        <source media="(max-width: 600px)" v-if="image?.sm" :srcset="image.sm">
-        <source media="(min-width: 601px)" :srcset="image.original">
-        <img :src="image.original" class="hero-slide__media-img" :alt="title">
+        <!-- Mobile изображение (если есть) -->
+        <source
+            v-if="mobileImage?.sm"
+            media="(max-width: 600px)"
+            :srcset="mobileImage.sm"
+        >
+        <source
+            v-if="mobileImage?.original"
+            media="(max-width: 600px)"
+            :srcset="mobileImage.original"
+        >
+
+        <!-- Desktop изображение -->
+        <source
+            v-if="desktopImage?.original"
+            media="(min-width: 601px)"
+            :srcset="desktopImage.original"
+        >
+
+        <!-- Fallback: desktop оригинал или первое доступное -->
+        <img
+            :src="desktopImage?.original || mobileImage?.original"
+            class="hero-slide__media-img"
+            :alt="title"
+        >
       </picture>
     </div>
   </div>
@@ -19,8 +41,14 @@ defineProps<{
   title?: string,
   subtitle?: string,
   text?: string,
-  image?: {
-    original: string,
+  desktopImage?: {
+    original?: string,
+    lg?: string,
+    md?: string,
+    sm?: string
+  },
+  mobileImage?: {
+    original?: string,
     sm?: string
   }
 }>();
