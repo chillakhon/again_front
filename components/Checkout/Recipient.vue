@@ -26,10 +26,10 @@
 </template>
 
 <script setup lang="ts">
-import type { Countries, Country } from "~/types/countries";
+import type {  Country } from "~/types/countries";
 
 // Загружаем страны
-const { data: countries } = await useApi<Countries>('/countries');
+const {data: countries} = await useCountries();
 
 const firstName = defineModel('firstName');
 const lastName = defineModel('lastName');

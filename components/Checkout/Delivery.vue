@@ -100,7 +100,7 @@ const setCity = ( object: object ) => {
   cityName.value = object.title;
 }
 
-const { data: countries } = await useApi<Countries>( '/countries' );
+const {data: countries} = await useCountries();
 const { data: cities } = await useApi<Cities>( '/countries/cities', {
   query: {
     country_id: countryId

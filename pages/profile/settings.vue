@@ -60,7 +60,7 @@ definePageMeta({
 });
 
 // Загружаем страны
-const {data: countries} = await useApi<Countries>('/countries');
+const {data: countries} = await useCountries();
 
 const modal = useModal();
 const authStore = useAuthStore();

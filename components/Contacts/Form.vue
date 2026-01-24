@@ -58,7 +58,7 @@ import type {Countries, Country} from "~/types/countries";
 import {getPolicyLink, getMarketingConsentLink} from '~/utils/getPolicyLink';
 
 // Загружаем страны
-const {data: countries} = await useApi<Countries>('/countries');
+const {data: countries} = await useCountries();
 
 const form = ref({
   name: {

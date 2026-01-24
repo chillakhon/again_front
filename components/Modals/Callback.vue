@@ -63,11 +63,12 @@
 <script setup lang="ts">
 import {FormInput, FormPhoneWithCountry, FormTextarea, ModalsSuccess} from "#components";
 import {useFormValidator} from "~/composables/useFormValidator";
-import type {Countries, Country} from "~/types/countries";
+import type {Country} from "~/types/countries";
 import {getPolicyLink, getMarketingConsentLink} from '~/utils/getPolicyLink';
 
+
 // Загружаем список стран
-const {data: countries} = await useApi<Countries>('/countries');
+const {data: countries} = await useCountries();
 
 const form = ref({
   name: {
