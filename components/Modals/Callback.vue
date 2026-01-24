@@ -66,7 +66,6 @@ import {useFormValidator} from "~/composables/useFormValidator";
 import type {Country} from "~/types/countries";
 import {getPolicyLink, getMarketingConsentLink} from '~/utils/getPolicyLink';
 
-
 // Загружаем список стран
 const {data: countries} = await useCountries();
 
