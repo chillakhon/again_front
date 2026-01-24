@@ -31,24 +31,34 @@
           class="contacts__form-btn btn"
           @click="send"
           :disabled="isButtonDisabled"
-      >отправить</button>
+      >отправить
+      </button>
     </div>
-    <FormCheckbox
-        class="form__policy"
-        name="policy"
-        :label="getPolicyLink()"
-        v-model="isChecked"
-    />
+    <div class="space-y-4">
+      <FormCheckbox
+          class="form__policy"
+          name="policy"
+          :label="getPolicyLink()"
+          v-model="isChecked"
+      />
+      <FormCheckbox
+          class="form__marketing"
+          name="marketing_consent"
+          :label="getMarketingConsentLink()"
+          v-model="isCheckedMarketing"
+      />
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { FormInput, FormPhoneWithCountry, FormTextarea, ModalsSuccess } from "#components";
-import { useFormValidator } from "~/composables/useFormValidator";
-import type { Countries, Country } from "~/types/countries";
+import {FormInput, FormPhoneWithCountry, FormTextarea, ModalsSuccess} from "#components";
+import {useFormValidator} from "~/composables/useFormValidator";
+import type {Countries, Country} from "~/types/countries";
+import {getPolicyLink, getMarketingConsentLink} from '~/utils/getPolicyLink';
 
 // Загружаем страны
-const { data: countries } = await useApi<Countries>('/countries');
+const {data: countries} = await useApi<Countries>('/countries');
 
 const form = ref({
   name: {
@@ -82,6 +92,8 @@ const form = ref({
 
 const selectedCountry = ref<Country | null>(null);
 const isChecked = ref(false);
+const isCheckedMarketing = ref(false);
+
 const isButtonDisabled = ref(true);
 
 watch((isChecked), (oldValue, newValue) => {
@@ -95,7 +107,7 @@ const handleCountryChange = (country: Country) => {
 };
 
 const send = async () => {
-  const { isFormError, validateForm, resetErrors, resetForm } = useFormValidator(form);
+  const {isFormError, validateForm, resetErrors, resetForm} = useFormValidator(form);
   resetErrors();
   validateForm();
 
@@ -105,7 +117,7 @@ const send = async () => {
 
   // Валидация длины телефона
   if (selectedCountry.value) {
-    const { validatePhoneLength } = usePhoneMask();
+    const {validatePhoneLength} = usePhoneMask();
     const isPhoneValid = validatePhoneLength(
         form.value.phone.value,
         selectedCountry.value.phone_code,
@@ -118,12 +130,14 @@ const send = async () => {
     }
   }
 
-  const { data, status, error } = await useApi('/contact-requests', {
+  const {data, status, error} = await useApi('/contact-requests', {
     body: {
       name: form.value.name.value,
       email: form.value.email.value,
       phone: form.value.phone.value,
       message: form.value.message.value,
+      // marketing_consent: isCheckedMarketing.value
+
     }
   }, 'contact', 'POST');
 

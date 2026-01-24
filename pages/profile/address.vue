@@ -43,6 +43,12 @@
           v-model="isChecked"
           :label="getPolicyLink()"
       />
+<!--      <FormCheckbox-->
+<!--          class="form__marketing"-->
+<!--          name="marketing_consent"-->
+<!--          :label="getMarketingConsentLink()"-->
+<!--          v-model="isCheckedMarketing"-->
+<!--      />-->
     </div>
   </div>
 </template>
@@ -51,12 +57,15 @@
 import type {Cities, Countries} from "~/types/countries";
 import {FormInput, FormSelect, ModalsSuccess} from "#components";
 import {useFormValidator} from "~/composables/useFormValidator";
+import {getPolicyLink, getMarketingConsentLink} from '~/utils/getPolicyLink';
 
 definePageMeta({
   layout: 'profile',
   title: 'Адрес доставки',
   middleware: 'auth'
 });
+
+const isCheckedMarketing = ref(false);
 
 const countryId = ref( '' );
 const setCountry = ( object: object ) => {

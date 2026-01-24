@@ -26,6 +26,7 @@
       >
         Подтвердить заказ
       </button>
+      <div class="space-y-4">
       <FormCheckbox
         name="policy"
         class="checkout__policy"
@@ -34,11 +35,21 @@
         :label="getPolicyLink()"
         v-model="isChecked"
       />
+      <FormCheckbox
+          class="form__marketing"
+          name="marketing_consent"
+          :label="getMarketingConsentLink()"
+          v-model="isCheckedMarketing"
+      />
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import {getPolicyLink, getMarketingConsentLink} from '~/utils/getPolicyLink';
+
+
 withDefaults( defineProps<{
   isLoading?: boolean
 }>(), {
@@ -47,6 +58,8 @@ withDefaults( defineProps<{
 const emit = defineEmits(['clickToButton']);
 const isDisabled = ref( false );
 const isChecked = ref( false );
+const isCheckedMarketing = ref(false);
+
 
 watch( isChecked, ( isChecked: boolean, newValue: boolean ) => {
   isDisabled.value = newValue;

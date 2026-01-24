@@ -11,15 +11,16 @@
               ООО ЭГЕЙН<br> ИНН 4707052811<br> ОГРН 1234700025196
             </div>
             <div class="footer__mobile">
-              <FooterContacts />
-              <FooterSocials />
+              <FooterContacts/>
+              <FooterSocials/>
             </div>
           </div>
-         <FooterMenu />
+          <FooterMenu/>
+          <FooterDocuments/>
         </div>
         <div class="footer__top-right">
-          <FooterContacts />
-          <FooterSocials />
+          <FooterContacts/>
+          <FooterSocials/>
         </div>
       </div>
       <div class="footer__bottom">
@@ -36,9 +37,9 @@
     </div>
   </footer>
 
-  <AsideMenu />
-  <ModalsDefault />
-  <Cookies />
+  <AsideMenu/>
+  <ModalsDefault/>
+  <Cookies/>
 
 </template>
 
@@ -138,6 +139,7 @@
     display: none;
   }
 }
+
 .footer__top-right {
   @media (max-width: $mobile) {
     display: none;

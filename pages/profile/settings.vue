@@ -37,14 +37,21 @@
           v-model="isChecked"
           :label="getPolicyLink()"
       />
+      <FormCheckbox
+          class="form__marketing"
+          name="marketing_consent"
+          :label="getMarketingConsentLink()"
+          v-model="isCheckedMarketing"
+      />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { FormDatepicker, FormInput, FormPhoneWithCountry, ModalsSuccess } from "#components";
-import { useFormValidator } from "~/composables/useFormValidator";
-import type { Countries, Country } from "~/types/countries";
+import {FormDatepicker, FormInput, FormPhoneWithCountry, ModalsSuccess} from "#components";
+import {useFormValidator} from "~/composables/useFormValidator";
+import type {Countries, Country} from "~/types/countries";
+import {getPolicyLink, getMarketingConsentLink} from '~/utils/getPolicyLink';
 
 definePageMeta({
   layout: 'profile',
@@ -53,11 +60,11 @@ definePageMeta({
 });
 
 // Загружаем страны
-const { data: countries } = await useApi<Countries>('/countries');
+const {data: countries} = await useApi<Countries>('/countries');
 
 const modal = useModal();
 const authStore = useAuthStore();
-const { user } = authStore;
+const {user} = authStore;
 
 const form = ref({
   first_name: {
@@ -140,6 +147,7 @@ onMounted(() => {
 
 const isLoading = ref(false);
 const isChecked = ref(false);
+const isCheckedMarketing = ref(false);
 const isButtonDisabled = ref(true);
 
 watch((isChecked), (oldValue, newValue) => {
@@ -151,7 +159,7 @@ const handleCountryChange = (country: Country) => {
 };
 
 const save = async () => {
-  const { isFormError, validateForm, resetErrors } = useFormValidator(form);
+  const {isFormError, validateForm, resetErrors} = useFormValidator(form);
   resetErrors();
   validateForm();
 
@@ -161,7 +169,7 @@ const save = async () => {
 
   // Валидация длины телефона
   if (selectedCountry.value) {
-    const { validatePhoneLength } = usePhoneMask();
+    const {validatePhoneLength} = usePhoneMask();
     const isPhoneValid = validatePhoneLength(
         form.value.phone.value,
         selectedCountry.value.phone_code,
@@ -175,7 +183,7 @@ const save = async () => {
   }
 
   isLoading.value = true;
-  const { data, status, error } = await useApi('/clients/update-profile', {
+  const {data, status, error} = await useApi('/clients/update-profile', {
     body: {
       first_name: form.value.first_name.value,
       last_name: form.value.last_name.value,
