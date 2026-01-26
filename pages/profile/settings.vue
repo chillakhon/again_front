@@ -32,11 +32,19 @@
         Сохранить изменения
       </button>
       <FormCheckbox
-          row-class="profile-settings__form-policy"
-          name="policy"
-          v-model="isChecked"
-          :label="getPolicyLink()"
+          class="form__policy"
+          name="privacy_policy"
+          :label="getPrivacyPolicyLink()"
+          v-model="isCheckedPolicy"
       />
+
+      <FormCheckbox
+          class="form__oferta"
+          name="oferta"
+          :label="getOfertaLink()"
+          v-model="isCheckedOferta"
+      />
+
       <FormCheckbox
           class="form__marketing"
           name="marketing_consent"
@@ -51,7 +59,7 @@
 import {FormDatepicker, FormInput, FormPhoneWithCountry, ModalsSuccess} from "#components";
 import {useFormValidator} from "~/composables/useFormValidator";
 import type {Countries, Country} from "~/types/countries";
-import {getPolicyLink, getMarketingConsentLink} from '~/utils/getPolicyLink';
+import { getMarketingConsentLink, getPrivacyPolicyLink, getOfertaLink} from '~/utils/getPolicyLink';
 
 definePageMeta({
   layout: 'profile',
@@ -146,11 +154,14 @@ onMounted(() => {
 });
 
 const isLoading = ref(false);
-const isChecked = ref(false);
+
+const isCheckedPolicy = ref(false);
+const isCheckedOferta = ref(false);
 const isCheckedMarketing = ref(false);
+
 const isButtonDisabled = ref(true);
 
-watch((isChecked), (oldValue, newValue) => {
+watch(isCheckedPolicy, (newValue) => {
   isButtonDisabled.value = newValue;
 });
 

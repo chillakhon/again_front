@@ -3,9 +3,9 @@
     <div class="checkout__block-title fz-h2">Способ оплаты*</div>
     <div class="checkout__payment">
       <FormRadio
-        name="payment"
-        :is-checked="true"
-        title="Оплата картой РФ"
+          name="payment"
+          :is-checked="true"
+          title="Оплата картой РФ"
       />
       <FormRadio
           name="payment"
@@ -27,43 +27,50 @@
         Подтвердить заказ
       </button>
       <div class="space-y-4">
-      <FormCheckbox
-        name="policy"
-        class="checkout__policy"
-        value="1"
-        :is-checked="true"
-        :label="getPolicyLink()"
-        v-model="isChecked"
-      />
-      <FormCheckbox
-          class="form__marketing"
-          name="marketing_consent"
-          :label="getMarketingConsentLink()"
-          v-model="isCheckedMarketing"
-      />
+        <FormCheckbox
+            class="form__policy"
+            name="privacy_policy"
+            :label="getPrivacyPolicyLink()"
+            v-model="isCheckedPolicy"
+        />
+
+        <FormCheckbox
+            class="form__oferta"
+            name="oferta"
+            :label="getOfertaLink()"
+            v-model="isCheckedOferta"
+        />
+
+        <FormCheckbox
+            class="form__marketing"
+            name="marketing_consent"
+            :label="getMarketingConsentLink()"
+            v-model="isCheckedMarketing"
+        />
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import {getPolicyLink, getMarketingConsentLink} from '~/utils/getPolicyLink';
+import {getMarketingConsentLink, getPrivacyPolicyLink, getOfertaLink} from '~/utils/getPolicyLink';
 
 
-withDefaults( defineProps<{
+withDefaults(defineProps<{
   isLoading?: boolean
 }>(), {
   isLoading: false
-} )
+})
 const emit = defineEmits(['clickToButton']);
-const isDisabled = ref( false );
-const isChecked = ref( false );
+const isDisabled = ref(false);
+
+const isCheckedPolicy = ref(false);
+const isCheckedOferta = ref(false);
 const isCheckedMarketing = ref(false);
 
-
-watch( isChecked, ( isChecked: boolean, newValue: boolean ) => {
+watch(isCheckedPolicy, (newValue) => {
   isDisabled.value = newValue;
-} )
+});
 </script>
 
 <style scoped lang="scss">

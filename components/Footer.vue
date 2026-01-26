@@ -24,15 +24,15 @@
         </div>
       </div>
       <div class="footer__bottom">
-        <div class="footer__bottom-item">
-          <NuxtLink href="/oferta" class="footer__link _border">Договор оферты</NuxtLink>
-        </div>
+<!--        <div class="footer__bottom-item">-->
+<!--          <NuxtLink href="/oferta" class="footer__link _border">Договор оферты</NuxtLink>-->
+<!--        </div>-->
         <div class="footer__bottom-item" style="--text-align: center;">
           <div class="footer__save">Все права защищены</div>
         </div>
-        <div class="footer__bottom-item" style="--text-align: right;">
-          <NuxtLink href="/policy" class="footer__link _border">Политика конфиденциальности</NuxtLink>
-        </div>
+<!--        <div class="footer__bottom-item" style="&#45;&#45;text-align: right;">-->
+<!--          <NuxtLink href="/policy" class="footer__link _border">Политика конфиденциальности</NuxtLink>-->
+<!--        </div>-->
       </div>
     </div>
   </footer>
@@ -81,7 +81,7 @@
 .footer__bottom {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   padding-top: 1.7rem;
   border-top: .1rem solid rgba(217, 217, 217, .2);
 

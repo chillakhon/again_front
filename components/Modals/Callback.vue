@@ -46,10 +46,18 @@
     <div class="space-y-4">
       <FormCheckbox
           class="form__policy"
-          name="policy"
-          :label="getPolicyLink()"
-          v-model="isChecked"
+          name="privacy_policy"
+          :label="getPrivacyPolicyLink()"
+          v-model="isCheckedPolicy"
       />
+
+      <FormCheckbox
+          class="form__oferta"
+          name="oferta"
+          :label="getOfertaLink()"
+          v-model="isCheckedOferta"
+      />
+
       <FormCheckbox
           class="form__marketing"
           name="marketing_consent"
@@ -57,6 +65,7 @@
           v-model="isCheckedMarketing"
       />
     </div>
+
   </div>
 </template>
 
@@ -64,7 +73,7 @@
 import {FormInput, FormPhoneWithCountry, FormTextarea, ModalsSuccess} from "#components";
 import {useFormValidator} from "~/composables/useFormValidator";
 import type {Country} from "~/types/countries";
-import {getPolicyLink, getMarketingConsentLink} from '~/utils/getPolicyLink';
+import {getPrivacyPolicyLink, getOfertaLink, getMarketingConsentLink} from '~/utils/getPolicyLink';
 
 // Загружаем список стран
 const {data: countries} = await useCountries();
@@ -94,13 +103,17 @@ const form = ref({
 // Храним выбранную страну для валидации
 const selectedCountry = ref<Country | null>(null);
 
-const isChecked = ref(false);
+const isCheckedPolicy = ref(false);
+const isCheckedOferta = ref(false);
 const isCheckedMarketing = ref(false);
+
 const isButtonDisabled = ref(true);
 
-watch((isChecked), (oldValue, newValue) => {
+watch(isCheckedPolicy, (newValue) => {
   isButtonDisabled.value = newValue;
 });
+
+
 
 const modal = useModal();
 

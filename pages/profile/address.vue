@@ -41,7 +41,7 @@
           name="policy"
           value="1"
           v-model="isChecked"
-          :label="getPolicyLink()"
+          :label="getPrivacyPolicyLink()"
       />
 <!--      <FormCheckbox-->
 <!--          class="form__marketing"-->
@@ -57,7 +57,7 @@
 import type {Cities, Countries} from "~/types/countries";
 import {FormInput, FormSelect, ModalsSuccess} from "#components";
 import {useFormValidator} from "~/composables/useFormValidator";
-import {getPolicyLink, getMarketingConsentLink} from '~/utils/getPolicyLink';
+import { getPrivacyPolicyLink} from '~/utils/getPolicyLink';
 
 definePageMeta({
   layout: 'profile',

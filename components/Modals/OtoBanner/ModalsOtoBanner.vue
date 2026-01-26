@@ -34,12 +34,15 @@
           </button>
         </div>
 
-        <FormCheckbox
-            class="form__policy"
-            name="policy"
-            :label="getPolicyLink()"
-            v-model="isChecked"
-        />
+        <div>
+          <FormCheckbox
+              class="form__policy"
+              name="policy"
+              row-class="flex items-start"
+              :label="getPrivacyPolicyLink()"
+              v-model="isChecked"
+          />
+        </div>
       </div>
 
       <div class="modal-oto__privacy" v-if="banner?.privacy_text" v-html="banner.privacy_text"></div>
@@ -51,6 +54,8 @@
 import {FormInput, FormPhone} from "#components"
 import {useFormValidator} from "~/composables/useFormValidator"
 import type {OtoBanner} from "~/types/oto-banner/otoBanner"
+import {getPrivacyPolicyLink} from '~/utils/getPolicyLink';
+
 
 // Получаем props из modal store
 const modalStore = useModal()
