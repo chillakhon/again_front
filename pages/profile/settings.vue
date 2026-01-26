@@ -162,7 +162,7 @@ const isCheckedMarketing = ref(false);
 const isButtonDisabled = ref(true);
 
 watch(isCheckedPolicy, (newValue) => {
-  isButtonDisabled.value = newValue;
+  isButtonDisabled.value = !newValue;
 });
 
 const handleCountryChange = (country: Country) => {

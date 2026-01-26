@@ -76,7 +76,7 @@ const isButtonDisabled = ref(true)
 const isLoading = ref(false)
 
 watch(isChecked, (oldValue, newValue) => {
-  isButtonDisabled.value = newValue
+  isButtonDisabled.value = !newValue
 })
 
 const {submitOtoBanner} = useOtoBanner()
