@@ -4,8 +4,12 @@ export default defineEventHandler((event) => {
     if (!isDevDomain) return;
 
     const auth = getRequestHeader(event, "authorization") || "";
-    const okUser = process.env.DEV_USER || "dev";
-    const okPass = process.env.DEV_PASS || "password";
+
+    const okUser = "dev";
+    const okPass = "12345678";
+
+    console.log("[basic-auth]", { host, hasAuth: !!auth, authStart: auth.slice(0, 10) });
+
 
     const token = auth.startsWith("Basic ") ? auth.slice(6) : "";
     const decoded = token ? Buffer.from(token, "base64").toString("utf8") : "";
@@ -14,5 +18,5 @@ export default defineEventHandler((event) => {
     if (user === okUser && pass === okPass) return;
 
     setResponseHeader(event, "WWW-Authenticate", 'Basic realm="Dev Area"');
-    throw createError({ statusCode: 401, statusMessage: "Unauthorized" });
+    throw createError({statusCode: 401, statusMessage: "Unauthorized"});
 });
