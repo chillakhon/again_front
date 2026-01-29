@@ -1,7 +1,7 @@
 <template>
   <div class="form__row" :class="rowClass">
     <div class="select" :class="{ 'select--active': isActive }" ref="select">
-      <button class="select__result" @click="toggle">
+      <button type="button"  class="select__result" @click="toggle">
         <span>{{ placeholder }}</span>
         <svg width="10" height="5" viewBox="0 0 10 5" fill="none" xmlns="http://www.w3.org/2000/svg" data-v-90e05f7c="">
           <path opacity="0.4" d="M5 5L9.33013 0.5H0.669873L5 5Z" fill="#545454" data-v-90e05f7c=""></path>
@@ -48,7 +48,9 @@ const props = withDefaults( defineProps<{
 } );
 
 const items = ref( props.list );
-const select = ref( false );
+
+const select = ref<HTMLElement | null>(null);
+
 const selectItems = ref( false );
 const placeholder = ref( props.placeholder );
 const isActive = ref( false );
@@ -82,7 +84,23 @@ const selected = ( id: number, title: string, code?: string ) => {
   isActive.value = false;
 }
 
+
+const onClickOutside = (e: MouseEvent | TouchEvent) => {
+  if (!isActive.value) return;
+  const el = select.value;
+  if (!el) return;
+
+  const target = e.target as Node | null;
+  if (target && !el.contains(target)) {
+    isActive.value = false;
+  }
+};
+
 onMounted( () => {
+
+  document.addEventListener('click', onClickOutside, true);
+  document.addEventListener('touchstart', onClickOutside, true);
+
   if ( props.hasOwnProperty( 'selectedId' ) ) {
     const find = props.list.find( value => value.id === props.selectedId );
     if ( find ){
@@ -94,6 +112,12 @@ onMounted( () => {
     }
   }
 } );
+
+
+onBeforeUnmount(() => {
+  document.removeEventListener('click', onClickOutside, true);
+  document.removeEventListener('touchstart', onClickOutside, true);
+});
 
 const search = () => {
   items.value = props.list.filter( item =>

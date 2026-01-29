@@ -11,7 +11,21 @@
       <div class="modal-oto__form form">
 
         <template v-if="banner?.input_field_enabled">
+          <!-- Если тип поля - телефон, используем FormPhoneWithCountry -->
+          <FormPhoneWithCountry
+              v-if="getInputType() === 'tel' && countries"
+              :countries="countries.countries"
+              :default-country-id="0"
+              :placeholder="banner?.input_field_placeholder || banner?.input_field_label || 'Введите номер телефона'"
+              v-model="form.input_field_value.value"
+              :error="form.input_field_value.error"
+              row-class="_15"
+              @country-changed="handleCountryChange"
+          />
+
+          <!-- Для остальных типов используем обычные компоненты -->
           <component
+              v-else
               :is="getInputComponent()"
               :type="getInputType()"
               name="input_field_value"
@@ -20,7 +34,6 @@
               v-model="form.input_field_value.value"
               row-class="_15"
           />
-
         </template>
 
         <div class="form__button" v-if="banner?.button_enabled">
@@ -34,15 +47,27 @@
           </button>
         </div>
 
-        <div>
+        <div class="modal-oto__checkboxes">
           <FormCheckbox
               class="form__policy"
               name="policy"
-              row-class="flex items-start"
               :label="getPrivacyPolicyLink()"
-              v-model="isChecked"
+              v-model="isCheckedPolicy"
+          />
+          <FormCheckbox
+              class="form__policy"
+              name="oferta"
+              :label="getOfertaLink()"
+              v-model="isCheckedOferta"
+          />
+          <FormCheckbox
+              class="form__policy"
+              name="marketing_consent"
+              :label="getMarketingConsentLink()"
+              v-model="isCheckedMarketing"
           />
         </div>
+
       </div>
 
       <div class="modal-oto__privacy" v-if="banner?.privacy_text" v-html="banner.privacy_text"></div>
@@ -51,11 +76,14 @@
 </template>
 
 <script setup lang="ts">
-import {FormInput, FormPhone} from "#components"
+import {FormInput, FormPhoneWithCountry} from "#components"
 import {useFormValidator} from "~/composables/useFormValidator"
 import type {OtoBanner} from "~/types/oto-banner/otoBanner"
-import {getPrivacyPolicyLink} from '~/utils/getPolicyLink';
+import type {Country} from "~/types/countries"
+import {getMarketingConsentLink, getOfertaLink, getPrivacyPolicyLink} from '~/utils/getPolicyLink';
 
+// Загружаем список стран
+const {data: countries} = await useCountries();
 
 // Получаем props из modal store
 const modalStore = useModal()
@@ -71,15 +99,27 @@ const form = ref({
   }
 })
 
-const isChecked = ref(false)
-const isButtonDisabled = ref(true)
 const isLoading = ref(false)
 
-watch(isChecked, (oldValue, newValue) => {
+const isCheckedPolicy = ref(false);
+const isCheckedOferta = ref(false);
+const isCheckedMarketing = ref(false);
+
+const isButtonDisabled = ref(true);
+
+// Храним выбранную страну для валидации телефона
+const selectedCountry = ref<Country | null>(null);
+
+watch(isCheckedPolicy, (newValue) => {
   isButtonDisabled.value = !newValue
 })
 
 const {submitOtoBanner} = useOtoBanner()
+
+// Обработчик смены страны
+const handleCountryChange = (country: Country) => {
+  selectedCountry.value = country;
+};
 
 const send = async () => {
   const {isFormError, validateForm, resetErrors, resetForm} = useFormValidator(form)
@@ -88,6 +128,21 @@ const send = async () => {
 
   if (isFormError.value) {
     return
+  }
+
+  // Дополнительная валидация длины телефона
+  if (getInputType() === 'tel' && selectedCountry.value) {
+    const {validatePhoneLength} = usePhoneMask();
+    const isPhoneValid = validatePhoneLength(
+        form.value.input_field_value.value,
+        selectedCountry.value.phone_code,
+        selectedCountry.value.phone_length
+    );
+
+    if (!isPhoneValid) {
+      form.value.input_field_value.error = `Номер должен содержать ${selectedCountry.value.phone_length} цифр`;
+      return;
+    }
   }
 
   isLoading.value = true
@@ -99,7 +154,6 @@ const send = async () => {
     email: getInputType() == 'email' ? inputValue : null,
     phone: getInputType() == 'tel' ? inputValue : null,
   }
-
 
   const result = await submitOtoBanner(data)
 
@@ -121,9 +175,7 @@ const send = async () => {
  * Определить компонент для поля ввода
  */
 const getInputComponent = () => {
-  if (banner?.value.input_field_type === 'phone') {
-    return FormPhone
-  }
+  // FormPhoneWithCountry обрабатывается отдельно в template
   return FormInput
 }
 
@@ -215,6 +267,23 @@ const getInputType = () => {
   @media (max-width: $mobile) {
     max-width: 100%;
   }
+}
+
+.modal-oto__checkboxes {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  text-align: left;
+
+  @media (max-width: $mobile) {
+    margin-top: 1rem;
+    gap: 0.8rem;
+  }
+}
+
+.form__policy {
+  margin: 0;
 }
 
 .modal-oto__privacy {

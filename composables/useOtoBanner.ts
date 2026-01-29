@@ -61,10 +61,15 @@ export const useOtoBanner = () => {
 
             // Показываем Success модалку
             const {ModalsSuccess} = useModals()
-            modal.openModal(ModalsSuccess, {
-                title: 'Спасибо!',
-                text: 'Ваша заявка успешно отправлена'
-            })
+
+            setTimeout(() => {
+                modal.openModal(ModalsSuccess, {
+                    title: 'Спасибо!',
+                    text: 'Ваша заявка успешно отправлена'
+                })
+            }, 1000)
+
+
         }
 
         return result

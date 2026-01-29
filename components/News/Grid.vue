@@ -1,5 +1,5 @@
 <template>
-  <div class="news__grid">
+  <div class="news__grid ">
     <NewsCard
         v-for="(item, key) in list"
         :key="key"

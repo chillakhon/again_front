@@ -31,26 +31,29 @@
       >
         Сохранить изменения
       </button>
-      <FormCheckbox
-          class="form__policy"
-          name="privacy_policy"
-          :label="getPrivacyPolicyLink()"
-          v-model="isCheckedPolicy"
-      />
 
-      <FormCheckbox
-          class="form__oferta"
-          name="oferta"
-          :label="getOfertaLink()"
-          v-model="isCheckedOferta"
-      />
+      <div class="space-y-4">
+        <FormCheckbox
+            class="form__policy"
+            name="privacy_policy"
+            :label="getPrivacyPolicyLink()"
+            v-model="isCheckedPolicy"
+        />
 
-      <FormCheckbox
-          class="form__marketing"
-          name="marketing_consent"
-          :label="getMarketingConsentLink()"
-          v-model="isCheckedMarketing"
-      />
+        <FormCheckbox
+            class="form__oferta"
+            name="oferta"
+            :label="getOfertaLink()"
+            v-model="isCheckedOferta"
+        />
+
+        <FormCheckbox
+            class="form__marketing"
+            name="marketing_consent"
+            :label="getMarketingConsentLink()"
+            v-model="isCheckedMarketing"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -59,7 +62,7 @@
 import {FormDatepicker, FormInput, FormPhoneWithCountry, ModalsSuccess} from "#components";
 import {useFormValidator} from "~/composables/useFormValidator";
 import type {Countries, Country} from "~/types/countries";
-import { getMarketingConsentLink, getPrivacyPolicyLink, getOfertaLink} from '~/utils/getPolicyLink';
+import {getMarketingConsentLink, getPrivacyPolicyLink, getOfertaLink} from '~/utils/getPolicyLink';
 
 definePageMeta({
   layout: 'profile',

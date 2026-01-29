@@ -21,7 +21,7 @@
         </div>
       </div>
 
-      <button class="modal__close" @click="modal.closeModal"></button>
+      <button class="modal__close " @click="modal.closeModal"></button>
     </div>
   </Teleport>
 </template>
@@ -43,6 +43,14 @@ const close = ( event : any ) => {
 </script>
 
 <style scoped lang="scss">
+
+@media (max-width: $mobile) {
+  .modal > .modal__close {
+    display: none !important;
+  }
+}
+
+
 .modal {
   background: rgba(0, 0, 0, 0.8);
   position: fixed;
@@ -134,6 +142,8 @@ const close = ( event : any ) => {
       }
     }
   }
+
+
 
   &--active {
     opacity: 1;

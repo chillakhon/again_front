@@ -8,7 +8,6 @@
         row-class="_15"
     />
 
-    <!-- НОВЫЙ КОМПОНЕНТ С ВЫБОРОМ СТРАНЫ -->
     <FormPhoneWithCountry
         v-if="countries"
         :countries="countries.countries"
@@ -112,7 +111,6 @@ const isButtonDisabled = ref(true);
 watch(isCheckedPolicy, (newValue) => {
   isButtonDisabled.value = !newValue;
 });
-
 
 
 const modal = useModal();

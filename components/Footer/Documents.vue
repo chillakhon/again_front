@@ -37,7 +37,10 @@
   margin-bottom: 1rem;
 
   @media (max-width: $mobile) {
-    display: none;
+
+
+
+
   }
 }
 

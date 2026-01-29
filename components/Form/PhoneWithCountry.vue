@@ -1,5 +1,5 @@
 <template>
-  <div class="form__row phone-with-country" :class="rowClass">
+  <div class="form__row phone-with-country z-20" :class="rowClass">
     <div class="phone-input">
       <!-- Селект выбора страны -->
       <div class="phone-input__select-wrapper">

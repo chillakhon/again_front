@@ -8,8 +8,6 @@ export default defineEventHandler((event) => {
     const okUser = "dev";
     const okPass = "12345678";
 
-    console.log("[basic-auth]", { host, hasAuth: !!auth, authStart: auth.slice(0, 10) });
-
 
     const token = auth.startsWith("Basic ") ? auth.slice(6) : "";
     const decoded = token ? Buffer.from(token, "base64").toString("utf8") : "";
