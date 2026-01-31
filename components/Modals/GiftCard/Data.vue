@@ -163,16 +163,20 @@
                 :error="errors.scheduled_time"
                 row-class="_15"
             />
+
+          </div>
+          <div class="form__timezone-hint">
+            ⏰ Время указывается по Москве (MSK, UTC+3)
           </div>
 
-          <FormSelect
-              name="timezone"
-              placeholder="Часовой пояс"
-              :list="timezones"
-              :selectedId="getSelectedTimezoneId()"
-              @getSelectedValue="updateTimezone"
-              row-class="_15"
-          />
+<!--          <FormSelect-->
+<!--              name="timezone"-->
+<!--              placeholder="Часовой пояс"-->
+<!--              :list="timezones"-->
+<!--              :selectedId="getSelectedTimezoneId()"-->
+<!--              @getSelectedValue="updateTimezone"-->
+<!--              row-class="_15"-->
+<!--          />-->
         </template>
 
       </template>
