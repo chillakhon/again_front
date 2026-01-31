@@ -1,6 +1,10 @@
 <template>
-  <div class="form__row radio">
+  <div
+      class="form__row radio"
+      :class="{ 'is-disabled': disabled }"
+  >
     <input
+        :disabled="disabled"
         type="radio"
         class="radio__input"
         :name="name"
@@ -20,6 +24,7 @@ withDefaults(defineProps<{
   name: string
   title: string,
   text?: string
+  disabled?: boolean
 }>(), {
   checked: false
 })
@@ -92,5 +97,35 @@ withDefaults(defineProps<{
   line-height: normal;
   text-decoration: underline;
 }
+
+
+.radio.is-disabled {
+  opacity: .55;
+  cursor: not-allowed;
+}
+
+.radio.is-disabled .radio__input {
+  cursor: not-allowed;
+}
+
+.radio.is-disabled .radio__label,
+.radio.is-disabled .radio__icon {
+  cursor: not-allowed;
+}
+
+/* если хочешь прям "серый" цвет иконки */
+.radio.is-disabled .radio__icon {
+  border-color: rgba(0, 0, 0, .2);
+}
+
+.radio.is-disabled .radio__icon:after {
+  background: rgba(0, 0, 0, .25);
+}
+
+/* текст тоже чуть приглушить */
+.radio.is-disabled .radio__label-text {
+  color: rgba(0, 0, 0, .25);
+}
+
 
 </style>

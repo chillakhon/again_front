@@ -1,8 +1,12 @@
 <template>
   <div class="profile-sales__item">
     <div class="profile-sales__item-media">
+      {{item.image_url}}
       <picture class="profile-sales__item-pic">
-        <img :src="item.image_url ?? '/icons/promo-code/default.png'" class="profile-sales__item-img" alt="">
+        <img :src="item.image_url ?? '/icons/promo-code/default.png'"
+             class="profile-sales__item-img"
+             alt=""
+        >
       </picture>
     </div>
     <div class="profile-sales__item-title" v-if="item.code">{{ item.code }}</div>

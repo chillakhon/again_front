@@ -67,7 +67,6 @@
         <NotFound v-else-if="cartStore.cart.length === 0" class="cart__not" :is-title="true" to="/catalog"/>
       </div>
     </div>
-
   </ClientOnly>
 </template>
 

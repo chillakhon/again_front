@@ -27,6 +27,7 @@
               name="card_type2"
               title="🎴 Пластиковая"
               text="Физическая карта с доставкой курьером"
+              :disabled="true"
               :checked="purchaseStore.purchaseData.type === 'plastic'"
               @click="updateField('type', 'plastic')"
           />
@@ -247,16 +248,16 @@ const validationErrors = ref([]);
 // Список часовых поясов
 const timezones = ref([
   { id: 1, name: 'Москва (MSK, UTC+3)', code: 'Europe/Moscow' },
-  { id: 2, name: 'Калининград (UTC+2)', code: 'Europe/Kaliningrad' },
-  { id: 3, name: 'Самара (UTC+4)', code: 'Europe/Samara' },
-  { id: 4, name: 'Екатеринбург (UTC+5)', code: 'Asia/Yekaterinburg' },
-  { id: 5, name: 'Омск (UTC+6)', code: 'Asia/Omsk' },
-  { id: 6, name: 'Красноярск (UTC+7)', code: 'Asia/Krasnoyarsk' },
-  { id: 7, name: 'Иркутск (UTC+8)', code: 'Asia/Irkutsk' },
-  { id: 8, name: 'Якутск (UTC+9)', code: 'Asia/Yakutsk' },
-  { id: 9, name: 'Владивосток (UTC+10)', code: 'Asia/Vladivostok' },
-  { id: 10, name: 'Магадан (UTC+11)', code: 'Asia/Magadan' },
-  { id: 11, name: 'Камчатка (UTC+12)', code: 'Asia/Kamchatka' },
+  // { id: 2, name: 'Калининград (UTC+2)', code: 'Europe/Kaliningrad' },
+  // { id: 3, name: 'Самара (UTC+4)', code: 'Europe/Samara' },
+  // { id: 4, name: 'Екатеринбург (UTC+5)', code: 'Asia/Yekaterinburg' },
+  // { id: 5, name: 'Омск (UTC+6)', code: 'Asia/Omsk' },
+  // { id: 6, name: 'Красноярск (UTC+7)', code: 'Asia/Krasnoyarsk' },
+  // { id: 7, name: 'Иркутск (UTC+8)', code: 'Asia/Irkutsk' },
+  // { id: 8, name: 'Якутск (UTC+9)', code: 'Asia/Yakutsk' },
+  // { id: 9, name: 'Владивосток (UTC+10)', code: 'Asia/Vladivostok' },
+  // { id: 10, name: 'Магадан (UTC+11)', code: 'Asia/Magadan' },
+  // { id: 11, name: 'Камчатка (UTC+12)', code: 'Asia/Kamchatka' },
 ]);
 
 const updateField = (field: string, value: any) => {

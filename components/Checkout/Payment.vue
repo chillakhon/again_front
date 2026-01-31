@@ -69,7 +69,9 @@ const isCheckedOferta = ref(false);
 const isCheckedMarketing = ref(false);
 
 watch(isCheckedPolicy, (newValue) => {
-  isDisabled.value = newValue;
+  isDisabled.value = !newValue;
+}, {
+  immediate: true,
 });
 </script>
 
