@@ -105,7 +105,6 @@ body._lock {
 }
 
 .section {
-  padding: 5rem 0;
 }
 
 h1 {
@@ -255,6 +254,10 @@ a, button {
       margin-bottom: 0;
     }
   }
+  & img {
+    border-radius: .8rem !important;
+  }
+
 }
 
 .text__content ol li {

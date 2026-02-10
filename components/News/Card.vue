@@ -3,7 +3,6 @@
     <div class="news-item__card">
       <div class="news-item__media">
         <NuxtLink :to="to" class="news-item__media-link" aria-label="Открыть статью">
-
           <picture class="news-item__media-pic">
             <img
                 :src="banner"
@@ -58,15 +57,10 @@ const to = computed(() => {
 
 }
 
-
-.news-item__card {
-  border-radius: 16px; // можешь 12/20/24 как нравится
-  overflow: hidden; // важно для картинки
-  background: #fff; // если нужно (или var(--bg-white))
-  padding: 2px;
+.news-item__media {
+  border-radius: 16px;   // или 6rem если хочешь как инпуты
+  overflow: hidden;
 }
-
-
 
 .news-item__media-link {
   display: block;
@@ -75,26 +69,33 @@ const to = computed(() => {
 
 
 .news-item__media-pic {
-  min-height: 25.1rem;
-  position: relative;
+  display: block;  // ← ДОБАВИТЬ! picture должен быть block
+  border-radius: 1.8rem;  // уберите !important
+  overflow: hidden;  // ← ДОБАВИТЬ для гарантии
+  background: #f5f5f5; // фон на случай пустых областей
 
-  @media (max-width: $mobile) {
-    min-height: 18rem;
-  }
+
+
+  //@media (max-width: $mobile) {
+  //  min-height: 18rem;
+  //}
 }
 
 .news-item__media-img {
-  position: absolute;
-  top: 0;
-  left: 0;
+  display: block;
   width: 100%;
-  height: 100%;
+  height: auto; // естественная высота
   object-fit: cover;
-  object-position: center;
+
+  aspect-ratio: 1713 / 800; // ← точное соотношение ваших изображений
+  //
+  //@media (max-width: $mobile) {
+  //  aspect-ratio: 1713 / 800; // то же соотношение
+  //}
 }
 
 .news-item__content {
-  padding-top: 2rem;
+  padding: 2px;
 }
 
 .news-item__date {

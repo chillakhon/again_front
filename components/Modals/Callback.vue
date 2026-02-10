@@ -10,6 +10,7 @@
 
     <FormPhoneWithCountry
         v-if="countries"
+        id="callback"
         :countries="countries.countries"
         :default-country-id="0"
         placeholder="Введите номер телефона*"
@@ -42,6 +43,7 @@
         Отправить
       </button>
     </div>
+
     <div class="space-y-4">
       <FormCheckbox
           class="form__policy"

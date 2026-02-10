@@ -1,9 +1,6 @@
 <template>
   <section class="section news home-news">
     <div class="news__container container">
-<!--      <div class="news__header block__header _left">-->
-<!--        <div class="block__header-title">Вам может быть это&nbsp;интересно!</div>-->
-<!--      </div>-->
 
       <NewsGrid :list="list" />
 

@@ -15,10 +15,29 @@
         </span>
       </NuxtLink>
       <ul class="menu__sub" v-if="item.sublist && item.sublist.length > 0">
-        <li v-for="(subItem, subKey) in item.sublist" :key="subKey" class="menu__item"
-            @click="clickMenuItem"
+        <li
+            v-for="(subItem, subKey) in item.sublist"
+            :key="subKey"
+            class="menu__item"
+            :class="{ 'menu__item--children': subItem.sublist && subItem.sublist.length }"
         >
-          <NuxtLink :to="subItem.link" class="menu__link">{{ subItem.title }}</NuxtLink>
+          <NuxtLink :to="subItem.link" class="menu__link" @click="clickMenuItem">
+            {{ subItem.title }}
+            <span class="menu__link-icon" v-if="subItem.sublist && subItem.sublist.length">
+              <svg width="10" height="5" viewBox="0 0 10 5" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path opacity="0.4" d="M5 5L9.33013 0.5H0.669873L5 5Z" fill="#545454"/>
+              </svg>
+            </span>
+          </NuxtLink>
+
+          <!-- Третий уровень -->
+          <ul class="menu__sub menu__sub--nested" v-if="subItem.sublist && subItem.sublist.length > 0">
+            <li v-for="(nestedItem, nestedKey) in subItem.sublist" :key="nestedKey" class="menu__item">
+              <NuxtLink :to="nestedItem.link" class="menu__link" @click="clickMenuItem">
+                {{ nestedItem.title }}
+              </NuxtLink>
+            </li>
+          </ul>
         </li>
       </ul>
     </li>
@@ -26,15 +45,34 @@
 </template>
 
 <script setup lang="ts">
-import { useApi } from '~/composables/useApi'
+import {useApi} from '~/composables/useApi'
 
 const mobileMenuStore = useMobileMenuStore()
 
+type MenuLinkItem = {
+  link: string
+  title: string
+  sublist?: MenuLinkItem[]
+}
+
+export interface MenuCategory {
+  id: number
+  name: string
+  slug: string
+  parent_id?: number | null
+  children?: MenuCategory[]
+}
+
+export interface MenuCategoriesResponse {
+  success: boolean
+  data: MenuCategory[]
+}
+
 // Загружаем категории из API
-const { data: categories } = await useAsyncData(
+const {data: categories} = await useAsyncData(
     'catalog-menu-categories',
     async () => {
-      const { data, error } = await useApi('/public/catalog/menu-categories')
+      const {data, error} = await useApi<MenuCategoriesResponse>('/public/catalog/menu-categories')
 
       if (error.value) {
         console.error('Ошибка загрузки категорий меню:', error.value)
@@ -49,23 +87,34 @@ const { data: categories } = await useAsyncData(
     }
 )
 
+// Рекурсивная функция для построения меню
+const buildCategoryMenu = (category: MenuCategory): MenuLinkItem => {
+  const menuItem: MenuLinkItem = {
+    link: `/catalog?category=${category.slug}`,
+    title: category.name,
+  }
+
+  if (category.children && category.children.length > 0) {
+    menuItem.sublist = category.children.map(child => buildCategoryMenu(child))
+  }
+
+  return menuItem
+}
+
 // Формируем меню
 const menuItems = computed(() => {
   // Подменю каталога - начинаем с "Все товары"
-  const catalogSublist = [
+  const catalogSublist: MenuLinkItem[] = [
     {
       link: '/catalog',
       title: 'Все товары'
     }
   ]
 
-  // Добавляем категории из API
-  if (categories.value && categories.value.length > 0) {
-    categories.value.forEach((category: any) => {
-      catalogSublist.push({
-        link: `/catalog?category=${category.slug}`,
-        title: category.name
-      })
+  // Добавляем категории из API рекурсивно
+  if (categories.value?.length) {
+    categories.value.forEach((cat: MenuCategory) => {
+      catalogSublist.push(buildCategoryMenu(cat))
     })
   }
 
@@ -127,7 +176,8 @@ const clickMenuItem = (event: any) => {
 
   if (liItem.classList.contains('menu__item--children')) {
     event.preventDefault()
-    const subList = liItem.querySelector('ul')
+    // Находим только прямое дочернее подменю (не вложенное)
+    const subList = liItem.querySelector(':scope > .menu__sub')
     if (subList) {
       liItem.classList.toggle('_active')
     }
@@ -152,7 +202,7 @@ const clickMenuItem = (event: any) => {
       color: rgba(203, 11, 19, .8);
 
       & .menu__link-icon path {
-        fill: rgba(203, 11, 19, .8);;
+        fill: rgba(203, 11, 19, .8);
       }
     }
   }
@@ -164,7 +214,7 @@ const clickMenuItem = (event: any) => {
 
 @media (any-hover: hover) {
   .menu__item--children:hover {
-    & .menu__sub {
+    & > .menu__sub {
       transform: translateX(0);
       opacity: 1;
       z-index: 998;
@@ -175,7 +225,7 @@ const clickMenuItem = (event: any) => {
 
 @media (max-width: $tablet) {
   .menu__item--children._active {
-    & .menu__sub {
+    & > .menu__sub {
       grid-template-rows: 1fr;
       height: auto;
       opacity: 1;
@@ -247,4 +297,9 @@ const clickMenuItem = (event: any) => {
   }
 }
 
+.menu__sub--nested {
+  @media (max-width: $tablet) {
+    padding-left: 4.4rem;
+  }
+}
 </style>

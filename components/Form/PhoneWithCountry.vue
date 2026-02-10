@@ -4,6 +4,7 @@
       <!-- Селект выбора страны -->
       <div class="phone-input__select-wrapper">
         <FormSelect
+            optionLabel="phone_code"
             :list="formattedCountries"
             :placeholder="selectPlaceholder"
             :selected-id="defaultCountryId"
@@ -29,7 +30,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Country } from '~/types/countries';
+import type {Country} from '~/types/countries';
 import FormSelect from '~/components/Form/Select.vue';
 
 const props = withDefaults(defineProps<{
@@ -49,13 +50,14 @@ const props = withDefaults(defineProps<{
   defaultCountryId: 0
 });
 
+
 const emit = defineEmits(['update:modelValue', 'countryChanged']);
 const model = defineModel<string>();
 
 const phoneValue = ref('');
 const selectedCountry = ref<Country | null>(null);
 
-const { generateMask } = usePhoneMask();
+const {generateMask} = usePhoneMask();
 
 // Форматируем список стран для dropdown - полное название
 const formattedCountries = computed(() => {
@@ -153,7 +155,7 @@ const handleInput = () => {
       @media (max-width: $mobile) {
         min-height: 5rem;
         height: 5rem;
-        width: 7rem;
+        width: 100%;
         padding: 0 0.5rem 0 1.5rem;
       }
 
@@ -193,6 +195,7 @@ const handleInput = () => {
     height: 7rem;
     border: 0.1rem solid var(--fg-input-border);
     border-radius: 0 6rem 6rem 0;
+
     padding: 0 2.7rem 0 2rem;
     font-size: 1.6rem;
     font-family: var(--ff-regular);
@@ -205,6 +208,8 @@ const handleInput = () => {
       height: 5rem;
       font-size: 1.4rem;
       padding: 0 2rem 0 1.5rem;
+
+
     }
   }
 

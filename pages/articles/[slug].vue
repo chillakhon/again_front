@@ -115,7 +115,7 @@ if (!post) {
     width: 100%;
     height: auto;
     margin: 3rem 0;
-    border-radius: .8rem;
+    border-radius: .8rem !important;
 
     @media (max-width: $mobile) {
       margin: 2rem 0;

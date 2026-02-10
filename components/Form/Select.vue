@@ -1,7 +1,7 @@
 <template>
   <div class="form__row" :class="rowClass">
     <div class="select" :class="{ 'select--active': isActive }" ref="select">
-      <button type="button"  class="select__result" @click="toggle">
+      <button type="button" class="select__result" @click="toggle">
         <span>{{ placeholder }}</span>
         <svg width="10" height="5" viewBox="0 0 10 5" fill="none" xmlns="http://www.w3.org/2000/svg" data-v-90e05f7c="">
           <path opacity="0.4" d="M5 5L9.33013 0.5H0.669873L5 5Z" fill="#545454" data-v-90e05f7c=""></path>
@@ -17,7 +17,7 @@
             v-for="( item, key ) in items"
             :key="key"
             ref="selectItems"
-            @click="selected( item.id, item.name, item.code )"
+            @click="selected( item.id, item[optionLabel], item.code )"
         >
           {{ item.name }}
         </button>
@@ -33,53 +33,54 @@
 </template>
 
 <script setup lang="ts">
-import type {Country} from "~/types/countries";
 
-const props = withDefaults( defineProps<{
+const props = withDefaults(defineProps<{
   name?: string,
   placeholder?: string,
   rowClass?: string,
   error?: string,
-  list: Country[],
+  list: any[],
   selectedId?: number
+  optionLabel?: string
 }>(), {
   error: '',
-  placeholder: 'Выбрать'
-} );
+  placeholder: 'Выбрать',
+  optionLabel: 'name'
+});
 
-const items = ref( props.list );
+const items = ref(props.list);
 
 const select = ref<HTMLElement | null>(null);
 
-const selectItems = ref( false );
-const placeholder = ref( props.placeholder );
-const isActive = ref( false );
-const searchInput = ref( '' );
-const model = defineModel<string|number>();
-const notFound = ref( false );
+const selectItems = ref(false);
+const placeholder = ref(props.placeholder);
+const isActive = ref(false);
+const searchInput = ref('');
+const model = defineModel<string | number>();
+const notFound = ref(false);
 
 const toggle = () => {
   isActive.value = !isActive.value;
 
-  const prevSelects = document.querySelectorAll( ".select" );
-  if ( prevSelects ){
-    prevSelects.forEach( ( item ) => {
-      item.classList.remove( 'select--active' );
-    } )
+  const prevSelects = document.querySelectorAll(".select");
+  if (prevSelects) {
+    prevSelects.forEach((item) => {
+      item.classList.remove('select--active');
+    })
   }
 }
 
 const emit = defineEmits(['getSelectedValue', 'update:modelValue']);
-const selected = ( id: number, title: string, code?: string ) => {
+
+const selected = (id: number, title: string, code?: string) => {
   emit('getSelectedValue', {
     name: props.name,
     id: id,
     title: title,
     code: code
-  } );
+  });
 
   model.value = id;
-
   placeholder.value = title;
   isActive.value = false;
 }
@@ -96,22 +97,22 @@ const onClickOutside = (e: MouseEvent | TouchEvent) => {
   }
 };
 
-onMounted( () => {
+onMounted(() => {
 
   document.addEventListener('click', onClickOutside, true);
   document.addEventListener('touchstart', onClickOutside, true);
 
-  if ( props.hasOwnProperty( 'selectedId' ) ) {
-    const find = props.list.find( value => value.id === props.selectedId );
-    if ( find ){
+  if (props.hasOwnProperty('selectedId')) {
+    const find = props.list.find(value => value.id === props.selectedId);
+    if (find) {
       selected(
           find.id,
-          find.name,
+          find[props.optionLabel],
           find.code
       );
     }
   }
-} );
+});
 
 
 onBeforeUnmount(() => {
@@ -120,7 +121,7 @@ onBeforeUnmount(() => {
 });
 
 const search = () => {
-  items.value = props.list.filter( item =>
+  items.value = props.list.filter(item =>
       item.name.toLowerCase().includes(searchInput.value.toLowerCase())
   );
 }

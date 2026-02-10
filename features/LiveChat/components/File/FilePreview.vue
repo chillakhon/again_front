@@ -27,7 +27,7 @@
           <!-- Image preview -->
           <div
               v-if="file.type === 'image' && file.preview"
-              class="relative w-20 h-20 rounded-lg overflow-hidden bg-gray-100 border border-gray-200 "
+              class="relative w-[50px] h-[50px] rounded-lg overflow-hidden bg-gray-100 border border-gray-200 "
           >
             <img
                 :src="file.preview"
@@ -38,20 +38,20 @@
             <!-- Remove button -->
             <button
                 @click="emit('remove', file.id)"
-                class="absolute top-1 right-1 w-5 h-5 bg-red-500 hover:bg-red-600 rounded-full flex items-center justify-center text-white shadow-lg transition-colors"
+                class="absolute top-1 right-1 w-6 h-6 bg-red-400 hover:bg-red-500 rounded-full flex items-center justify-center text-white shadow-lg transition-colors"
             >
-              <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
 
             <!-- Upload progress -->
-            <div
-                v-if="file.uploadProgress !== undefined && file.uploadProgress < 100"
-                class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center"
-            >
-              <span class="text-white text-xs font-medium">{{ file.uploadProgress }}%</span>
-            </div>
+<!--            <div-->
+<!--                v-if="file.uploadProgress !== undefined && file.uploadProgress < 100"-->
+<!--                class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center"-->
+<!--            >-->
+<!--              <span class="text-white text-xs font-medium">{{ file.uploadProgress }}%</span>-->
+<!--            </div>-->
 
             <!-- Error overlay -->
             <div
