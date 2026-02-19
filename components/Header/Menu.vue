@@ -298,8 +298,45 @@ const clickMenuItem = (event: any) => {
 }
 
 .menu__sub--nested {
+
   @media (max-width: $tablet) {
     padding-left: 4.4rem;
   }
 }
+
+
+/* ===== DESKTOP: 3-й уровень открываем СПРАВА ===== */
+@media (any-hover: hover) {
+  /* родитель 2-го уровня уже position:relative через .menu__item */
+  .menu__sub--nested {
+    position: absolute;
+    top: 0;
+    left: 100%;              /* справа от 2-го уровня */
+    transform: translateX(10px); /* чуть отступ и анимация */
+    opacity: 0;
+    pointer-events: none;
+    z-index: 999;
+
+    /* внешний вид как у 2-го уровня */
+    padding: 1.4rem 1.6rem;
+    border-radius: var(--br-regular);
+    box-shadow: 0 7px 15px 0 rgba(0, 0, 0, 0.1),
+    0 28px 28px 0 rgba(0, 0, 0, 0.09),
+    0 63px 38px 0 rgba(0, 0, 0, 0.05),
+    0 112px 45px 0 rgba(0, 0, 0, 0.01),
+    0 175px 49px 0 rgba(0, 0, 0, 0);
+    background: var(--fg-white);
+    white-space: nowrap;
+    transition: var(--tr-regular);
+  }
+
+  /* показываем 3-й уровень при наведении на пункт 2-го уровня */
+  .menu__sub > .menu__item--children:hover > .menu__sub--nested {
+    transform: translateX(0);
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+
 </style>

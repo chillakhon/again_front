@@ -21,24 +21,24 @@
             <div class="success__messengers-list">
               <!-- Telegram -->
               <a
-                  href="https://t.me/YOUR_TELEGRAM"
-                  class="success__messengers-item _telegram"
+                  href="https://t.me/again8help_bot"
+                  class=""
                   target="_blank"
                   rel="noopener"
                   aria-label="Telegram"
               >
-                <img src="/icons/chat/telegram.svg" alt="Telegram" width="27" height="26" />
+                <img src="/icons/chat/telegram.svg" alt="Telegram" width="30" height="29" />
               </a>
 
               <!-- VK -->
               <a
-                  href="https://vk.com/YOUR_VK"
-                  class="success__messengers-item _vk"
+                  href="https://vk.me/public228837691?ref=590197ba2f669a6f7ea29870%3Aru"
+                  class=""
                   target="_blank"
                   rel="noopener"
                   aria-label="VK"
               >
-                <img src="/icons/chat/vk.svg" alt="VK" width="27" height="26" />
+                <img src="/icons/chat/vk.svg" alt="VK" width="30" height="29" />
               </a>
             </div>
 
