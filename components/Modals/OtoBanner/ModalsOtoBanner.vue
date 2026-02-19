@@ -162,13 +162,30 @@ const send = async () => {
   if (result.success) {
     resetErrors()
     resetForm()
+
+
   } else if (result.error?.data?.errors) {
-    for (const item in result.error.data.errors) {
-      if (form.value[item]) {
-        form.value[item].error = result.error.data.errors[item][0]
-      }
+    const errors = result.error.data.errors
+
+    // input_field_value (если вдруг бэк вернул его)
+    if (errors.input_field_value?.[0]) {
+      form.value.input_field_value.error = errors.input_field_value[0]
+      return
+    }
+
+    // email -> показываем в input_field_value
+    if (errors.email?.[0] && getInputType() === 'email') {
+      form.value.input_field_value.error = errors.email[0]
+      return
+    }
+
+    // phone -> показываем в input_field_value
+    if (errors.phone?.[0] && getInputType() === 'tel') {
+      form.value.input_field_value.error = errors.phone[0]
+      return
     }
   }
+
 }
 
 /**

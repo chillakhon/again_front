@@ -59,21 +59,33 @@ export const useOtoBanner = () => {
             // Закрываем OTO модалку
             modal.closeModal()
 
+            // Достаём статус промо из ответа бэка
+            const promoStatus = result.data?.data?.meta?.promo?.status
+
             // Показываем Success модалку
-            const {ModalsSuccess} = useModals()
+            const { ModalsSuccess } = useModals()
 
             setTimeout(() => {
+                // Если промо уже выдавали — показываем другой текст
+                if (promoStatus === 'already_issued') {
+                    modal.openModal(ModalsSuccess, {
+                        title: 'Скидка уже доступна',
+                        text: 'Вы уже получали этот промокод. Посмотрите в личном кабинете: Профиль → Скидки и бонусы.'
+                    })
+                    return
+                }
+
+                // Обычный сценарий (впервые отправили)
                 modal.openModal(ModalsSuccess, {
                     title: 'Спасибо!',
                     text: 'Ваша заявка успешно отправлена'
                 })
             }, 1000)
-
-
         }
 
         return result
     }
+
 
     return {
         initOtoBanner,

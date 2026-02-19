@@ -57,7 +57,7 @@ const selectedLevel = ref<number | null>(null)
 
 // 0 = "без" (сбрасывает фильтр), дальше 2–6
 const absorbencyLevels = [
-  {value: 0, label: 'без'},
+  {value: 0, label: ''},
   {value: 2, label: '2'},
   {value: 3, label: '3'},
   {value: 4, label: '4'},
@@ -95,8 +95,6 @@ defineExpose({
 </script>
 
 <style scoped lang="scss">
-
-
 
 
 /* 3 в ряд на мобиле, 2 в ряд на совсем узких можно оставить 3 — оно компактно */

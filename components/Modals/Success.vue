@@ -1,5 +1,5 @@
 <template>
-  <div class="modal-thanks__title modal__title">Спасибо</div>
+  <div class="modal-thanks__title modal__title">{{`${modal.props.title ?? 'Спасибо'}`}}</div>
   <div class="modal-thanks__text" v-if="modal.props.text" v-html="modal.props.text"></div>
 </template>
 
@@ -8,7 +8,7 @@ const modal = useModal();
 
 setTimeout( () => {
   modal.closeModal();
-}, 3000 )
+}, 6000 )
 </script>
 
 <style scoped lang="scss">

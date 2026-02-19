@@ -22,15 +22,15 @@
     </div>
   </header>
 
-  <div class="header__bottom" :class="{ '_active': mobileMenuStore.isActive }">
-    <div class="container">
-      <HeaderMenu class="header__menu"/>
-      <div class="header__mobile">
-        <button class="header__call" @click="modal.openModal( ModalsCallback )">Связаться с нами</button>
-        <HeaderSocials/>
+    <div class="header__bottom" :class="{ '_active': mobileMenuStore.isActive }">
+      <div class="container">
+        <HeaderMenu class="header__menu"/>
+        <div class="header__mobile">
+          <button class="header__call" @click="modal.openModal( ModalsCallback )">Связаться с нами</button>
+          <HeaderSocials/>
+        </div>
       </div>
     </div>
-  </div>
 </template>
 
 <script setup lang="ts">

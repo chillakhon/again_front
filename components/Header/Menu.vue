@@ -238,14 +238,14 @@ const clickMenuItem = (event: any) => {
 .menu__link {
   display: flex;
   align-items: center;
-  font-size: 1.6rem;
-  line-height: 110%;
-  color: var(--fg-regular-85);
-  font-weight: 300;
+  justify-content: space-between; /* ключ */
+  gap: .6rem;
+  width: 100%;                  /* ключ */
 }
 
 .menu__link-icon {
-  margin-left: .4rem;
+  flex: 0 0 auto;               /* ключ: не сжимать и не переносить */
+  margin-left: 0;               /* можно убрать, раз есть gap */
 
   & path {
     transition: var(--tr-regular);
