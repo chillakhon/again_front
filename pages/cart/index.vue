@@ -35,6 +35,17 @@ definePageMeta( {
   title: 'Корзина',
 } )
 const cartStore = useCartStore();
+const promotionStore = usePromotionStore();
+
+// Перепроверяем акции при изменении корзины или total
+// (total пересчитывается в app.vue onMounted через cartInit, поэтому watchим его)
+watch(() => [cartStore.cart.length, cartStore.total], async ([length, total]) => {
+  if (length > 0 && total > 0) {
+    await promotionStore.checkApplicable(cartStore.cart, cartStore.total);
+  } else if (length === 0) {
+    promotionStore.reset();
+  }
+}, { immediate: true });
 </script>
 
 <style scoped lang="scss">
