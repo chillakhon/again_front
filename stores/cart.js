@@ -36,6 +36,12 @@ export const useCartStore = defineStore('cartStore', () => {
     const init = () => {
         countInCart();
         countCartTotal();
+
+        // Проверяем акции после пересчёта корзины
+        if (cart.value.length > 0 && total.value > 0) {
+            const promotionStore = usePromotionStore();
+            promotionStore.checkApplicable(cart.value, total.value);
+        }
     }
 
     const addToCart = async (product, quantity = 1, variant = null, color = null) => {

@@ -71,9 +71,13 @@ export const usePromotionStore = defineStore('promotionStore', () => {
                 price: item.selected_variant?.price ?? item.price,
             }));
 
+            console.log('[Promotion] checkApplicable items:', JSON.stringify(items), 'total:', cartTotal);
+
             const { data, error } = await useApi('/public/promotions/check-applicable', {
                 body: { items, total: cartTotal },
             }, '', 'POST');
+
+            console.log('[Promotion] response data:', JSON.stringify(data.value), 'error:', error.value);
 
             if (error.value) {
                 console.error('Promotion check error:', error.value);
