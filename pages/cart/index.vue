@@ -37,15 +37,23 @@ definePageMeta( {
 const cartStore = useCartStore();
 const promotionStore = usePromotionStore();
 
-// Перепроверяем акции при изменении корзины или total
-// (total пересчитывается в app.vue onMounted через cartInit, поэтому watchим его)
-watch(() => [cartStore.cart.length, cartStore.total], async ([length, total]) => {
-  if (length > 0 && total > 0) {
+const runCheck = async () => {
+  if (cartStore.cart.length > 0 && cartStore.total > 0) {
     await promotionStore.checkApplicable(cartStore.cart, cartStore.total);
-  } else if (length === 0) {
+  } else if (cartStore.cart.length === 0) {
     promotionStore.reset();
   }
-}, { immediate: true });
+};
+
+// После монтирования cartInit() уже должен отработать (app.vue onMounted)
+// Даём nextTick чтобы total точно пересчитался
+onMounted(async () => {
+  await nextTick();
+  await runCheck();
+});
+
+// Перепроверяем при изменении корзины или total
+watch(() => [cartStore.cart.length, cartStore.total], runCheck);
 </script>
 
 <style scoped lang="scss">
