@@ -2,14 +2,16 @@
   <CartTotal
       :is-promocode="true"
       :is-border="true"
-      :with-button="false"
+      :with-button="withButton"
   />
 </template>
 
 <script setup lang="ts">
-defineProps<{
-  withButton: boolean
-}>();
+withDefaults(defineProps<{
+  withButton?: boolean
+}>(), {
+  withButton: false,
+});
 </script>
 
 <style scoped lang="scss">

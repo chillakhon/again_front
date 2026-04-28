@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { GIFT_CERTIFICATE } from "~/constants/index.js";
 import { useGiftCardPaymentStore } from './giftCardPayment';
 import { useGiftCardPurchaseStore } from './giftCardPurchase';
+import { usePromotionStore } from './promotion';
 
 export const useCartStore = defineStore('cartStore', () => {
     const quantity = ref(0);
@@ -243,6 +244,10 @@ export const useCartStore = defineStore('cartStore', () => {
 
         giftCardPaymentStore.reset();
         giftCardPurchaseStore.reset();
+
+        // Очищаем store акций
+        const promotionStore = usePromotionStore();
+        promotionStore.reset();
 
         localStorage.removeItem('promoCode');
     }
