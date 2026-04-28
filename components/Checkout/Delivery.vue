@@ -7,7 +7,7 @@
           name="country"
           :list="countries.countries"
           placeholder="Страна"
-          :selected-id="userStore.user.profile.delivery_country_id"
+          :selected-id="userStore.user?.profile?.delivery_country_id"
           @get-selected-value="setCountry"
       />
       <FormSelect
@@ -15,7 +15,7 @@
           name="city"
           :list="cities.cities"
           placeholder="Город"
-          :selected-id="userStore.user.profile.delivery_city_id"
+          :selected-id="userStore.user?.profile?.delivery_city_id"
           @get-selected-value="setCity"
       />
       <FormInput
@@ -109,8 +109,8 @@ const { data: cities } = await useApi<Cities>( '/countries/cities', {
 } );
 
 // computed( () => {
-//   countryCode.value = userStore.user.profile.delivery_country_id;
-//   cityName.value = userStore.user.profile.delivery_city_id;
+//   countryCode.value = userStore.user?.profile?.delivery_country_id;
+//   cityName.value = userStore.user?.profile?.delivery_city_id;
 // } )
 </script>
 
