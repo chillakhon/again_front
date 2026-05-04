@@ -42,6 +42,7 @@
       </div>
 
       <NuxtLink v-if="withButton" to="/checkout" class="cart__checkout btn _wide _15 _60">Оформить заказ</NuxtLink>
+      <CartPromotion />
       <CartPromocode v-if="isPromocode"/>
     </div>
   </div>

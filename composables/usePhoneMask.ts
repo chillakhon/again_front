@@ -59,7 +59,13 @@ export const usePhoneMask = () => {
         // Удаляем код страны и все нечисловые символы
         const phoneWithoutCode = phone.replace(phoneCode, '').trim();
         const digitsOnly = phoneWithoutCode.replace(/\D/g, '');
-        return digitsOnly.length === expectedLength;
+        // Если цифр ровно столько сколько нужно — ок
+        if (digitsOnly.length === expectedLength) return true;
+        // Допускаем также полный номер с кодом страны (например 11 цифр для +7)
+        const allDigits = phone.replace(/\D/g, '');
+        const codeDigits = phoneCode.replace(/\D/g, '');
+        if (allDigits.length === expectedLength + codeDigits.length) return true;
+        return false;
     };
 
     /**

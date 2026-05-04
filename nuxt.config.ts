@@ -27,6 +27,9 @@ export default defineNuxtConfig({
                 }
             }
         },
+        ssr: {
+            noExternal: ['@fancyapps/ui'],
+        },
     },
     vue: {
         compilerOptions: {

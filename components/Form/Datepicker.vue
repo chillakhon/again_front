@@ -1,11 +1,12 @@
 <template>
-  <div class="form__row" :class="rowClass">
+  <div class="form__row" :class="[rowClass, { '_highlight': highlight }]">
     <VueDatePicker
         :placeholder="placeholder"
         v-model="model"
         :enable-time-picker="false"
         :format="format"
         :format-locale="ru"
+        :disabled="disabled"
         select-text="Выбрать"
         cancel-text="Отменить"
     ></VueDatePicker>
@@ -18,12 +19,17 @@ import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
 import ru from 'date-fns/locale/ru/index.js';
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   name: string,
   placeholder?: string,
   rowClass?: string,
-  error?: string
-}>();
+  error?: string,
+  disabled?: boolean,
+  highlight?: boolean
+}>(), {
+  disabled: false,
+  highlight: false
+});
 
 const model = defineModel<string|number>();
 const emit = defineEmits(['update:modelValue']);
@@ -107,5 +113,27 @@ const formatDateOutput = (date) => {
     font-size: 1.4rem;
     --dp-preview-font-size: 1.4rem;
   }
+}
+
+.form__row._highlight {
+  :deep(.dp__input) {
+    border-color: var(--fg-red);
+    animation: highlight-pulse 2s ease-in-out infinite;
+  }
+}
+
+@keyframes highlight-pulse {
+  0%, 100% {
+    border-color: var(--fg-red);
+  }
+  50% {
+    border-color: var(--fg-input-border);
+  }
+}
+
+:deep(.dp__disabled) {
+  background-color: #f5f5f5;
+  cursor: not-allowed;
+  opacity: 0.7;
 }
 </style>

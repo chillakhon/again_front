@@ -71,6 +71,17 @@
     </a>
 
 
+    <!-- Max -->
+    <a
+        href="https://max.ru/id660108499492_bot"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="w-[50px] h-[50px] rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 overflow-hidden"
+        title="Перейти в Max"
+    >
+      <img src="/icons/chat/max.svg" alt="Max" class="w-full h-full object-contain">
+    </a>
+
     <!-- Email -->
     <a
         href="mailto:help@again8.ru"

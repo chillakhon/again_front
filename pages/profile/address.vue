@@ -65,6 +65,8 @@ definePageMeta({
   middleware: 'auth'
 });
 
+useBirthdayReminder();
+
 const isCheckedMarketing = ref(false);
 
 const countryId = ref( '' );

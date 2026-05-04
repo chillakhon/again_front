@@ -18,6 +18,8 @@ definePageMeta({
   middleware: 'auth',
 });
 
+useBirthdayReminder();
+
 const { data: cards } = await useApi( '/orders/user' );
 </script>
 

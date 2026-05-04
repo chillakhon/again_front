@@ -75,17 +75,28 @@ import {useCartStore} from '~/stores/cart';
 import {useAuthStore} from '~/stores/auth';
 import {useGiftCardPaymentStore} from '~/stores/giftCardPayment';
 import {useGiftCardPurchaseStore} from '~/stores/giftCardPurchase';
+import {usePromotionStore} from '~/stores/promotion';
 import type {Country} from "~/types/countries";
 
 const cartStore = useCartStore();
 const userStore = useAuthStore();
 const giftCardPaymentStore = useGiftCardPaymentStore();
 const giftCardPurchaseStore = useGiftCardPurchaseStore();
+const promotionStore = usePromotionStore();
+
+// Проверяем применимые акции при загрузке checkout
+onMounted(async () => {
+  if (cartStore.cart.length > 0) {
+    await promotionStore.checkApplicable(cartStore.cart, cartStore.total);
+  }
+});
 const isLoading = ref(false);
 const giftCardDataRef = ref(null);
 
 const recipientRef = ref<{
-  selectedCountry: Country | null
+  selectedCountry: Country | null,
+  setPhoneError: (msg: string) => void,
+  $el: HTMLElement
 } | null>(null);
 
 const form = computed(() => {
@@ -122,7 +133,7 @@ const validateRecipientPhone = () => {
   );
 
   if (!isPhoneValid) {
-    console.error(`Номер должен содержать ${selectedCountry.phone_length} цифр`);
+    recipientRef.value?.setPhoneError(`Номер должен содержать ${selectedCountry.phone_length} цифр`);
     recipientRef.value?.$el?.scrollIntoView({
       behavior: 'smooth',
       block: 'center'
@@ -130,6 +141,7 @@ const validateRecipientPhone = () => {
     return false;
   }
 
+  recipientRef.value?.setPhoneError('');
   return true;
 };
 
@@ -163,9 +175,17 @@ const submit = async () => {
   isLoading.value = true;
 
   // Добавляем данные сертификата в запрос
+  const formVal = form.value.value;
   const requestData = {
-    ...form.value.value,
+    ...formVal,
+    delivery_address: {
+      country: formVal.country_code ?? '',
+      city: formVal.city_name ?? '',
+      address: formVal.delivery_address ?? '',
+    },
   };
+  delete requestData.country_code;
+  delete requestData.city_name;
 
 
   if (cartStore.hasGiftCertificateInCart) {
@@ -175,7 +195,16 @@ const submit = async () => {
     );
   }
 
+  // Добавляем данные акции (если есть)
+  if (promotionStore.hasPromotion) {
+    const promotionData = promotionStore.getDataForOrder();
+    Object.assign(requestData, promotionData);
 
+    // Если пользователь выбрал подарок — убираем промокод
+    if (!promotionStore.useDiscountInstead) {
+      delete requestData.promo_code;
+    }
+  }
 
   const {data, error} = await useApi('/orders', {
     body: requestData
@@ -185,6 +214,7 @@ const submit = async () => {
 
   if (data.value?.success === true) {
     cartStore.setEmptyCart();
+    promotionStore.reset();
     return navigateTo('/success?id=' + data.value.order.id);
   }
 

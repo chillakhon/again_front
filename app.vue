@@ -23,6 +23,7 @@ import Livechatwidget from "~/features/LiveChat/components/Livechatwidget.vue";
 const {init: cartInit} = useCartStore();
 const {init: cookieInit} = useCookieStore();
 
+useBirthdayReminder();
 
 onMounted(() => {
   cartInit();

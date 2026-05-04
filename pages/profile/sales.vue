@@ -17,7 +17,9 @@ definePageMeta({
   layout: 'profile',
   title: 'Ваши скидки и бонусы',
   middleware: 'auth'
-})
+});
+
+useBirthdayReminder();
 
 type Data = {
   success: boolean,

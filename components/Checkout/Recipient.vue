@@ -19,6 +19,7 @@
           name="phone"
           placeholder="Введите номер телефона*"
           v-model="phone"
+          :error="phoneError"
           @country-changed="handleCountryChange"
       />
     </div>
@@ -36,14 +37,20 @@ const lastName = defineModel('lastName');
 const phone = defineModel('phone');
 
 const selectedCountry = ref<Country | null>(null);
+const phoneError = ref('');
 
 const handleCountryChange = (country: Country) => {
   selectedCountry.value = country;
 };
 
-// Экспортируем selectedCountry для валидации в родителе
+const setPhoneError = (msg: string) => {
+  phoneError.value = msg;
+};
+
+// Экспортируем selectedCountry и setPhoneError для валидации в родителе
 defineExpose({
-  selectedCountry
+  selectedCountry,
+  setPhoneError
 });
 </script>
 

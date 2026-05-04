@@ -1,24 +1,35 @@
 <template>
   <div class="profile-settings__form form">
     <template v-for="( item, key ) in form" :key="key">
-      <component
-          v-if="key !== 'phone'"
-          :is="item.template"
+      <!-- Дата рождения с подсветкой и блокировкой -->
+      <FormDatepicker
+          v-if="key === 'birthday'"
           :name="key"
           :placeholder="item.placeholder"
           v-model="item.value"
           :error="item.error"
+          :disabled="isBirthdayDisabled"
+          :highlight="isBirthdayHighlight"
       />
 
       <!-- Телефон с выбором страны -->
       <FormPhoneWithCountry
-          v-else-if="countries"
+          v-else-if="key === 'phone' && countries"
           :countries="countries.countries"
           :default-country-id="userPhoneCountryId"
           :placeholder="item.placeholder"
           v-model="item.value"
           :error="item.error"
           @country-changed="handleCountryChange"
+      />
+
+      <component
+          v-else-if="key !== 'phone'"
+          :is="item.template"
+          :name="key"
+          :placeholder="item.placeholder"
+          v-model="item.value"
+          :error="item.error"
       />
     </template>
 
@@ -130,11 +141,22 @@ const form = ref({
 const userPhoneCountryId = ref(0);
 const selectedCountry = ref<Country | null>(null);
 
+// Логика поля ДР: подсветка и блокировка
+const isBirthdayDisabled = ref(false);
+const isBirthdayHighlight = ref(false);
+
 onMounted(() => {
   form.value.first_name.value = user?.profile?.first_name || '';
   form.value.last_name.value = user?.profile?.last_name || '';
   form.value.birthday.value = user?.profile?.birthday || '';
   form.value.email.value = user.email;
+
+  // ДР: если заполнено — блокируем, если нет — подсвечиваем
+  if (user?.profile?.birthday) {
+    isBirthdayDisabled.value = true;
+  } else {
+    isBirthdayHighlight.value = true;
+  }
 
   // Определяем страну по номеру телефона
   if (user?.profile?.phone && countries.value?.countries) {
@@ -215,6 +237,13 @@ const save = async () => {
     }
   } else {
     authStore.updateProfile(form);
+
+    // После сохранения ДР — блокируем поле и убираем подсветку
+    if (form.value.birthday.value) {
+      isBirthdayDisabled.value = true;
+      isBirthdayHighlight.value = false;
+    }
+
     modal.openModal(ModalsSuccess, {
       title: 'Спасибо!',
       text: 'Ваш профиль обновлен'

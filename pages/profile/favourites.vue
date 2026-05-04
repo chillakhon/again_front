@@ -8,7 +8,9 @@ definePageMeta({
   layout: 'profile',
   title: 'Хочу купить',
   middleware: 'auth'
-})
+});
+
+useBirthdayReminder();
 
 const favourites = useFavouritesStore();
 </script>

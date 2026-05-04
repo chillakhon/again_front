@@ -1,5 +1,19 @@
 <template>
-  <div class="cart__promo">
+  <!-- Блокировка промокода если акция не разрешает промокоды -->
+  <div v-if="promotionStore.hasPromotion && !promotionStore.allowPromoCodes" class="cart__promo">
+    <div class="cart__promo-blocked">
+      Промокоды и скидки недоступны — действует акция «{{ promotionStore.activePromotion?.name }}»
+    </div>
+  </div>
+
+  <!-- Блокировка промокода если пользователь выбрал подарок (а не скидку) -->
+  <div v-else-if="promotionStore.hasPromotion && promotionStore.allowPromoCodes && promotionStore.userChoice === 'gift'" class="cart__promo">
+    <div class="cart__promo-blocked _info">
+      Вы выбрали подарок. Чтобы использовать промокод, переключитесь на «Промокод / скидка» выше.
+    </div>
+  </div>
+
+  <div v-else class="cart__promo">
     <div class="cart__promo-flex">
       <input
           type="text"
@@ -56,7 +70,10 @@
 </template>
 
 <script setup lang="ts">
+import { usePromotionStore } from '~/stores/promotion';
+
 const cart = useCartStore();
+const promotionStore = usePromotionStore();
 const promoCodeInput = ref('');
 const isLoading = ref(false);
 
@@ -140,6 +157,23 @@ onMounted(() => {
 </script>
 
 <style scoped lang="scss">
+.cart__promo-blocked {
+  margin-top: 2rem;
+  padding: 1.2rem 1.4rem;
+  border-radius: 0.8rem;
+  font-size: 1.2rem;
+  line-height: 1.4;
+  background: rgba(211, 47, 47, 0.08);
+  border-left: 3px solid #d32f2f;
+  color: #c62828;
+
+  &._info {
+    background: rgba(33, 150, 243, 0.08);
+    border-left-color: #2196F3;
+    color: #1565c0;
+  }
+}
+
 .cart__promo {
   position: relative;
   --height: 6.6rem;
