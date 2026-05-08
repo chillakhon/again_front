@@ -25,6 +25,12 @@ export const usePromotionStore = defineStore('promotionStore', () => {
     const message = ref('');
     const messageClass = ref('');
 
+    // Счётчик запросов для защиты от race condition:
+    // несколько checkApplicable() могут лететь параллельно (например, из app.vue::cartInit
+    // и из watch на странице). Применяем результат только самого последнего запроса,
+    // чтобы устаревший ответ не затирал актуальный стейт (и не сбрасывал выбранный подарок).
+    let requestId = 0;
+
     // ========================================
     // COMPUTED
     // ========================================
@@ -58,10 +64,13 @@ export const usePromotionStore = defineStore('promotionStore', () => {
      */
     const checkApplicable = async (cartItems, cartTotal) => {
         if (!cartItems || cartItems.length === 0) {
+            // Сбрасываем все «в полёте» запросы, чтобы их ответы не применились.
+            requestId += 1;
             reset();
             return;
         }
 
+        const myRequestId = ++requestId;
         isLoading.value = true;
 
         try {
@@ -79,6 +88,12 @@ export const usePromotionStore = defineStore('promotionStore', () => {
 
             console.log('[Promotion] response data:', JSON.stringify(data.value), 'error:', error.value);
 
+            // Если в это время был запущен более свежий запрос — игнорируем этот ответ,
+            // иначе устаревший ответ может затереть актуальный стейт (бывший баг с пропадающим подарком).
+            if (myRequestId !== requestId) {
+                return;
+            }
+
             if (error.value) {
                 console.error('Promotion check error:', error.value);
                 reset();
@@ -90,9 +105,16 @@ export const usePromotionStore = defineStore('promotionStore', () => {
                 // Берём самую приоритетную (первую, т.к. бек сортирует по priority desc)
                 activePromotion.value = data.value.data[0];
 
-                // Автоматически выбираем первый подарок
-                if (activePromotion.value.gift_products?.length > 0) {
-                    selectedGift.value = activePromotion.value.gift_products[0];
+                // Автоматически выбираем первый подарок, только если ещё ничего не выбрано
+                // или ранее выбранного подарка больше нет в новом списке.
+                const giftProductsList = activePromotion.value.gift_products || [];
+                const stillAvailable = selectedGift.value
+                    ? giftProductsList.find((g) => g.id === selectedGift.value.id)
+                    : null;
+                if (stillAvailable) {
+                    selectedGift.value = stillAvailable;
+                } else if (giftProductsList.length > 0) {
+                    selectedGift.value = giftProductsList[0];
                 }
 
                 // Если промокоды не разрешены — принудительно выбираем подарок
@@ -107,9 +129,13 @@ export const usePromotionStore = defineStore('promotionStore', () => {
             }
         } catch (err) {
             console.error('Promotion check failed:', err);
-            reset();
+            if (myRequestId === requestId) {
+                reset();
+            }
         } finally {
-            isLoading.value = false;
+            if (myRequestId === requestId) {
+                isLoading.value = false;
+            }
         }
     };
 

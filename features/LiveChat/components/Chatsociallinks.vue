@@ -79,7 +79,7 @@
         class="w-[50px] h-[50px] rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 overflow-hidden"
         title="Перейти в Max"
     >
-      <img src="/icons/chat/max.svg" alt="Max" class="w-full h-full object-contain">
+      <img src="/icons/chat/max.svg" alt="Max" class="w-[42px] h-[42px] object-contain">
     </a>
 
     <!-- Email -->

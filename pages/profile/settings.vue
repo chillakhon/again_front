@@ -219,38 +219,42 @@ const save = async () => {
   }
 
   isLoading.value = true;
-  const {data, status, error} = await useApi('/clients/update-profile', {
-    body: {
-      first_name: form.value.first_name.value,
-      last_name: form.value.last_name.value,
-      phone: form.value.phone.value,
-      email: form.value.email.value,
-      birthday: getDateFormat().formatDateOutput(form.value.birthday.value)
-    }
-  }, '', 'PUT');
-
-  if (status.value === 'error' && error?.value?.data?.errors) {
-    for (const item in error.value.data.errors) {
-      if (form.value[item]) {
-        form.value[item].error = error.value.data.errors[item][0];
+  try {
+    const {data, status, error} = await useApi('/clients/update-profile', {
+      body: {
+        first_name: form.value.first_name.value,
+        last_name: form.value.last_name.value,
+        phone: form.value.phone.value,
+        email: form.value.email.value,
+        birthday: getDateFormat().formatDateOutput(form.value.birthday.value)
       }
-    }
-  } else {
-    authStore.updateProfile(form);
+    }, '', 'PUT');
 
-    // После сохранения ДР — блокируем поле и убираем подсветку
-    if (form.value.birthday.value) {
-      isBirthdayDisabled.value = true;
-      isBirthdayHighlight.value = false;
-    }
+    if (status.value === 'error' && error?.value?.data?.errors) {
+      for (const item in error.value.data.errors) {
+        if (form.value[item]) {
+          form.value[item].error = error.value.data.errors[item][0];
+        }
+      }
+    } else {
+      authStore.updateProfile(form);
 
-    modal.openModal(ModalsSuccess, {
-      title: 'Спасибо!',
-      text: 'Ваш профиль обновлен'
-    });
+      // После сохранения ДР — блокируем поле и убираем подсветку
+      if (form.value.birthday.value) {
+        isBirthdayDisabled.value = true;
+        isBirthdayHighlight.value = false;
+      }
+
+      modal.openModal(ModalsSuccess, {
+        title: 'Спасибо!',
+        text: 'Ваш профиль обновлен'
+      });
+    }
+  } catch (e) {
+    console.error('Profile update failed:', e);
+  } finally {
+    isLoading.value = false;
   }
-
-  isLoading.value = false;
 };
 </script>
 

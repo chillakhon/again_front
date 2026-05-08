@@ -84,12 +84,26 @@ const giftCardPaymentStore = useGiftCardPaymentStore();
 const giftCardPurchaseStore = useGiftCardPurchaseStore();
 const promotionStore = usePromotionStore();
 
-// Проверяем применимые акции при загрузке checkout
-onMounted(async () => {
-  if (cartStore.cart.length > 0) {
+// Проверяем применимые акции при загрузке checkout.
+// Важно: cartStore.total пересчитывается через cartInit() в app.vue::onMounted,
+// который выполняется ПОСЛЕ onMounted этой страницы (child → parent).
+// Поэтому здесь нельзя дёргать checkApplicable с total=0 — бэк отфильтрует все акции
+// по min_purchase_amount и reset() затрёт уже выставленный selectedGift.
+const runPromotionCheck = async () => {
+  if (cartStore.cart.length > 0 && cartStore.total > 0) {
     await promotionStore.checkApplicable(cartStore.cart, cartStore.total);
+  } else if (cartStore.cart.length === 0) {
+    promotionStore.reset();
   }
+};
+
+onMounted(async () => {
+  await nextTick();
+  await runPromotionCheck();
 });
+
+// Перепроверяем при изменении корзины или total (после cartInit)
+watch(() => [cartStore.cart.length, cartStore.total], runPromotionCheck);
 const isLoading = ref(false);
 const giftCardDataRef = ref(null);
 

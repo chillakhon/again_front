@@ -93,6 +93,7 @@ export const useAuthStore = defineStore('authStore', () => {
     }
 
     const updateProfile = (form) => {
+        if (!user.value.profile) user.value.profile = {};
         user.value.profile.birthday = getDateFormat().formatDateOutput(form.value.birthday.value);
         user.value.profile.first_name = form.value.first_name.value;
         user.value.profile.last_name = form.value.last_name.value;

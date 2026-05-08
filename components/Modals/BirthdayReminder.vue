@@ -5,31 +5,19 @@
     <NuxtLink to="/profile/settings" class="btn _border" @click="close">
       Заполнить дату рождения
     </NuxtLink>
-    <button class="modal-birthday__dismiss" @click="dismiss">
-      Больше не показывать
-    </button>
   </div>
 </template>
 
 <script setup lang="ts">
 const modal = useModal();
 
-const STORAGE_KEY = 'birthday_reminder_dismissed';
-
 const close = () => {
-  modal.closeModal();
-};
-
-const dismiss = () => {
-  if (process.client) {
-    localStorage.setItem(STORAGE_KEY, '1');
-  }
   modal.closeModal();
 };
 
 setTimeout(() => {
   modal.closeModal();
-}, 5000);
+}, 10000);
 </script>
 
 <style scoped lang="scss">
