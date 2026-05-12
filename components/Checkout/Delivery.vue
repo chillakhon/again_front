@@ -1,22 +1,43 @@
 <template>
   <div class="checkout__block">
     <div class="checkout__block-title fz-h2">Доставка</div>
+
+    <div class="checkout__delivery-self" v-if="userStore.isAuthenticated && hasProfileAddress">
+      <FormCheckbox
+          name="delivery_self"
+          label="Доставка по моему адресу"
+          v-model="useMyAddress"
+      />
+    </div>
+
     <div class="checkout__delivery">
       <FormSelect
           v-if="countries"
+          :key="`country-${useMyAddress}`"
           name="country"
           :list="countries.countries"
           placeholder="Страна"
-          :selected-id="userStore.user?.profile?.delivery_country_id"
+          :selected-id="useMyAddress ? userStore.user?.profile?.delivery_country_id : undefined"
           @get-selected-value="setCountry"
       />
       <FormSelect
           v-if="cities"
+          :key="`city-${useMyAddress}-${countryId}`"
           name="city"
           :list="cities.cities"
           placeholder="Город"
-          :selected-id="userStore.user?.profile?.delivery_city_id"
+          :selected-id="useMyAddress ? userStore.user?.profile?.delivery_city_id : undefined"
           @get-selected-value="setCity"
+      />
+      <FormInput
+          name="region"
+          placeholder="Регион / область"
+          v-model="region"
+      />
+      <FormInput
+          name="postal_code"
+          placeholder="Почтовый индекс"
+          v-model="postalCode"
       />
       <FormInput
           name="address"
@@ -24,116 +45,193 @@
           v-model="address"
       />
 
-      <FormCheckbox
-          name="delivery[]"
-          class="form__row"
-          :label="{
-            title: 'Пункт выдачи СДЭК',
-            link: 'Выбрать на карте',
-            price: '+ __ ₽'
-          }"
+      <div class="checkout__delivery-extras">
+        <FormInput
+            name="entrance"
+            placeholder="Подъезд"
+            v-model="entrance"
+        />
+        <FormInput
+            name="floor"
+            placeholder="Этаж"
+            v-model="floor"
+        />
+        <FormInput
+            name="intercom"
+            placeholder="Домофон"
+            v-model="intercom"
+        />
+      </div>
+
+      <FormDatepicker
+          name="delivery_date"
+          placeholder="Желаемая дата доставки"
+          v-model="deliveryDate"
       />
 
-      <FormCheckbox
-          name="delivery[]"
-          class="form__row"
-          :label="{
-            title: 'Пункт самовывоза Boxberry',
-            link: 'Выбрать на карте',
-            price: '+ __ ₽'
-          }"
-      />
-
-      <FormCheckbox
-          name="delivery[]"
-          class="form__row"
-          :label="{
-            title: 'Доставка в отделение Почты<br> России или почтомат',
-            link: 'Выбрать на карте',
-            price: '+ __ ₽'
-          }"
-      />
-
-      <FormCheckbox
-          name="delivery[]"
-          class="form__row"
-          :label="{
-            title: 'СДЭК: Курьерская доставка',
-            link: 'Тариф “Посылка склад-дверь”<br> от 6 до 7 рабочих дней',
-            price: '+ __ ₽'
-          }"
-      />
-
-      <FormCheckbox
-          name="delivery[]"
-          class="form__row"
-          :label="{
-            title: 'Курьером Boxberry',
-            link: 'Курьерская служба<br> Boxberry 7 дней',
-            price: '+ __ ₽'
-          }"
-      />
+      <div v-if="deliveryMethodsList.length" class="checkout__delivery-methods">
+        <div class="checkout__delivery-methods-title">Способ доставки*</div>
+        <FormRadio
+            v-for="method in deliveryMethodsList"
+            :key="method.id"
+            name="delivery_method"
+            :title="method.name"
+            :text="method.description"
+            :checked="deliveryMethodId === method.id"
+            @click="selectDeliveryMethod(method)"
+        />
+      </div>
     </div>
     <div class="checkout__delivery-comment">
-      <FormTextarea name="notes" placeholder="Оставьте комментарий к заказу" v-model="notes" />
+      <FormTextarea
+          name="buyer_comment"
+          placeholder="Комментарий к заказу"
+          v-model="buyerComment"
+      />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import type {Cities, Countries} from "~/types/countries";
+import type { Cities, Countries } from "~/types/countries";
+
+interface DeliveryMethod {
+  id: number,
+  name: string,
+  delivery_type_code?: string,
+  description?: string,
+  is_active?: boolean,
+}
 
 const userStore = useAuthStore();
-const countryId = ref( 0 );
+const countryId = ref(0);
 
-const countryCode = defineModel( 'countryCode' );
-const cityName = defineModel( 'cityName' );
-const address = defineModel( 'address' );
-const notes = defineModel( 'notes' );
+// Двухсторонние связки с родителем (pages/checkout/index.vue):
+const countryCode = defineModel('countryCode');
+const countryName = defineModel('countryName');
+const cityName = defineModel('cityName');
+const address = defineModel('address');
+const region = defineModel('region');
+const postalCode = defineModel('postalCode');
+const entrance = defineModel('entrance');
+const floor = defineModel('floor');
+const intercom = defineModel('intercom');
+const deliveryDate = defineModel<string | number>('deliveryDate');
+const buyerComment = defineModel('buyerComment');
+const deliveryMethodId = defineModel<number | null>('deliveryMethodId');
+const deliveryMethodName = defineModel<string>('deliveryMethodName');
+const deliveryMethodCode = defineModel<string>('deliveryMethodCode');
 
-const setCountry = ( object: object ) => {
+// FormSelect эмитит { name: <form-поле>, id, title, code }.
+// Здесь нужен именно `title` (название страны/города), а не `name`
+// (там просто имя поля формы, типа "country"/"city").
+const setCountry = (object: any) => {
   countryCode.value = object.code;
+  countryName.value = object.title ?? object.name ?? object.code;
   countryId.value = object.id;
-}
+};
 
-const setCity = ( object: object ) => {
-  cityName.value = object.title;
-}
+const setCity = (object: any) => {
+  cityName.value = object.title ?? object.name;
+};
 
-const {data: countries} = await useCountries();
-const { data: cities } = await useApi<Cities>( '/countries/cities', {
+// Чекбокс «Доставка по моему адресу». По умолчанию выключен.
+// При включении подставляем страну/город/индекс/адрес из профиля,
+// при выключении — обнуляем, чтобы юзер ввёл данные вручную.
+const useMyAddress = ref(false);
+const hasProfileAddress = computed(() => {
+  const p = userStore.user?.profile;
+  return !!(p?.delivery_country_id || p?.delivery_city_id || p?.delivery_address);
+});
+
+watch(useMyAddress, (checked) => {
+  const p = userStore.user?.profile;
+  if (checked && p) {
+    address.value = p.delivery_address || '';
+    postalCode.value = p.delivery_postal_code || '';
+    // countryId триггерит подгрузку списка городов (watch: [countryId]).
+    // После remount FormSelect-ов :selected-id подставит значения
+    // из профиля → setCountry/setCity сработают автоматически.
+    if (p.delivery_country_id) {
+      countryId.value = p.delivery_country_id;
+    }
+  } else {
+    address.value = '';
+    postalCode.value = '';
+    region.value = '';
+    countryCode.value = '';
+    countryName.value = '';
+    cityName.value = '';
+    countryId.value = 0;
+  }
+});
+
+const selectDeliveryMethod = (method: DeliveryMethod) => {
+  deliveryMethodId.value = method.id;
+  deliveryMethodName.value = method.name;
+  deliveryMethodCode.value = method.delivery_type_code ?? '';
+};
+
+const { data: countries } = await useCountries();
+const { data: cities } = await useApi<Cities>('/countries/cities', {
   query: {
-    country_id: countryId
+    country_id: countryId,
   },
-  watch: [ countryId ]
-} );
+  watch: [countryId],
+});
 
-// computed( () => {
-//   countryCode.value = userStore.user?.profile?.delivery_country_id;
-//   cityName.value = userStore.user?.profile?.delivery_city_id;
-// } )
+// Загружаем активные методы доставки. Список не зависит от адреса —
+// для расчёта стоимости отдельно вызывается /api/delivery/calculate.
+const { data: deliveryMethods } = await useApi<{
+  data: DeliveryMethod[],
+  meta: { total_methods: number }
+}>('/delivery/methods/admin', {
+  query: { active: 1 },
+});
+
+const deliveryMethodsList = computed<DeliveryMethod[]>(
+    () => deliveryMethods.value?.data ?? []
+);
+
+// Преселектим первый метод, чтобы пользователь не получал ошибку
+// «Способ доставки обязателен», если просто не дотянулся до радио-кнопок.
+watch(deliveryMethodsList, (list) => {
+  if (list.length && !deliveryMethodId.value) {
+    selectDeliveryMethod(list[0]);
+  }
+}, { immediate: true });
 </script>
 
 <style scoped lang="scss">
-.delivery__checkbox {
-  :deep(.checkbox__icon) {
-    top: .2rem;
+.checkout__delivery-self {
+  margin-bottom: 1.5rem;
+}
 
-    @media (max-width: $mobile) {
-      font-size: .3rem;
-    }
-  }
+.checkout__delivery-extras {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
 
   @media (max-width: $mobile) {
-    & {
-      margin-top: 3rem;
-      margin-bottom: 0;
-    }
+    grid-template-columns: 1fr;
   }
+}
+
+.checkout__delivery-methods {
+  margin-top: 2rem;
+
+  & > .form__row + .form__row {
+    margin-top: 1.2rem;
+  }
+}
+
+.checkout__delivery-methods-title {
+  font-size: var(--fz-regular);
+  font-weight: 600;
+  margin-bottom: 1.2rem;
 }
 
 .checkout__delivery-comment {
   margin-top: 3.3rem;
 }
-
 </style>
