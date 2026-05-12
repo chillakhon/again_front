@@ -59,7 +59,7 @@
         <!-- От кого -->
         <FormInput
             placeholder="Введите ваше имя*"
-            :value="purchaseStore.purchaseData.sender_name"
+            :model-value="purchaseStore.purchaseData.sender_name"
             @update:modelValue="updateField('sender_name', $event)"
             :error="errors.sender_name"
             row-class="_15"
@@ -69,7 +69,7 @@
         <template v-if="purchaseStore.purchaseData.recipient_type === 'someone'">
           <FormInput
               placeholder="Имя получателя*"
-              :value="purchaseStore.purchaseData.recipient_name"
+              :model-value="purchaseStore.purchaseData.recipient_name"
               @update:modelValue="updateField('recipient_name', $event)"
               :error="errors.recipient_name"
               row-class="_15"
@@ -79,7 +79,7 @@
               v-if="purchaseStore.purchaseData.delivery_channel === 'email'"
               type="email"
               placeholder="Email получателя*"
-              :value="purchaseStore.purchaseData.recipient_email"
+              :model-value="purchaseStore.purchaseData.recipient_email"
               @update:modelValue="updateField('recipient_email', $event)"
               :error="errors.recipient_email"
               row-class="_15"
@@ -89,7 +89,7 @@
               v-if="purchaseStore.purchaseData.delivery_channel === 'telegram'"
               name="recipient_phone"
               placeholder="Телефон получателя*"
-              :value="purchaseStore.purchaseData.recipient_phone"
+              :model-value="purchaseStore.purchaseData.recipient_phone"
               @update:modelValue="updateField('recipient_phone', $event)"
               :error="errors.recipient_phone"
               row-class="_15"
@@ -99,7 +99,7 @@
         <!-- Поздравительное сообщение -->
         <FormTextarea
             placeholder="Поздравительное сообщение (необязательно)"
-            :value="purchaseStore.purchaseData.message"
+            :model-value="purchaseStore.purchaseData.message"
             @update:modelValue="updateField('message', $event)"
             row-class="_15"
         />
@@ -151,14 +151,14 @@
             <FormDatepicker
                 name="scheduled_date"
                 placeholder="Дата отправки*"
-                :value="purchaseStore.purchaseData.scheduled_date"
+                :model-value="purchaseStore.purchaseData.scheduled_date"
                 @update:modelValue="updateField('scheduled_date', $event)"
                 :error="errors.scheduled_date"
             />
             <FormInput
                 type="time"
                 placeholder="Время*"
-                :value="purchaseStore.purchaseData.scheduled_time"
+                :model-value="purchaseStore.purchaseData.scheduled_time"
                 @update:modelValue="updateField('scheduled_time', $event)"
                 :error="errors.scheduled_time"
                 row-class="_15"
@@ -199,7 +199,7 @@
         <!-- От кого (для пластиковой тоже нужно) -->
         <FormInput
             placeholder="От кого (ваше имя)*"
-            :value="purchaseStore.purchaseData.sender_name"
+            :model-value="purchaseStore.purchaseData.sender_name"
             @update:modelValue="updateField('sender_name', $event)"
             :error="errors.sender_name"
             row-class="_15"
@@ -208,7 +208,7 @@
         <!-- Поздравительное сообщение (опционально) -->
         <FormTextarea
             placeholder="Поздравительное сообщение (будет напечатано на открытке)"
-            :value="purchaseStore.purchaseData.message"
+            :model-value="purchaseStore.purchaseData.message"
             @update:modelValue="updateField('message', $event)"
             row-class="_15"
         />

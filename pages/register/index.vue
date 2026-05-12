@@ -9,31 +9,26 @@
             name="first_name"
             placeholder="Введите имя*"
             v-model="form.first_name"
-            :value="form.first_name"
         />
         <FormInput
             name="last_name"
             placeholder="Введите фамилию*"
             v-model="form.last_name"
-            :value="form.last_name"
         />
         <FormInput
             name="surname"
             placeholder="Введите отчество*"
             v-model="form.surname"
-            :value="form.surname"
         />
         <FormInput
             name="phone"
             placeholder="Введите номер телефона*"
             v-model="form.phone"
-            :value="form.phone"
         />
         <FormInput
             name="email"
             placeholder="Введите вашу email почту*"
             v-model="form.email"
-            :value="form.email"
         />
         <div class="form__button">
           <button class="register__form-btn btn" @click="register">Зарегистрироваться</button>

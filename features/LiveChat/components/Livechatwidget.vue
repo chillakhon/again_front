@@ -76,17 +76,31 @@ const inputError = computed(() => store.inputError)
 const conversation = computed(() => store.conversation)
 const messages = computed(() => store.messages)
 
+// Нормализуем id клиента: '' → null, иначе number.
+// Поведение Number('') === 0 ломало привязку: 0 трактовался как «нет клиента»
+// и client_id не уходил в API.
+const normalizeClientId = (rawId: unknown): number | null => {
+  if (rawId === null || rawId === undefined || rawId === '') return null
+  const n = Number(rawId)
+  return Number.isFinite(n) && n > 0 ? n : null
+}
+
+// Загружает/перепривязывает диалог с актуальным client_id.
+// Бэкенд (PublicConversationController::getOrCreateForClient) найдёт существующий
+// диалог по external_id и проставит client_id, если у того его ещё не было.
+// При logout-е auth-стор удаляет externalId из localStorage — getExternalIdClient
+// сгенерирует новый, и виджет получит чистый диалог (чтобы переписка не «текла»
+// между разными аккаунтами на одном браузере).
+const linkConversationToCurrentUser = async () => {
+  const externalId = await getExternalIdClient()
+  const userId = normalizeClientId(authUser.user?.id)
+  store.setClientInfo(userId, externalId)
+  await store.fetchOrCreateConversation()
+}
+
 // Инициализация при монтировании
 onMounted(async () => {
-  // Генерируем или получаем external_id
-  let externalId = await getExternalIdClient()
-  const userId = authUser.user.id ?? null
-
-  // Устанавливаем информацию о клиенте
-  store.setClientInfo(Number(userId), externalId)
-
-  // Загружаем или создаём conversation
-  await store.fetchOrCreateConversation()
+  await linkConversationToCurrentUser()
 
   // Отмечаем как прочитанный при открытии
   if (conversation.value) {
@@ -98,6 +112,17 @@ onMounted(async () => {
     events?.subscribeToEvents()
   }
 })
+
+// Когда пользователь логинится (или checkAuth завершается уже после монтирования
+// виджета), `authUser.user.id` появляется — догоняем привязку, чтобы анонимный
+// chat с этого браузера получил `client_id` на бэке.
+watch(
+    () => authUser.user?.id,
+    async (newId, oldId) => {
+      if (newId === oldId) return
+      await linkConversationToCurrentUser()
+    },
+)
 
 // Отмечаем как прочитанное при открытии
 watch(isOpen, async (newVal) => {

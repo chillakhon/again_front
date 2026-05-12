@@ -24,21 +24,33 @@
               />
 
               <CheckoutDelivery
-                  v-model:country-code="form.value.country_code"
-                  v-model:city-name="form.value.city_name"
-                  v-model:address="form.value.delivery_address"
-                  v-model:notes="form.value.notes"
+                  v-model:country-code="form.country_code"
+                  v-model:country-name="form.country_name"
+                  v-model:city-name="form.city_name"
+                  v-model:address="form.delivery_address"
+                  v-model:region="form.region"
+                  v-model:postal-code="form.postal_code"
+                  v-model:entrance="form.entrance"
+                  v-model:floor="form.floor"
+                  v-model:intercom="form.intercom"
+                  v-model:delivery-date="form.delivery_date"
+                  v-model:buyer-comment="form.buyer_comment"
+                  v-model:delivery-method-id="form.delivery_method_id"
+                  v-model:delivery-method-name="form.delivery_method_name"
+                  v-model:delivery-method-code="form.delivery_method_code"
               />
               <CheckoutRecipient
                   ref="recipientRef"
-                  v-model:first-name="form.value.user.first_name"
-                  v-model:last-name="form.value.user.last_name"
-                  v-model:phone="form.value.user.phone"
+                  v-model:first-name="form.user.first_name"
+                  v-model:last-name="form.user.last_name"
+                  v-model:phone="form.user.phone"
               />
 
               <CheckoutPayment
+                  v-model:payment-method="form.payment_method"
                   @click-to-button="submit"
                   :is-loading="isLoading"
+                  :error="submitError"
               />
             </div>
           </div>
@@ -56,7 +68,7 @@
             <div class="checkout__total">
               <CheckoutTotal
                   :with-button="false"
-                  v-model:promo-code="form.value.promo_code"
+                  v-model:promo-code="form.promo_code"
               />
 
               <CheckoutGiftCard/>
@@ -105,6 +117,7 @@ onMounted(async () => {
 // Перепроверяем при изменении корзины или total (после cartInit)
 watch(() => [cartStore.cart.length, cartStore.total], runPromotionCheck);
 const isLoading = ref(false);
+const submitError = ref('');
 const giftCardDataRef = ref(null);
 
 const recipientRef = ref<{
@@ -113,35 +126,47 @@ const recipientRef = ref<{
   $el: HTMLElement
 } | null>(null);
 
-const form = computed(() => {
-  return ref({
-    promo_code: cartStore.promoCode,
-    gift_card_data: '',
-    gift_card_code: giftCardPaymentStore.giftCardCode,
-    user: {
-      first_name: userStore.user?.profile?.first_name || '',
-      last_name: userStore.user?.profile?.last_name || '',
-      phone: userStore.user?.profile?.phone || ''
-    },
-    country_code: 'RU',
-    city_name: 'Москва',
-    delivery_address: 'Ленина 12',
-    notes: 'Комментарий',
-    items: cartStore.getCartForCheckout()
-  });
+// Форма — обычный ref, без обёртки computed/ref-ом-в-ref-е.
+// Поля получателя НЕ префиллим профилем: в Recipient.vue есть чекбокс
+// «Получатель — я сам», который подставляет данные авторизованного юзера.
+// Так юзер сам решает, на кого оформлять заказ.
+const form = reactive({
+  promo_code: cartStore.promoCode,
+  gift_card_data: '',
+  gift_card_code: giftCardPaymentStore.giftCardCode,
+  user: {
+    first_name: '',
+    last_name: '',
+    phone: '',
+  },
+  country_code: '',
+  country_name: '',
+  city_name: '',
+  delivery_address: '',
+  region: '',
+  postal_code: '',
+  entrance: '',
+  floor: '',
+  intercom: '',
+  delivery_date: '' as string | number,
+  buyer_comment: '',
+  delivery_method_id: null as number | null,
+  delivery_method_name: '',
+  delivery_method_code: '',
+  payment_method: '',
 });
 
 
 const validateRecipientPhone = () => {
   const selectedCountry = recipientRef.value?.selectedCountry ?? null;
 
-  if (!selectedCountry || !form.value.value.user.phone) {
+  if (!selectedCountry || !form.user.phone) {
     return true;
   }
 
   const { validatePhoneLength } = usePhoneMask();
   const isPhoneValid = validatePhoneLength(
-      form.value.value.user.phone,
+      form.user.phone,
       selectedCountry.phone_code,
       selectedCountry.phone_length
   );
@@ -160,17 +185,34 @@ const validateRecipientPhone = () => {
 };
 
 
+const showError = async (msg: string) => {
+  submitError.value = msg;
+  await nextTick();
+  // Скроллим к самой ошибке (она теперь рендерится прямо над кнопкой
+  // «Подтвердить заказ» внутри CheckoutPayment).
+  document
+      .querySelector('.checkout__submit-error')
+      ?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+};
+
+// Склеивает список отсутствующих полей в человеко-читаемую фразу:
+// ['адрес доставки']                       → 'Заполните адрес доставки'
+// ['страну', 'адрес доставки']             → 'Заполните страну и адрес доставки'
+// ['страну', 'город', 'адрес доставки']    → 'Заполните страну, город и адрес доставки'
+const joinMissing = (parts: string[]) => {
+  if (parts.length <= 1) return `Заполните ${parts[0] ?? ''}`.trim();
+  const head = parts.slice(0, -1).join(', ');
+  const tail = parts[parts.length - 1];
+  return `Заполните ${head} и ${tail}`;
+};
+
 const submit = async () => {
+  submitError.value = '';
+
   // Валидация данных сертификата (если есть в корзине)
-
-
   if (cartStore.hasGiftCertificateInCart) {
-
-
     const isValid = giftCardDataRef.value?.validate();
-
     if (!isValid) {
-      // Скроллим к форме с ошибками
       giftCardDataRef.value?.$el?.scrollIntoView({
         behavior: 'smooth',
         block: 'center'
@@ -185,22 +227,54 @@ const submit = async () => {
     return;
   }
 
+  // Минимальные проверки обязательных полей до отправки на бэк.
+  // Показываем только реально пустые поля, а не общий текст.
+  const missing: string[] = [];
+  if (!form.country_name) missing.push('страну');
+  if (!form.city_name) missing.push('город');
+  if (!form.delivery_address) missing.push('адрес доставки');
+  if (!form.user.first_name) missing.push('имя');
+  if (!form.user.last_name) missing.push('фамилию');
+  if (!form.user.phone) missing.push('телефон');
+  if (missing.length) {
+    await showError(joinMissing(missing));
+    return;
+  }
 
   isLoading.value = true;
 
-  // Добавляем данные сертификата в запрос
-  const formVal = form.value.value;
-  const requestData = {
-    ...formVal,
-    delivery_address: {
-      country: formVal.country_code ?? '',
-      city: formVal.city_name ?? '',
-      address: formVal.delivery_address ?? '',
-    },
+  // Получатель и контактная информация — берём из формы профиля.
+  // Если в будущем понадобится разделить «заказчик» и «получатель» —
+  // сделаем отдельный блок с собственной валидацией.
+  const deliveryAddress: Record<string, any> = {
+    country: form.country_name,
+    city: form.city_name,
+    address: form.delivery_address,
   };
-  delete requestData.country_code;
-  delete requestData.city_name;
+  if (form.region) deliveryAddress.region = form.region;
+  if (form.postal_code) deliveryAddress.postal_code = form.postal_code;
+  if (form.entrance) deliveryAddress.entrance = form.entrance;
+  if (form.floor) deliveryAddress.floor = form.floor;
+  if (form.intercom) deliveryAddress.intercom = form.intercom;
+  if (form.delivery_date) deliveryAddress.delivery_date = form.delivery_date;
+  if (form.buyer_comment) deliveryAddress.buyer_comment = form.buyer_comment;
 
+  const requestData: Record<string, any> = {
+    promo_code: form.promo_code,
+    gift_card_code: form.gift_card_code,
+    items: cartStore.getCartForCheckout(),
+    user: { ...form.user },
+    recipient: { ...form.user },
+    delivery_address: deliveryAddress,
+  };
+
+  if (form.payment_method) {
+    requestData.payment_method = form.payment_method;
+  }
+
+  if (form.delivery_method_name) {
+    requestData.delivery_method = { name: form.delivery_method_name };
+  }
 
   if (cartStore.hasGiftCertificateInCart) {
     requestData.gift_card_data = giftCardPurchaseStore.getDataForAPI(
@@ -209,12 +283,11 @@ const submit = async () => {
     );
   }
 
-  // Добавляем данные акции (если есть)
+  // Акция (если активна)
   if (promotionStore.hasPromotion) {
     const promotionData = promotionStore.getDataForOrder();
     Object.assign(requestData, promotionData);
 
-    // Если пользователь выбрал подарок — убираем промокод
     if (!promotionStore.useDiscountInstead) {
       delete requestData.promo_code;
     }
@@ -232,10 +305,17 @@ const submit = async () => {
     return navigateTo('/success?id=' + data.value.order.id);
   }
 
-  if (error.value) {
-    console.error('Order error:', error.value);
-    // TODO: Показать ошибку пользователю
+  // Ошибка от бэка — показываем пользователю + скроллим к ней
+  const payload: any = error.value?.data ?? data.value;
+  let message = 'Не удалось оформить заказ';
+  if (payload?.errors && typeof payload.errors === 'object') {
+    const messages = Object.values(payload.errors).flat() as string[];
+    message = messages[0] || payload.message || message;
+  } else if (payload?.message) {
+    message = payload.message;
   }
+  await showError(message);
+  console.error('Order error:', error.value ?? data.value);
 }
 
 

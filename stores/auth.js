@@ -69,6 +69,12 @@ export const useAuthStore = defineStore('authStore', () => {
         //     localStorage.removeItem('auth_token');
         // }
 
+        // Чистим externalId онлайн-чата, чтобы переписка не «утекла» к следующему
+        // пользователю, который залогинится на этом же браузере.
+        if (process.client) {
+            try { localStorage.removeItem('externalId'); } catch (e) { /* ignore */ }
+        }
+
         return navigateTo('/');
     }
 
